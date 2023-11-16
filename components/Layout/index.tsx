@@ -3,10 +3,10 @@
 'use client';
 
 import { useDisclosure } from '@mantine/hooks';
-import { AppShell, Box, Burger, Group, NavLink, Title } from '@mantine/core';
-import { IconNavigationCheck } from '@tabler/icons-react';
+import { AppShell, Autocomplete, Box, Burger, Group, NavLink, Title, rem } from '@mantine/core';
+import { IconNavigationCheck, IconSearch } from '@tabler/icons-react';
 
-// import classes from './MobileNavbar.module.css';
+import classes from './MobileNavbar.module.css';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
@@ -32,6 +32,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 href="/"
               />
             </Box>
+            <Group>
+              <Autocomplete
+                // className={classes.search}
+                placeholder="Search"
+                leftSection={
+                  <IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                }
+                visibleFrom="xs"
+              />
+            </Group>
           </Group>
         </Group>
       </AppShell.Header>

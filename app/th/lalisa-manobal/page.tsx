@@ -1,19 +1,45 @@
 /* eslint-disable react/no-unescaped-entities */
 
-'use client';
+import {
+  Avatar,
+  Center,
+  Container,
+  Stack,
+  Tabs,
+  TabsList,
+  TabsTab,
+  Text,
+  Title,
+} from '@mantine/core';
 
-import { Container, Stack, Tabs, Text, Title } from '@mantine/core';
+export default async function Page() {
+  const topic = 'Lisa_(rapper)'; // Replace with the desired Wikipedia page title or topic
 
-export default function Page() {
+  const data = await fetch(
+    `https://th.wikipedia.org/w/api.php?action=query&titles=${topic}&prop=extracts|pageimages|info&pithumbsize=400&inprop=url&redirects=&format=json&origin=*`
+  )
+    .then((response) => response.json())
+    .catch((error) => {
+      console.error('Error fetching data:', error);
+    });
   return (
     <Container c="white">
       <Stack>
-        <Tabs defaultValue="gallery">
-          <Tabs.List mb="xl">
-            <Tabs.Tab value="gallery">ประวัติ</Tabs.Tab>
-            <Tabs.Tab value="messages">การท่องเที่ยว</Tabs.Tab>
-            <Tabs.Tab value="settings">สถานที่ท่องเที่ยวใกล้เคียง</Tabs.Tab>
-          </Tabs.List>
+        <Center>
+          <Avatar size={200} src={data.query.pages['848451'].thumbnail.source} alt="test" />
+        </Center>
+        <Text
+          size="xs"
+          dangerouslySetInnerHTML={{
+            __html: data.query.pages['848451'].extract,
+          }}
+        />
+        {/* <Tabs defaultValue="gallery">
+          <TabsList mb="xl">
+            <TabsTab value="gallery">ประวัติ</TabsTab>
+            <TabsTab value="messages">การท่องเที่ยว</TabsTab>
+            <TabsTab value="settings">สถานที่ท่องเที่ยวใกล้เคียง</TabsTab>
+          </TabsList>
 
           <Tabs.Panel value="gallery">
             <Stack justify="center" align="center">
@@ -41,7 +67,7 @@ export default function Page() {
           </Tabs.Panel>
           <Tabs.Panel value="messages">Messages tab content</Tabs.Panel>
           <Tabs.Panel value="settings">Settings tab content</Tabs.Panel>
-        </Tabs>
+        </Tabs> */}
       </Stack>
     </Container>
   );
