@@ -1,28 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { load } from 'cheerio';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
-  try {
-    const url =
-      'https://entertainment.trueid.net/detail/5gmRjj2Vp52a?fbclid=IwAR2VlZyovRUJ-uaw-lLlENgvrH4PrAHF5hxRrY0AT4-BVsWdK5tYQckF_Zs';
+  const response = await fetch('https://www.kpopmap.com/kpopmap-trending/');
+  const html = await response.text();
+  const $ = load(html);
 
-    // Fetch HTML content from the URL using fetch
-    const response = await fetch(url);
+  const trending = $('div.trending-box.people > div.post');
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch data');
-    }
+  const trendingList = trending
+    .map((_, el) => {
+      const $el = $(el);
+      const title = $el.find('div.post-data > h3 > a').text();
+      const image = $el.find('div.post-img > a > img').attr('src');
 
-    const html = await response.text();
+      return {
+        title,
+        image,
+      };
+    })
+    .get();
 
-    // Parse HTML using Cheerio
-    const $ = load(html);
-
-    // Extract data using Cheerio selectors
-
-    // Return scraped data as JSON response
-    return Response.json({ html });
-  } catch (error) {
-    Response.json({ error });
-  }
+  return NextResponse.json({ trendingList });
 }
