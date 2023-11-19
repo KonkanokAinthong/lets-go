@@ -74,44 +74,7 @@ export default function HomePage() {
               loop
               align="center"
               slidesToScroll={4}
-            >
-              <CarouselSlide>
-                <Image
-                  src="https://occ-0-7166-92.1.nflxso.net/dnm/api/v6/WNk1mr9x_Cd_2itp6pUM7-lXMJg/AAAABTGDHL1pevsw-uMEJ2Z7YWpZXw4T97TcmVFwRgl4m0uc8Vgut7DgGKAZOoL6bH7s7owTlVeNtiOLcyUZdu7bb2PuCp8DReh5qSe2PgWaIpIEtP2yDvNgsALxWiPDsMFCmDpxS4m2F6dsKW_fTcLxGNJuH_e2M42m2FkbemmzYJbIX0c-tVV7mkqdQ6vFJ940vIBdekxctWnS2M_Kayl0hCtJqb2Pgsf5Tt-mdp0sZHWuzWDRxMW7dJGiuiVAH7WESLPkK-6n87QHgozGlj9mgcsD291aQS7CcnaHJTrIYSC9l88XEt0Z3Fypew.jpg"
-                  alt="test"
-                />
-                <Title order={3} ta="center" c="white">
-                  Doona!
-                </Title>
-              </CarouselSlide>
-              <CarouselSlide>
-                <Image
-                  src="https://occ-0-7166-92.1.nflxso.net/dnm/api/v6/WNk1mr9x_Cd_2itp6pUM7-lXMJg/AAAABTGDHL1pevsw-uMEJ2Z7YWpZXw4T97TcmVFwRgl4m0uc8Vgut7DgGKAZOoL6bH7s7owTlVeNtiOLcyUZdu7bb2PuCp8DReh5qSe2PgWaIpIEtP2yDvNgsALxWiPDsMFCmDpxS4m2F6dsKW_fTcLxGNJuH_e2M42m2FkbemmzYJbIX0c-tVV7mkqdQ6vFJ940vIBdekxctWnS2M_Kayl0hCtJqb2Pgsf5Tt-mdp0sZHWuzWDRxMW7dJGiuiVAH7WESLPkK-6n87QHgozGlj9mgcsD291aQS7CcnaHJTrIYSC9l88XEt0Z3Fypew.jpg"
-                  alt="test"
-                />
-                <Title order={3} ta="center" c="white">
-                  Doona!
-                </Title>
-              </CarouselSlide>
-              <CarouselSlide>
-                <Image
-                  src="https://occ-0-7166-92.1.nflxso.net/dnm/api/v6/WNk1mr9x_Cd_2itp6pUM7-lXMJg/AAAABTGDHL1pevsw-uMEJ2Z7YWpZXw4T97TcmVFwRgl4m0uc8Vgut7DgGKAZOoL6bH7s7owTlVeNtiOLcyUZdu7bb2PuCp8DReh5qSe2PgWaIpIEtP2yDvNgsALxWiPDsMFCmDpxS4m2F6dsKW_fTcLxGNJuH_e2M42m2FkbemmzYJbIX0c-tVV7mkqdQ6vFJ940vIBdekxctWnS2M_Kayl0hCtJqb2Pgsf5Tt-mdp0sZHWuzWDRxMW7dJGiuiVAH7WESLPkK-6n87QHgozGlj9mgcsD291aQS7CcnaHJTrIYSC9l88XEt0Z3Fypew.jpg"
-                  alt="test"
-                />
-                <Title order={3} ta="center" c="white">
-                  Doona!
-                </Title>
-              </CarouselSlide>
-              <CarouselSlide>
-                <Image
-                  src="https://occ-0-7166-92.1.nflxso.net/dnm/api/v6/WNk1mr9x_Cd_2itp6pUM7-lXMJg/AAAABTGDHL1pevsw-uMEJ2Z7YWpZXw4T97TcmVFwRgl4m0uc8Vgut7DgGKAZOoL6bH7s7owTlVeNtiOLcyUZdu7bb2PuCp8DReh5qSe2PgWaIpIEtP2yDvNgsALxWiPDsMFCmDpxS4m2F6dsKW_fTcLxGNJuH_e2M42m2FkbemmzYJbIX0c-tVV7mkqdQ6vFJ940vIBdekxctWnS2M_Kayl0hCtJqb2Pgsf5Tt-mdp0sZHWuzWDRxMW7dJGiuiVAH7WESLPkK-6n87QHgozGlj9mgcsD291aQS7CcnaHJTrIYSC9l88XEt0Z3Fypew.jpg"
-                  alt="test"
-                />
-                <Title order={3} ta="center" c="white">
-                  Doona!
-                </Title>
-              </CarouselSlide>
-            </Carousel>
+            ></Carousel>
           </Stack>
         </section>
       </Stack>
