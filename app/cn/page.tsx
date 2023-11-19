@@ -1,28 +1,25 @@
 'use client';
 
 import { Carousel, CarouselSlide } from '@mantine/carousel';
-import { Box, Container, Image, SimpleGrid, Stack, Title } from '@mantine/core';
+import { Avatar, Box, Container, Image, SimpleGrid, Stack, Title } from '@mantine/core';
+import axios from 'axios';
 import Link from 'next/link';
+import { useQuery } from 'react-query';
 
 async function getTrendingChineseCelebrities() {
-  const response = await fetch('http://localhost:3000/api/trending-celebs?nationality=Chinese', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-store',
-  });
+  const response = await axios.get('/api/trending/celebrities?nationality=Chinese');
 
-  if (!response.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    throw new Error('Failed to fetch data');
-  }
-  const data = await response.json();
-
-  return data;
+  return response?.data?.filteredLists ?? [];
 }
 
 export default function Page() {
+  const { data: filteredLists } = useQuery(
+    'trendingChineseCelebrities',
+    getTrendingChineseCelebrities
+  );
+
+  console.log(filteredLists);
+
   return (
     <Container c="white">
       <Stack>
@@ -30,7 +27,7 @@ export default function Page() {
           Top Trending Chinese Celebrities
         </Title>
         <SimpleGrid cols={3}>
-          {/* {data?.filteredLists?.map((celebrity: any) => (
+          {filteredLists?.map((celebrity: any) => (
             <div
               key={celebrity.title}
               style={{
@@ -40,14 +37,13 @@ export default function Page() {
                 flexDirection: 'column',
               }}
             >
-              <Box w={200} h={200}>
-                <Image src={celebrity.image} alt="test" w={200} h={200} />
-              </Box>
+              <Avatar size={120} src={celebrity.image} alt={celebrity.title} />
+
               <Title order={3}>
                 <Link href={`/cn/${celebrity.title}`}>{celebrity.title}</Link>
               </Title>
             </div>
-          ))} */}
+          ))}
         </SimpleGrid>
 
         <section>

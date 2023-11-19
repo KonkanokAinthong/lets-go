@@ -2,35 +2,17 @@
 
 import { Carousel, CarouselSlide } from '@mantine/carousel';
 import { Box, Container, Image, SimpleGrid, Stack, Title } from '@mantine/core';
+import axios from 'axios';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 
 async function getTrendingThaiCelebrities() {
-  const response = await fetch('/api/trending-celebs?nationality=Thai', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-store',
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch data');
-  }
-  const data = await response.json();
-
-  return data?.filteredLists ?? [];
+  const response = await axios.get('/api/trending/celebrities?nationality=Thai');
+  return response?.data?.filteredLists ?? [];
 }
 
 export default function Page() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    getTrendingThaiCelebrities().then((d) => {
-      console.log(d);
-      setData(d);
-    });
-  }, []);
+  const { data: filteredLists } = useQuery('trendingThaiCelebrities', getTrendingThaiCelebrities);
 
   return (
     <Container c="white">
@@ -39,7 +21,7 @@ export default function Page() {
           Top Trending Thai Celebrities
         </Title>
         <SimpleGrid cols={3}>
-          {data?.map((celebrity: any) => (
+          {filteredLists?.map((celebrity: any) => (
             <div
               key={celebrity.title}
               style={{

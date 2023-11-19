@@ -3,13 +3,37 @@
 'use client';
 
 import { useDisclosure } from '@mantine/hooks';
-import { AppShell, Autocomplete, Box, Burger, Group, NavLink, Title, rem } from '@mantine/core';
+import {
+  AppShell,
+  Autocomplete,
+  Box,
+  Burger,
+  Group,
+  Loader,
+  NavLink,
+  Title,
+  rem,
+} from '@mantine/core';
 import { IconNavigationCheck, IconSearch } from '@tabler/icons-react';
-
-import classes from './MobileNavbar.module.css';
+import { useState } from 'react';
+import axios from 'axios';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
+  const [value, setValue] = useState('');
+  const [options, setOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const handleSearch = async (query: string) => {
+    setValue(query);
+    setLoading(true);
+
+    const { data } = await axios.get(`/api/search-places?place=${query}`);
+    const places = data.data.predictions.map((prediction: any) => prediction.description);
+
+    setOptions(places);
+    setLoading(false);
+  };
 
   return (
     <AppShell
@@ -34,8 +58,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
             </Box>
             <Group>
               <Autocomplete
-                // className={classes.search}
-                placeholder="Search"
+                placeholder="Type to search"
+                value={value}
+                data={options}
+                onChange={handleSearch}
+                rightSection={loading ? <Loader size={16} /> : null}
                 leftSection={
                   <IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                 }
