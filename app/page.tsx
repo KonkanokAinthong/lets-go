@@ -12,7 +12,12 @@ export default function HomePage() {
         <section>
           <Stack>
             <Grid justify="center" align="center">
-              <GridCol span={4}>
+              <GridCol
+                span={{
+                  xs: 12,
+                  md: 4,
+                }}
+              >
                 <Stack justify="center" align="center">
                   <Box w={400} h={400}>
                     <Image
@@ -27,7 +32,12 @@ export default function HomePage() {
                   </Button>
                 </Stack>
               </GridCol>
-              <GridCol span={4}>
+              <GridCol
+                span={{
+                  xs: 12,
+                  md: 4,
+                }}
+              >
                 <Stack justify="center" align="center">
                   <Box w={400} h={400}>
                     <Image
@@ -43,7 +53,12 @@ export default function HomePage() {
                   </Button>
                 </Stack>
               </GridCol>
-              <GridCol span={4}>
+              <GridCol
+                span={{
+                  xs: 12,
+                  md: 4,
+                }}
+              >
                 <Stack justify="center" align="center">
                   <Box w={400} h={400}>
                     <Image
@@ -66,7 +81,7 @@ export default function HomePage() {
             <Title order={1} mb="xl" ta="center" c="white">
               Recommended Celebrities
             </Title>
-            <Carousel
+            {/* <Carousel
               withIndicators
               height={500}
               slideSize={{ base: '100%', sm: '50%', md: '25%' }}
@@ -74,7 +89,7 @@ export default function HomePage() {
               loop
               align="center"
               slidesToScroll={4}
-            ></Carousel>
+            ></Carousel> */}
           </Stack>
         </section>
       </Stack>

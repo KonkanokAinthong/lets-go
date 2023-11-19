@@ -1,17 +1,16 @@
+'use client';
+
 import '@mantine/core/styles.css';
 import '@mantine/carousel/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript, Container } from '@mantine/core';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { theme } from '../theme';
-import { HeaderSearch } from '@/components/HeaderSearch';
+
 import { Layout } from '@/components/Layout';
 
-export const metadata = {
-  title: "Let's go",
-  description: 'I am using Mantine with Next.js!',
-};
-
 export default function RootLayout({ children }: { children: any }) {
+  const queryClient = new QueryClient();
   return (
     <html lang="en">
       <head>
@@ -30,13 +29,15 @@ export default function RootLayout({ children }: { children: any }) {
           backgroundSize: 'cover',
         }}
       >
-        <MantineProvider theme={theme}>
-          <Layout>
-            <Container size="xl" mb="xl">
-              {children}
-            </Container>
-          </Layout>
-        </MantineProvider>
+        <QueryClientProvider client={queryClient}>
+          <MantineProvider theme={theme}>
+            <Layout>
+              <Container size="xl" mb="xl">
+                {children}
+              </Container>
+            </Layout>
+          </MantineProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );

@@ -1,65 +1,58 @@
 'use client';
 
-import { Carousel, CarouselSlide } from '@mantine/carousel';
+import { Carousel } from '@mantine/carousel';
 import { Box, Container, Image, SimpleGrid, Stack, Title } from '@mantine/core';
+import axios from 'axios';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 
 async function getTrendingKoreanCelebrities() {
-  const response = await fetch('http://localhost:3000/api/scrape', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    cache: 'no-store',
-  });
-
-  if (!response.ok) {
-    // This will activate the closest `error.js` Error Boundary
+  try {
+    const response = await axios.get('http://localhost:3000/api/scrape');
+    return response.data;
+  } catch (error) {
+    console.error(error);
     throw new Error('Failed to fetch data');
   }
-  const data = await response.json();
-
-  return data;
 }
 
 async function getRecommendedKoreanSeries() {
-  const response = await fetch(
-    'https://www.netflix.com/tudum/top10/_next/data/m3mpsocLHP8YPHzG-j91-/south-korea/tv.json',
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      cache: 'no-store',
-    }
-  );
-
-  if (!response.ok) {
-    // This will activate the closest `error.js` Error Boundary
+  try {
+    const response = await axios.get(
+      'https://www.netflix.com/tudum/top10/_next/data/m3mpsocLHP8YPHzG-j91-/south-korea/tv.json'
+    );
+    return response.data;
+  } catch (error) {
+    console.error(error);
     throw new Error('Failed to fetch data');
   }
-  const data = await response.json();
-
-  return data;
 }
 
 export default function Page() {
-  // const [] = useState([]);
-
-  // useEffect(() => {
-  //   getTrendingKoreanCelebrities();
-  //   getRecommendedKoreanSeries();
-  // }, []);
-
+  const { data: trending, isLoading: isTrendingLoading } = useQuery(
+    'trendingKoreanCelebrities',
+    getTrendingKoreanCelebrities
+  );
+  // const { data: series, isLoading: isSeriesLoading } = useQuery(
+  //   'recommendedKoreanSeries',
+  //   getRecommendedKoreanSeries
+  // );
+  if (isTrendingLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <Container c="white">
       <Stack>
         <Title order={1} ta="center" c="white">
           Top Trending Korean Celebrities
         </Title>
-        <SimpleGrid cols={3}>
-          {/* {data?.trendingLists?.map((celebrity: any) => (
+        <SimpleGrid
+          cols={{
+            xs: 12,
+            md: 3,
+          }}
+        >
+          {trending?.trendingLists?.map((celebrity: any) => (
             <div
               key={celebrity.title}
               style={{
@@ -76,7 +69,7 @@ export default function Page() {
                 <Link href={`/kr/${celebrity.title}`}>{celebrity.title}</Link>
               </Title>
             </div>
-          ))} */}
+          ))}
         </SimpleGrid>
 
         <section>
@@ -84,7 +77,7 @@ export default function Page() {
             <Title order={1} mb="xl" ta="center" c="white">
               Recommended Korean Series
             </Title>
-            <Carousel
+            {/* <Carousel
               withIndicators
               slideSize={{ base: '100%', sm: '50%', md: '25%' }}
               slideGap="md"
@@ -92,8 +85,8 @@ export default function Page() {
               align="center"
               slidesToScroll={4}
             >
-              {/* {series?.pageProps?.data?.weeklyTopTen?.map((serie: any) => (
-                <CarouselSlide key={serie.id}>
+              {series?.pageProps?.data?.weeklyTopTen?.map((serie: any) => (
+                <Carousel.Slide key={serie.id}>
                   <Title order={3} ta="center">
                     <Image
                       src={series?.pageProps?.data?.weeklyBoxartUrls[serie.id]?.vertical}
@@ -101,9 +94,9 @@ export default function Page() {
                     />
                     <Link href={`/kr/${serie.showName}`}>{serie.showName}</Link>
                   </Title>
-                </CarouselSlide>
-              ))} */}
-            </Carousel>
+                </Carousel.Slide>
+              ))}
+            </Carousel> */}
           </Stack>
         </section>
       </Stack>
