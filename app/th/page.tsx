@@ -1,9 +1,12 @@
+'use client';
+
 import { Carousel, CarouselSlide } from '@mantine/carousel';
 import { Box, Container, Image, SimpleGrid, Stack, Title } from '@mantine/core';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 async function getTrendingThaiCelebrities() {
-  const response = await fetch('http://localhost:3000/api/trending-celebs?nationality=Thai', {
+  const response = await fetch('/api/trending-celebs?nationality=Thai', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -12,18 +15,22 @@ async function getTrendingThaiCelebrities() {
   });
 
   if (!response.ok) {
-    // This will activate the closest `error.js` Error Boundary
     throw new Error('Failed to fetch data');
   }
   const data = await response.json();
 
-  return data;
+  return data?.filteredLists ?? [];
 }
 
-export default async function Page() {
-  const data = await getTrendingThaiCelebrities();
+export default function Page() {
+  const [data, setData] = useState([]);
 
-  console.log(data);
+  useEffect(() => {
+    getTrendingThaiCelebrities().then((d) => {
+      console.log(d);
+      setData(d);
+    });
+  }, []);
 
   return (
     <Container c="white">
@@ -32,7 +39,7 @@ export default async function Page() {
           Top Trending Thai Celebrities
         </Title>
         <SimpleGrid cols={3}>
-          {data?.filteredLists?.map((celebrity: any) => (
+          {data?.map((celebrity: any) => (
             <div
               key={celebrity.title}
               style={{

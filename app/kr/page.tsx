@@ -1,6 +1,9 @@
+'use client';
+
 import { Carousel, CarouselSlide } from '@mantine/carousel';
 import { Box, Container, Image, SimpleGrid, Stack, Title } from '@mantine/core';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 async function getTrendingKoreanCelebrities() {
   const response = await fetch('http://localhost:3000/api/scrape', {
@@ -41,11 +44,13 @@ async function getRecommendedKoreanSeries() {
   return data;
 }
 
-export default async function Page() {
-  const data = await getTrendingKoreanCelebrities();
-  const series = await getRecommendedKoreanSeries();
+export default function Page() {
+  // const [] = useState([]);
 
-  console.log(series);
+  // useEffect(() => {
+  //   getTrendingKoreanCelebrities();
+  //   getRecommendedKoreanSeries();
+  // }, []);
 
   return (
     <Container c="white">
@@ -54,7 +59,7 @@ export default async function Page() {
           Top Trending Korean Celebrities
         </Title>
         <SimpleGrid cols={3}>
-          {data?.trendingLists?.map((celebrity: any) => (
+          {/* {data?.trendingLists?.map((celebrity: any) => (
             <div
               key={celebrity.title}
               style={{
@@ -71,7 +76,7 @@ export default async function Page() {
                 <Link href={`/kr/${celebrity.title}`}>{celebrity.title}</Link>
               </Title>
             </div>
-          ))}
+          ))} */}
         </SimpleGrid>
 
         <section>
@@ -87,7 +92,7 @@ export default async function Page() {
               align="center"
               slidesToScroll={4}
             >
-              {series?.pageProps?.data?.weeklyTopTen?.map((serie: any) => (
+              {/* {series?.pageProps?.data?.weeklyTopTen?.map((serie: any) => (
                 <CarouselSlide key={serie.id}>
                   <Title order={3} ta="center">
                     <Image
@@ -97,7 +102,7 @@ export default async function Page() {
                     <Link href={`/kr/${serie.showName}`}>{serie.showName}</Link>
                   </Title>
                 </CarouselSlide>
-              ))}
+              ))} */}
             </Carousel>
           </Stack>
         </section>

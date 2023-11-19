@@ -1,3 +1,5 @@
+'use client';
+
 import { Carousel, CarouselSlide } from '@mantine/carousel';
 import { Box, Container, Image, SimpleGrid, Stack, Title } from '@mantine/core';
 import Link from 'next/link';
@@ -20,11 +22,7 @@ async function getTrendingChineseCelebrities() {
   return data;
 }
 
-export default async function Page() {
-  const data = await getTrendingChineseCelebrities();
-
-  console.log(data);
-
+export default function Page() {
   return (
     <Container c="white">
       <Stack>
@@ -32,7 +30,7 @@ export default async function Page() {
           Top Trending Chinese Celebrities
         </Title>
         <SimpleGrid cols={3}>
-          {data?.filteredLists?.map((celebrity: any) => (
+          {/* {data?.filteredLists?.map((celebrity: any) => (
             <div
               key={celebrity.title}
               style={{
@@ -49,7 +47,7 @@ export default async function Page() {
                 <Link href={`/cn/${celebrity.title}`}>{celebrity.title}</Link>
               </Title>
             </div>
-          ))}
+          ))} */}
         </SimpleGrid>
 
         <section>
