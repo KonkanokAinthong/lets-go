@@ -1,7 +1,7 @@
 'use client';
 
-import { Carousel, CarouselSlide } from '@mantine/carousel';
-import { Avatar, Box, Container, Image, SimpleGrid, Stack, Title } from '@mantine/core';
+import { Carousel } from '@mantine/carousel';
+import { Avatar, Container, SimpleGrid, Stack, Title } from '@mantine/core';
 import axios from 'axios';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
@@ -37,7 +37,7 @@ export default function Page() {
                 flexDirection: 'column',
               }}
             >
-              <Avatar size={120} src={celebrity.image} alt={celebrity.title} />
+              <Avatar size={150} src={celebrity.image} alt={celebrity.title} />
 
               <Title order={3}>
                 <Link href={`/cn/${celebrity.title}`}>{celebrity.title}</Link>

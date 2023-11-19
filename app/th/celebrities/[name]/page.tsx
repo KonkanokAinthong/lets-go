@@ -49,30 +49,6 @@ export default function Page() {
   console.log(places);
   console.log(nearbyPlaces);
 
-  // const thData = await fetch(
-  //   `https://th.wikipedia.org/w/api.php?action=query&titles=${name}&prop=extracts|pageimages|info&pithumbsize=400&inprop=url&redirects=&format=json&origin=*`
-  // )
-  //   .then((response) => response.json())
-  //   .catch((error) => {
-  //     console.error('Error fetching data:', error);
-  //   });
-
-  // const enData = await fetch(
-  //   `https://en.wikipedia.org/w/api.php?action=query&titles=${name}&prop=extracts|pageimages|info&pithumbsize=400&inprop=url&redirects=&format=json&origin=*`
-  // )
-  //   .then((response) => response.json())
-  //   .catch((error) => {
-  //     console.error('Error fetching data:', error);
-  //   });
-
-  // console.log(enData);
-
-  // const randomKey = Object.keys(thData?.query?.pages)[0];
-
-  // const data = thData?.query?.pages?.[randomKey]?.extract ? thData : enData;
-
-  // console.log(randomKey);
-
   return (
     <Container c="white">
       <Stack>
@@ -89,18 +65,7 @@ export default function Page() {
             <TabsTab value="visited-places">การท่องเที่ยว</TabsTab>
             <TabsTab value="nearby">สถานที่ท่องเที่ยวใกล้เคียง</TabsTab>
           </TabsList>
-          {/* <TabsPanel value="info">
-            {data?.query?.pages?.[randomKey]?.extract ? (
-              <Text
-                size="xs"
-                dangerouslySetInnerHTML={{
-                  __html: data?.query?.pages?.[randomKey]?.extract,
-                }}
-              />
-            ) : (
-              <Text size="xs">ไม่มีข้อมูล</Text>
-            )}
-          </TabsPanel> */}
+          <TabsPanel value="info">Info</TabsPanel>
           <TabsPanel value="visited-places">
             <Stack justify="center" align="center">
               {places?.map((place: any) => (

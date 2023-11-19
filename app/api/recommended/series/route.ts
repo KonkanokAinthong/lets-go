@@ -14,17 +14,18 @@ export async function GET(request: Request) {
     const seriesList = series
         .map((i, el) => {
             const $el = $(el);
+
             const titles = $el
                 .find('h6.text-primary.title > a')
                 .map((i, el) => $(el).text())
                 .get()
                 .filter((title) => title.trim().length > 0 && title !== '');
-
+            const images = $el.find('img').map((i, el) => $(el).attr('data-src')).get();
             const description = $el.find('div > div > div.col-xs-9.row-cell.content > span').text();
 
             const data = titles.map((title, index) => ({
                 title,
-                // image: images[index] || null,
+                image: images[index] || null,
                 description,
             }));
 
