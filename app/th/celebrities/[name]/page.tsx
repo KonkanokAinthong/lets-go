@@ -1,10 +1,13 @@
 'use client';
 
 import {
+  Avatar,
   Center,
   Container,
   Divider,
+  Grid,
   Image,
+  Loader,
   Stack,
   Tabs,
   TabsList,
@@ -19,6 +22,31 @@ import { useQuery } from 'react-query';
 
 const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
 
+const TMDB_API_TOKEN =
+  'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNDg5YjUyNDg3MTdmZjY2NmY3NzhkNzE3NmVmYjdjZiIsInN1YiI6IjY1NTk5ZTI5ZWE4NGM3MTA5NmRmMjk2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.e0lqhUBzvqt4L-OleXqsj8bx_p6yQK46wPabFdYFO1s';
+
+const searchCelebrity = async (name: string) => {
+  const data = await axios.get(
+    `https://api.themoviedb.org/3/search/person?query=${name}&include_adult=false&language=en-US&page=1`,
+    {
+      headers: {
+        Authorization: `Bearer ${TMDB_API_TOKEN}`,
+      },
+    }
+  );
+  return data.data.results[0];
+};
+
+const getCelebrityInfo = async (person_id: string) => {
+  const data = await axios.get(`https://api.themoviedb.org/3/person/${person_id}`, {
+    headers: {
+      Authorization: `Bearer ${TMDB_API_TOKEN}`,
+    },
+  });
+
+  return data.data;
+};
+
 const getPlacebyTextSearch = async (place: string) => {
   try {
     const response = await axios.get(`/api/places?place=${place}`);
@@ -29,31 +57,53 @@ const getPlacebyTextSearch = async (place: string) => {
   }
 };
 
-const getNearbyPlaces = async (place: string) => {
-  try {
-    const response = await axios.get(`/api/nearby-places?place=${place}`);
-    return response.data.data.results;
-  } catch (error) {
-    console.error(error);
-    throw new Error('Failed to fetch data');
-  }
+const getNearbyPlaces = async (lat, long) => {
+  // try {
+  //   const response = await axios.get(`/api/nearby-places?place=${place}`);
+  //   return response.data.data.results;
+  // } catch (error) {
+  //   console.error(error);
+  //   throw new Error('Failed to fetch data');
+  // }
 };
 
 export default function Page() {
   const { name } = useParams();
   const placeName = 'restaurant in Bangkok';
-  const { data: places } = useQuery('place', () => getPlacebyTextSearch(placeName as string));
-  const { data: nearbyPlaces } = useQuery('nearbyPlaces', () =>
-    getNearbyPlaces(placeName as string)
+  const { data: celebrity, isLoading: isCelebrityLoading } = useQuery('celebrity', () =>
+    searchCelebrity(name as string)
   );
-  console.log(places);
-  console.log(nearbyPlaces);
+  const { data: celebrityInfo, isLoading: isCelebbrityInfoLoading } = useQuery(
+    'celebrityInfo',
+    () => getCelebrityInfo(celebrity?.id),
+    {
+      enabled: !!celebrity?.id,
+    }
+  );
+  const { data: places, isLoading: isPlacesLoading } = useQuery('place', () =>
+    getPlacebyTextSearch(placeName as string)
+  );
+  // const { data: nearbyPlaces } = useQuery('nearbyPlaces', () =>
+  //   getNearbyPlaces(placeName as string)
+  // );
+
+  if (isCelebrityLoading || isCelebbrityInfoLoading || isPlacesLoading) {
+    return <Loader />;
+  }
+
+  console.log(celebrityInfo);
+
+  console.log(celebrity);
 
   return (
     <Container c="white">
       <Stack>
         <Center>
-          {/* <Avatar size={200} src={data?.query?.pages?.[randomKey]?.thumbnail?.source} alt="test" /> */}
+          <Avatar
+            size={200}
+            src={`https://image.tmdb.org/t/p/original/${celebrityInfo?.profile_path}`}
+            alt="test"
+          />
         </Center>
         <Title order={1} ta="center">
           {decodeURIComponent(name as string)}
@@ -65,7 +115,38 @@ export default function Page() {
             <TabsTab value="visited-places">การท่องเที่ยว</TabsTab>
             <TabsTab value="nearby">สถานที่ท่องเที่ยวใกล้เคียง</TabsTab>
           </TabsList>
-          <TabsPanel value="info">Info</TabsPanel>
+          <TabsPanel value="info">
+            <Stack>
+              <div>
+                {celebrityInfo?.biography ? (
+                  <Text size="xs">{celebrityInfo?.biography}</Text>
+                ) : (
+                  <Text size="xs">ไม่มีข้อมูล</Text>
+                )}
+              </div>
+              <div>
+                <Title order={3}>Known For</Title>
+                <Grid>
+                  {celebrity?.known_for?.map((item) => (
+                    <Grid.Col span={4}>
+                      <Stack key={item.id}>
+                        <Image
+                          src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
+                          alt="test"
+                        />
+                        <Stack>
+                          <Title order={3} ta="center">
+                            {item.name}
+                          </Title>
+                          {/* <Text size="xs">{item.overview}</Text> */}
+                        </Stack>
+                      </Stack>
+                    </Grid.Col>
+                  ))}
+                </Grid>
+              </div>
+            </Stack>
+          </TabsPanel>
           <TabsPanel value="visited-places">
             <Stack justify="center" align="center">
               {places?.map((place: any) => (

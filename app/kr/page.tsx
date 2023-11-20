@@ -112,7 +112,7 @@ export default function Page() {
                 <Carousel.Slide key={serie.title}>
                   <Title order={3} ta="center">
                     <Image src={serie?.image} alt={serie?.title} />
-                    <Link href={`/kr/${serie.title}`}>{serie.title}</Link>
+                    <Link href={`/kr/series/${serie.title}`}>{serie.title}</Link>
                     <Text size="xs">{serie.description}</Text>
                   </Title>
                 </Carousel.Slide>

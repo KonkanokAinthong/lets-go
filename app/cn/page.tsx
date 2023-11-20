@@ -48,7 +48,7 @@ export default function Page() {
               <Avatar size={150} src={celebrity.image} alt={celebrity.title} />
 
               <Title order={3}>
-                <Link href={`/cn/${celebrity.title}`}>{celebrity.title}</Link>
+                <Link href={`/cn/celebrities/${celebrity.title}`}>{celebrity.title}</Link>
               </Title>
             </div>
           ))}
@@ -70,7 +70,7 @@ export default function Page() {
                 <Carousel.Slide key={serie.title}>
                   <Title order={3} ta="center">
                     <Image src={serie?.image} alt={serie?.title} />
-                    <Link href={`/kr/${serie.title}`}>{serie.title}</Link>
+                    <Link href={`/cn/series/${serie.title}`}>{serie.title}</Link>
                     <Text size="xs">{serie.description}</Text>
                   </Title>
                 </Carousel.Slide>

@@ -41,7 +41,7 @@ export default function Page() {
             >
               <Avatar src={celebrity.image} alt={celebrity.title} size={150} />
               <Title order={3} ta="center">
-                <Link href={`/th/${celebrity.title}`}>{celebrity.title}</Link>
+                <Link href={`/th/celebrities/${celebrity.title}`}>{celebrity.title}</Link>
               </Title>
             </div>
           ))}
