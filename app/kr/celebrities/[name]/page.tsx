@@ -29,25 +29,25 @@ const getPlacebyTextSearch = async (place: string) => {
   }
 };
 
-const getNearbyPlaces = async (place: string) => {
-  try {
-    const response = await axios.get(`/api/nearby-places?place=${place}`);
-    return response.data.data.results;
-  } catch (error) {
-    console.error(error);
-    throw new Error('Failed to fetch data');
-  }
-};
+// const getNearbyPlaces = async (place: string) => {
+//   try {
+//     const response = await axios.get(`/api/nearby-places?place=${place}`);
+//     return response.data.data.results;
+//   } catch (error) {
+//     console.error(error);
+//     throw new Error('Failed to fetch data');
+//   }
+// };
 
 export default function Page() {
   const { name } = useParams();
-  const placeName = 'restaurant in Bangkok';
+  const placeName = 'Temple in Bangkok';
   const { data: places } = useQuery('place', () => getPlacebyTextSearch(placeName as string));
-  const { data: nearbyPlaces } = useQuery('nearbyPlaces', () =>
-    getNearbyPlaces(placeName as string)
-  );
-  console.log(places);
-  console.log(nearbyPlaces);
+  // const { data: nearbyPlaces } = useQuery('nearbyPlaces', () =>
+  //   getNearbyPlaces(placeName as string)
+  // );
+  // console.log(places);
+  // console.log(nearbyPlaces);
 
   return (
     <Container c="white">

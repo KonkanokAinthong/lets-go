@@ -57,19 +57,19 @@ const getPlacebyTextSearch = async (place: string) => {
   }
 };
 
-const getNearbyPlaces = async (lat: string, long: string) => {
-  // try {
-  //   const response = await axios.get(`/api/nearby-places?place=${place}`);
-  //   return response.data.data.results;
-  // } catch (error) {
-  //   console.error(error);
-  //   throw new Error('Failed to fetch data');
-  // }
-};
+// const getNearbyPlaces = async (lat: string, long: string) => {
+//   // try {
+//   //   const response = await axios.get(`/api/nearby-places?place=${place}`);
+//   //   return response.data.data.results;
+//   // } catch (error) {
+//   //   console.error(error);
+//   //   throw new Error('Failed to fetch data');
+//   // }
+// };
 
 export default function Page() {
   const { name } = useParams();
-  const placeName = 'restaurant in Bangkok';
+  const placeName = 'Temple in Bangkok';
   const { data: celebrity, isLoading: isCelebrityLoading } = useQuery('celebrity', () =>
     searchCelebrity(name as string)
   );

@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     const radius = 1500; // Specify the search radius in meters
 
     // limit 100 requests per day for free plan
-    const searchText = 'Thai restaurants in Bangkok'; // Replace with your search query
+    const searchText = 'Temple in Bangkok'; // Replace with your search query
 
     const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(searchText)}&key=${apiKey}`
     // const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radius}&key=${apiKey}`;
