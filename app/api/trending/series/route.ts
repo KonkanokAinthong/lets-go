@@ -10,33 +10,32 @@ export async function GET(request: Request) {
 
     const series = $('li.fs-item');
 
-    const trendingLists = trending
-        .map((i, el) => {
-            const $el = $(el);
-            const titles = $el
-                .find('div.fs-details > div.details > a > b')
-                .map((i, el) => $(el).text())
-                .get();
+    const trendingLists = series.map((i, el) => {
+        const $el = $(el);
+        const titles = $el
+            .find('div.fs-details > div.details > a > b')
+            .map((i, el) => $(el).text())
+            .get();
 
-            const images = $el
-                .find('div.fs-details > a > img')
-                .map((i, el) => $(el).attr('src'))
-                .get();
+        const images = $el
+            .find('div.fs-details > a > img')
+            .map((i, el) => $(el).attr('src'))
+            .get();
 
-            const nationality = $el.find('div.fs-details > div.details > div').text();
+        const nationality = $el.find('div.fs-details > div.details > div').text();
 
-            const data = titles.map((title, index) => ({
-                title,
-                image: images[index] || null,
-                nationality,
-            }));
+        const data = titles.map((title, index) => ({
+            title,
+            image: images[index] || null,
+            nationality,
+        }));
 
-            return data;
-        })
+        return data;
+    })
         .get();
 
-    if (nationalityParam) {
-        const filteredLists = trendingLists.filter((item) => item.nationality === nationalityParam);
+    if (countryParam) {
+        const filteredLists = trendingLists.filter((item) => item.nationality === countryParam);
 
         return NextResponse.json({ filteredLists });
     }
