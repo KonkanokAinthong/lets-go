@@ -1,8 +1,35 @@
+'use client';
+
 import { Carousel, CarouselSlide } from '@mantine/carousel';
-import { Box, Button, Container, Grid, GridCol, Image, Stack, Title } from '@mantine/core';
+import { Avatar, Box, Button, Container, Grid, GridCol, Image, Stack, Title } from '@mantine/core';
+
+import axios from 'axios';
 import Link from 'next/link';
+import { useQuery } from 'react-query';
+
+async function getTrendingCelebrities() {
+  try {
+    const response = await axios.get('/api/trending/celebrities');
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to fetch data');
+  }
+}
+
+const NATIONALITY = {
+  Korean: 'kr',
+  Chinese: 'cn',
+  Thai: 'th',
+};
 
 export default function HomePage() {
+  const { data: trending, isLoading: isTrendingLoading } = useQuery(
+    'trendingCelebrities',
+    getTrendingCelebrities
+  );
+  console.log(trending);
+
   return (
     <Container size="xl">
       <Stack gap="xl">
@@ -81,15 +108,30 @@ export default function HomePage() {
             <Title order={1} mb="xl" ta="center" c="white">
               Recommended Celebrities
             </Title>
-            {/* <Carousel
-              withIndicators
-              height={500}
+            <Carousel
               slideSize={{ base: '100%', sm: '50%', md: '25%' }}
               slideGap="md"
               loop
               align="center"
               slidesToScroll={4}
-            ></Carousel> */}
+            >
+              {trending?.trendingLists?.map((celebrity: any) => (
+                <Carousel.Slide key={celebrity.title}>
+                  <Stack justify="center" align="center">
+                    <Avatar size={150} src={celebrity?.image} alt={celebrity?.title} />
+                    <Title order={3} ta="center">
+                      <Link
+                        href={`/${NATIONALITY[celebrity.nationality as keyof typeof NATIONALITY]}/${
+                          celebrity.title
+                        }`}
+                      >
+                        {celebrity.title}
+                      </Link>
+                    </Title>
+                  </Stack>
+                </Carousel.Slide>
+              ))}
+            </Carousel>
           </Stack>
         </section>
       </Stack>

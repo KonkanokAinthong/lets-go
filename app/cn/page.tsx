@@ -1,7 +1,7 @@
 'use client';
 
 import { Carousel } from '@mantine/carousel';
-import { Avatar, Container, SimpleGrid, Stack, Title } from '@mantine/core';
+import { Avatar, Container, Image, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 import axios from 'axios';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
@@ -12,13 +12,21 @@ async function getTrendingChineseCelebrities() {
   return response?.data?.filteredLists ?? [];
 }
 
+async function getRecommendedChineseSeries() {
+  const response = await axios.get('/api/recommended/series?nationality=Chinese Drama');
+
+  return response.data ?? [];
+}
+
 export default function Page() {
   const { data: filteredLists } = useQuery(
     'trendingChineseCelebrities',
     getTrendingChineseCelebrities
   );
 
-  console.log(filteredLists);
+  const { data: series } = useQuery('recommendedChineseSeries', getRecommendedChineseSeries);
+
+  console.log(series);
 
   return (
     <Container c="white">
@@ -52,24 +60,21 @@ export default function Page() {
               Recommended Chinese Series
             </Title>
             <Carousel
-              withIndicators
               slideSize={{ base: '100%', sm: '50%', md: '25%' }}
               slideGap="md"
               loop
               align="center"
               slidesToScroll={4}
             >
-              {/* {series?.pageProps?.data?.weeklyTopTen?.map((serie: any) => (
-                <CarouselSlide key={serie.id}>
+              {series?.map((serie: any) => (
+                <Carousel.Slide key={serie.title}>
                   <Title order={3} ta="center">
-                    <Image
-                      src={series?.pageProps?.data?.weeklyBoxartUrls[serie.id]?.vertical}
-                      alt="test"
-                    />
-                    <Link href={`/kr/${serie.showName}`}>{serie.showName}</Link>
+                    <Image src={serie?.image} alt={serie?.title} />
+                    <Link href={`/kr/${serie.title}`}>{serie.title}</Link>
+                    <Text size="xs">{serie.description}</Text>
                   </Title>
-                </CarouselSlide>
-              ))} */}
+                </Carousel.Slide>
+              ))}
             </Carousel>
           </Stack>
         </section>

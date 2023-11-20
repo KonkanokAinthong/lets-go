@@ -11,8 +11,16 @@ async function getTrendingThaiCelebrities() {
   return response?.data?.filteredLists ?? [];
 }
 
+async function getRecommendedThaiSeries() {
+  const response = await axios.get('/api/recommended/series?nationality=Thai Drama');
+  return response.data ?? [];
+}
+
 export default function Page() {
   const { data: filteredLists } = useQuery('trendingThaiCelebrities', getTrendingThaiCelebrities);
+  const { data: series } = useQuery('recommendedThaiSeries', getRecommendedThaiSeries);
+
+  console.log(series);
 
   return (
     <Container c="white">
@@ -45,7 +53,6 @@ export default function Page() {
               Recommended Thai Series
             </Title>
             <Carousel
-              withIndicators
               slideSize={{ base: '100%', sm: '50%', md: '25%' }}
               slideGap="md"
               loop

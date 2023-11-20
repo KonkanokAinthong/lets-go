@@ -102,7 +102,6 @@ export default function Page() {
               Recommended Korean Series
             </Title>
             <Carousel
-              withIndicators
               slideSize={{ base: '100%', sm: '50%', md: '25%' }}
               slideGap="md"
               loop

@@ -5,6 +5,14 @@ import { NextResponse } from 'next/server';
 export async function GET(request: Request) {
     const nationalityParam = new URL(request.url).searchParams.get('nationality');
 
+    if (nationalityParam === 'Thai Drama') {
+        const response = await fetch('https://www.gmm25.com/shows.html');
+        const html = await response.text();
+        const $ = load(html);
+
+        return NextResponse.json([]);
+    }
+
     const response = await fetch('https://mydramalist.com/shows/top');
     const html = await response.text();
     const $ = load(html);
@@ -20,7 +28,10 @@ export async function GET(request: Request) {
                 .map((i, el) => $(el).text())
                 .get()
                 .filter((title) => title.trim().length > 0 && title !== '');
-            const images = $el.find('img').map((i, el) => $(el).attr('data-src')).get();
+            const images = $el
+                .find('img')
+                .map((i, el) => $(el).attr('data-src'))
+                .get();
             const description = $el.find('div > div > div.col-xs-9.row-cell.content > span').text();
 
             const data = titles.map((title, index) => ({
@@ -37,6 +48,7 @@ export async function GET(request: Request) {
         const filteredLists = seriesList.filter((item) =>
             item.description.toLowerCase().includes(nationalityParam.toLowerCase())
         );
+
         return NextResponse.json(filteredLists);
     }
 
