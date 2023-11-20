@@ -57,7 +57,7 @@ const getPlacebyTextSearch = async (place: string) => {
   }
 };
 
-const getNearbyPlaces = async (lat, long) => {
+const getNearbyPlaces = async (lat: string, long: string) => {
   // try {
   //   const response = await axios.get(`/api/nearby-places?place=${place}`);
   //   return response.data.data.results;
