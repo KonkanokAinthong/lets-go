@@ -31,6 +31,7 @@ export default function Page() {
     'trendingKoreanCelebrities',
     getTrendingKoreanCelebrities
   );
+
   const { data: series, isLoading: isSeriesLoading } = useQuery(
     'recommendedKoreanSeries',
     getRecommendedKoreanSeries
@@ -89,7 +90,7 @@ export default function Page() {
               >
                 <Avatar src={celebrity.image} alt="test" size={150} />
                 <Title order={3}>
-                  <Link href={`/kr/${celebrity.title}`}>{celebrity.title}</Link>
+                  <Link href={`/kr/celebrities/${celebrity.title}`}>{celebrity.title}</Link>
                 </Title>
               </div>
             ))}

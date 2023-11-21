@@ -11,16 +11,16 @@ export async function GET(request: Request) {
     const trending = $('li.fs-item');
 
     const trendingLists = trending
-        .map((i, el) => {
-            const $el = $(el);
+        .map((tredningListIndex, trendingListElement) => {
+            const $el = $(trendingListElement);
             const titles = $el
                 .find('div.fs-details > div.details > a > b')
-                .map((i, el) => $(el).text())
+                .map((titleElementIndex, titleElement) => $(titleElement).text())
                 .get();
 
             const images = $el
                 .find('div.fs-details > a > img')
-                .map((i, el) => $(el).attr('src'))
+                .map((imageIndex, imageElement) => $(imageElement).attr('src'))
                 .get();
 
             const nationality = $el.find('div.fs-details > div.details > div').text();

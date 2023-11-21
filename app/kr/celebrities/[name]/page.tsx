@@ -49,6 +49,8 @@ export default function Page() {
   // console.log(places);
   // console.log(nearbyPlaces);
 
+  console.log(places);
+
   return (
     <Container c="white">
       <Stack>

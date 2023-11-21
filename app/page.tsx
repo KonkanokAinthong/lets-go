@@ -70,7 +70,7 @@ export default function HomePage() {
                       h={400}
                     />
                   </Box>
-                  <Button size="lg" component={Link} href="/kr">
+                  <Button size="lg" component={Link} href="/kr" variant="white" c="black">
                     South Korea
                   </Button>
                 </Stack>
@@ -91,7 +91,7 @@ export default function HomePage() {
                     />
                   </Box>
 
-                  <Button size="lg" component={Link} href="/cn">
+                  <Button size="lg" component={Link} href="/cn" variant="white" c="black">
                     China
                   </Button>
                 </Stack>
@@ -111,7 +111,7 @@ export default function HomePage() {
                       alt="test"
                     />
                   </Box>
-                  <Button size="lg" component={Link} href="/th">
+                  <Button size="lg" component={Link} href="/th" variant="white" c="black">
                     Thailand
                   </Button>
                 </Stack>

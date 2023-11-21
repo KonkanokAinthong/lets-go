@@ -125,25 +125,29 @@ export default function Page() {
                 )}
               </div>
               <div>
-                <Title order={3}>Known For</Title>
-                <Grid>
-                  {celebrity?.known_for?.map((item) => (
-                    <Grid.Col span={4}>
-                      <Stack key={item.id}>
-                        <Image
-                          src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
-                          alt="test"
-                        />
-                        <Stack>
-                          <Title order={3} ta="center">
+                <Stack>
+                  <Title order={3}>Known For</Title>
+                  <Grid>
+                    {celebrity?.known_for?.map((item) => (
+                      <Grid.Col
+                        span={{
+                          xs: 12,
+                          md: 4,
+                        }}
+                      >
+                        <Stack key={item.id}>
+                          <Image
+                            src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
+                            alt="test"
+                          />
+                          <Title order={6} ta="center">
                             {item.name}
                           </Title>
-                          {/* <Text size="xs">{item.overview}</Text> */}
                         </Stack>
-                      </Stack>
-                    </Grid.Col>
-                  ))}
-                </Grid>
+                      </Grid.Col>
+                    ))}
+                  </Grid>
+                </Stack>
               </div>
             </Stack>
           </TabsPanel>

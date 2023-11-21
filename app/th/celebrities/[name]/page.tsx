@@ -128,7 +128,12 @@ export default function Page() {
                 <Title order={3}>Known For</Title>
                 <Grid>
                   {celebrity?.known_for?.map((item) => (
-                    <Grid.Col span={4}>
+                    <Grid.Col
+                      span={{
+                        xs: 12,
+                        md: 4,
+                      }}
+                    >
                       <Stack key={item.id}>
                         <Image
                           src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
@@ -138,7 +143,6 @@ export default function Page() {
                           <Title order={3} ta="center">
                             {item.name}
                           </Title>
-                          {/* <Text size="xs">{item.overview}</Text> */}
                         </Stack>
                       </Stack>
                     </Grid.Col>

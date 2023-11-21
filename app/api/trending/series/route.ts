@@ -16,7 +16,6 @@ export async function GET(request: Request) {
             .find('div.fs-details > div.details > a > b')
             .map((i, el) => $(el).text())
             .get();
-
         const images = $el
             .find('div.fs-details > a > img')
             .map((i, el) => $(el).attr('src'))
