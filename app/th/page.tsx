@@ -115,15 +115,17 @@ export default function Page() {
                       flexDirection: 'column',
                     }}
                   >
-                    <Avatar
-                      size={150}
-                      src={`https://image.tmdb.org/t/p/original/${celebrity.profile_path}`}
-                      alt={celebrity.name}
-                    />
+                    <Stack>
+                      <Avatar
+                        size={150}
+                        src={`https://image.tmdb.org/t/p/original/${celebrity.profile_path}`}
+                        alt={celebrity.name}
+                      />
 
-                    <Title order={3} ta="center">
-                      <Link href={`/th/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
-                    </Title>
+                      <Title order={6} ta="center">
+                        {celebrity.name}
+                      </Title>
+                    </Stack>
                   </div>
                 </Grid.Col>
               ))}

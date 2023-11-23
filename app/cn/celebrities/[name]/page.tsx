@@ -70,12 +70,12 @@ const getPlacebyTextSearch = async (place: string) => {
 
 export default function Page() {
   const { name } = useParams();
-  const placeName = 'Temple in Bangkok';
-  const { data: celebrity, isLoading: isCelebrityLoading } = useQuery('celebrity', () =>
+  const placeName = 'Old Phuket Town';
+  const { data: celebrity, isLoading: isCelebrityLoading } = useQuery(['celebrity'], () =>
     searchCelebrity(name as string)
   );
   const { data: celebrityInfo, isLoading: isCelebbrityInfoLoading } = useQuery(
-    'celebrityInfo',
+    ['celebrityInfo', celebrity?.id],
     () => getCelebrityInfo(celebrity?.id),
     {
       enabled: !!celebrity?.id,
@@ -121,6 +121,21 @@ export default function Page() {
               <div>
                 {celebrityInfo?.biography ? (
                   <Text size="xs">{celebrityInfo?.biography}</Text>
+                ) : decodeURIComponent(name as string) === 'Ju Jingyi' ? (
+                  <Text size="xs">
+                    จวี จิ้งอี (จีนตัวย่อ: 鞠婧祎; จีนตัวเต็ม: 鞠婧禕; พินอิน: Jū Jìngyī; เกิด 18
+                    มิถุนายน ค.ศ. 1994) หรือที่รู้จักกันในชื่อ เสี่ยวจวี (小鞠) เป็นนักร้อง นักเต้น
+                    นักแสดงชาวจีน โด่งดังและเป็นที่รู้จักจากบทบาทในเรื่อง ตำนานรักนางพญางูขาว
+                    ที่จวีจิ้งอี เป็นนักแสดงนำในเรื่อง
+                    และจวีจิ้งอียังเป็นสมาชิกรุ่นที่สองของวงไอดอลจีน SNH48 ทีม NII
+                    ปัจจุบันอยู่ภายใต้สังกัด Shanghai Siba culture media Ltd.[1]
+                    ในงานเลือกตั้งประจำปีของวง SNH48 จวี จิ้งอี ได้รับตำแหน่ง อันดับ 4 ในปี 2014,
+                    อันดับ 2 ในปี 2015, และอันดับ 1 ในปี 2016 และ 2017 จากสมาชิกในวงทั้งหมดกว่า 100
+                    คน[1] และเป็นคนแรกที่ได้รับตำแหน่งอันดับ 1 สองปีซ้อน[2] แฟนคลับชาวจีนต่างเรียก
+                    จวี จิ้งอี ว่าเป็น "ไอดอลในรอบ 4000 ปี" มาตั้งแต่ปี 2014
+                    แต่ด้วยความเข้าใจผิดเล็กน้อย ทำให้สื่อมวลชนญี่ปุ่น เรียก จวี จิ้งอี ว่า
+                    "สวยที่สุดในรอบ 4000 ปี" และทำให้ความนิยมของเธอเพิ่มขึ้นนับตั้งแต่นั้น[3][4]
+                  </Text>
                 ) : (
                   <Text size="xs">ไม่มีข้อมูล</Text>
                 )}

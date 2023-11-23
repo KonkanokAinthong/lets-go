@@ -4,8 +4,22 @@ import { NextResponse } from 'next/server';
 import puppeteer from 'puppeteer';
 import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
 
+function extractName(text: string) {
+  const regex = /(?<=\().+?(?=\))/;
+  const match = text.match(regex);
+  return match ? match[0] : null;
+}
+
+function removePrefixes(list) {
+  return list.map((item) => ({ ...item, name: item.name.replace(/^\d\.\)\s*/, '') }));
+}
+
 export async function GET(request: Request) {
   const nationalityParam = new URL(request.url).searchParams.get('nationality');
+
+  const allData = [];
+  const regex =
+    /ถนนข้าวสาร|สวนลุมพินี|Dalmantian|ถนนเยาวราช|สนามแพทสเตเดี้ยม|centralwOrld|Parc Paragon/g;
 
   const browser = await puppeteer.launch({
     headless: 'new',
@@ -29,36 +43,22 @@ export async function GET(request: Request) {
       size: 500,
     });
 
-    await page.waitForSelector('._3y5_T');
+    await page.waitForSelector('[data-testid="lazyLoadContainer-div"]');
 
     const html = await page.content();
     const $ = load(html);
 
     const data = [];
 
-    const keywords = [
-      'สวน',
-      'ถนน',
-      'หัวหิน',
-      'เขา',
-      'ทะเล',
-      'ที่พัก',
-      'ร้านอาหาร',
-      'ร้านกาแฟ',
-      'ภูเก็ต',
-      'Phuket',
-      'Old Phuket Town',
-    ];
     browser.close();
 
-    $('._3y5_T').each((index, element) => {
+    $('[data-testid="lazyLoadContainer-div"]').each((index, element) => {
       const name = $(element).find('blockquote > p > strong').text();
       const description = $(element).find('p').text().trim();
-      const containsKeyword = keywords.some(keyword => description.includes(keyword));
+
       data.push({
         name,
         description,
-        containsKeyword,
       });
     });
 
@@ -76,14 +76,9 @@ export async function GET(request: Request) {
     // Concatenating the original data array with the split objects
     const updatedData = data.concat(splitObjects);
 
-    const cleanedData = updatedData.map((item) => {
-      const name = item.name.replace(/^\d+\.\)\s*/, ''); // Remove the numbering pattern at the start of the string
-      return { ...item, name };
-    });
+    const newData = removePrefixes(updatedData);
 
-    console.log(cleanedData);
-
-    return NextResponse.json(cleanedData);
+    return NextResponse.json(newData);
   }
 
   if (nationalityParam === 'Korean') {
@@ -113,10 +108,12 @@ export async function GET(request: Request) {
     $('._3y5_T').each((index, element) => {
       const name = $(element).find('blockquote > p > strong').text();
       const description = $(element).find('p').text().trim();
+      const places = description.match(regex);
 
       data.push({
         name,
         description,
+        places: places ? places.map((place) => place.trim()) : null,
       });
     });
 
@@ -136,10 +133,8 @@ export async function GET(request: Request) {
 
     const cleanedData = updatedData.map((item) => {
       const name = item.name.replace(/^\d+\.\)\s*/, ''); // Remove the numbering pattern at the start of the string
-      return { ...item, name };
+      return { ...item, name: extractName(name) };
     });
-
-    console.log(cleanedData);
 
     return NextResponse.json(cleanedData);
   }
@@ -169,13 +164,10 @@ export async function GET(request: Request) {
 
     const data = [];
 
-    const keywords = ['หัวหิน'];
-
     $('._UtcWG').each((index, element) => {
       const name = $(element).find('strong').text();
       const placeVisited = $(element).find('._2R5zX').text();
       const image = $(element).find('img').attr('src');
-      const ig = $(element).find('iframe').attr('src');
 
       data.push({
         name,
@@ -184,7 +176,8 @@ export async function GET(request: Request) {
       });
     });
 
-    console.log(data);
     return NextResponse.json(data);
   }
+
+  return NextResponse.json(allData);
 }

@@ -1,27 +1,16 @@
 'use client';
 
 import { Carousel } from '@mantine/carousel';
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Grid,
-  GridCol,
-  Image,
-  Loader,
-  Stack,
-  Title,
-} from '@mantine/core';
+import { Avatar, Box, Button, Container, Grid, GridCol, Image, Stack, Title } from '@mantine/core';
 
 import axios from 'axios';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
 
 async function getRecommendedCelebrities() {
-  const response = await axios.get('/api/recommended/celebrities');
+  const response = await axios.get('/api/scrape');
 
-  return response?.data.data ?? [];
+  return response?.data ?? [];
 }
 
 const NATIONALITY = {
@@ -29,6 +18,35 @@ const NATIONALITY = {
   Chinese: 'cn',
   Thai: 'th',
 };
+
+const mock = [
+  {
+    name: 'Kim Seon Ho',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Kim_Seonho_TEACHA0508.png',
+    nationality: 'South Korean',
+  },
+  {
+    name: 'Jackson Wang',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Jackson_Wang_at_a_mini_fanmeeting_outside_%22Show%21_Music_Core%22_studios%2C_1_June_2019_02.jpg/440px-Jackson_Wang_at_a_mini_fanmeeting_outside_%22Show%21_Music_Core%22_studios%2C_1_June_2019_02.jpg',
+    nationality: 'Chinese',
+  },
+  {
+    name: 'Jumpol Adulkittiporn',
+    image: 'https://image.tmdb.org/t/p/original//alCgpzXB50QWfck3KFlfzkRnXSW.jpg',
+    nationality: 'Thai',
+  },
+  {
+    name: 'Atthaphan Phunsawat',
+    image: 'https://image.tmdb.org/t/p/original//uJ1THfL7y8tuWpCNpow6eoPIr27.jpg',
+    nationality: 'Thai',
+  },
+  {
+    name: 'Tawan Vihokratana',
+    image: 'https://image.tmdb.org/t/p/original//3UvwJGTDRXVYjUfaiLQuk7vKqHR.jpg',
+    nationality: 'Thai',
+  },
+];
 
 export default function Page() {
   const { data: recommendedCelebrities } = useQuery(
@@ -122,17 +140,17 @@ export default function Page() {
               align="center"
               slidesToScroll={4}
             >
-              {recommendedCelebrities?.trendingLists?.map((celebrity: any) => (
-                <Carousel.Slide key={celebrity.title}>
+              {mock?.map((celebrity: any) => (
+                <Carousel.Slide key={celebrity.name}>
                   <Stack justify="center" align="center">
-                    <Avatar size={150} src={celebrity?.image} alt={celebrity?.title} />
-                    <Title order={3} ta="center">
+                    <Avatar size={150} src={celebrity?.image} alt={celebrity?.name} />
+                    <Title order={6} ta="center">
                       <Link
                         href={`/${
                           NATIONALITY[celebrity.nationality as keyof typeof NATIONALITY]
-                        }/celebrities/${celebrity.title}`}
+                        }/celebrities/${celebrity.name}`}
                       >
-                        {celebrity.title}
+                        {celebrity.name}
                       </Link>
                     </Title>
                   </Stack>

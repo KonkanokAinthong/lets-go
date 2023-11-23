@@ -16,19 +16,25 @@ import {
   Title,
 } from '@mantine/core';
 import axios from 'axios';
-import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useQuery } from 'react-query';
 
 const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
 
-const getPlacebyTextSearch = async (place: string) => {
+const getPlacebyTextSearch = async (places: string[]) => {
   try {
-    const response = await axios.get(`/api/places?place=${place}`);
-    return response.data.data.results;
+    const promises = places?.map(async (place) => {
+      const response = await axios.get(`/api/places?place=${place}`);
+      console.log(response);
+      return response.data.data.results[0];
+    });
+
+    const results = await Promise.all(promises);
+    console.log(results);
+    return results;
   } catch (error) {
     console.error(error);
-    throw new Error('Failed to fetch data');
+    return [];
   }
 };
 
@@ -36,14 +42,11 @@ const TMDB_API_TOKEN =
   'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNDg5YjUyNDg3MTdmZjY2NmY3NzhkNzE3NmVmYjdjZiIsInN1YiI6IjY1NTk5ZTI5ZWE4NGM3MTA5NmRmMjk2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.e0lqhUBzvqt4L-OleXqsj8bx_p6yQK46wPabFdYFO1s';
 
 const searchCelebrity = async (name: string) => {
-  const data = await axios.get(
-    `https://api.themoviedb.org/3/search/person?query=${name}&include_adult=false&language=en-US&page=1`,
-    {
-      headers: {
-        Authorization: `Bearer ${TMDB_API_TOKEN}`,
-      },
-    }
-  );
+  const data = await axios.get(`https://api.themoviedb.org/3/search/person?query=${name}`, {
+    headers: {
+      Authorization: `Bearer ${TMDB_API_TOKEN}`,
+    },
+  });
   return data.data.results[0];
 };
 
@@ -57,17 +60,34 @@ const getCelebrityInfo = async (person_id: string) => {
   return data.data;
 };
 
+async function getTrendingKoreanCelebrities() {
+  try {
+    const response = await axios.get('/api/scrape?nationality=Korean');
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to fetch data');
+  }
+}
+
 export default function Page() {
   const { name } = useParams();
-  const placeName = 'Temple in Bangkok';
-  const { data: places } = useQuery('place', () => getPlacebyTextSearch(placeName as string));
+  const decodedName = decodeURIComponent(name as string);
+  const { data: celebs, isLoading: isTrendingLoading } = useQuery(
+    ['trendingKoreanCelebrities', decodedName],
+    getTrendingKoreanCelebrities
+  );
 
-  const { data } = useQuery('celebrity', () => searchCelebrity('Kim Seon Ho' as string));
-  const { data: info } = useQuery('info', () => getCelebrityInfo(data?.id));
+  const filter = celebs?.filter((celeb) => celeb.name === decodedName)[0];
 
-  console.log(data);
+  const { data: places } = useQuery(['places', filter?.places], () =>
+    getPlacebyTextSearch(decodedName === 'Jackson Wang' ? ['หมูกระทะคนรวย'] : filter.places)
+  );
 
-  console.log(info);
+  const { data } = useQuery(['searchCeleb', decodedName], () =>
+    searchCelebrity(decodedName as string)
+  );
+  const { data: info } = useQuery(['info', data?.id], () => getCelebrityInfo(data?.id));
 
   return (
     <Container c="white">
@@ -114,9 +134,7 @@ export default function Page() {
                             src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
                             alt="test"
                           />
-                          <Text component={Link} href="" ta="center">
-                            {item.name ?? item.title}
-                          </Text>
+                          <Text ta="center">{item.name ?? item.title}</Text>
                         </Stack>
                       </Grid.Col>
                     ))}
@@ -127,29 +145,33 @@ export default function Page() {
           </TabsPanel>
           <TabsPanel value="visited-places">
             <Stack justify="center" align="center">
-              {places?.map((place: any) => (
-                <Stack key={place.name}>
-                  <Image
-                    src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${API_KEY}`}
-                    alt="test"
-                  />
-                  <Stack>
-                    <Title order={3} ta="center">
-                      {place.name}
-                    </Title>
-                    <Text size="xs">{place.formatted_address}</Text>
+              {places?.some((place) => place !== undefined) ? (
+                places?.map((place: any) => (
+                  <Stack key={place?.name}>
+                    <Image
+                      src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place?.photos[0].photo_reference}&key=${API_KEY}`}
+                      alt="test"
+                    />
+                    <Stack>
+                      <Title order={3} ta="center">
+                        {place?.name}
+                      </Title>
+                      <Text size="xs">{place?.formatted_address}</Text>
+                    </Stack>
+                    <iframe
+                      title="map"
+                      src={`https://www.google.com/maps/embed/v1/view?key=${API_KEY}&center=${place?.geometry.location.lat},${place?.geometry.location.lng}&zoom=15`}
+                      width="100%"
+                      height="450"
+                      allowFullScreen
+                      loading="lazy"
+                    />
+                    <Divider size="md" w="100%" />
                   </Stack>
-                  <iframe
-                    title="map"
-                    src={`https://www.google.com/maps/embed/v1/view?key=${API_KEY}&center=${place.geometry.location.lat},${place.geometry.location.lng}&zoom=15`}
-                    width="100%"
-                    height="450"
-                    allowFullScreen
-                    loading="lazy"
-                  />
-                  <Divider size="md" w="100%" />
-                </Stack>
-              ))}
+                ))
+              ) : (
+                <Text size="xs">ไม่มีข้อมูล</Text>
+              )}
             </Stack>
           </TabsPanel>
           <TabsPanel value="nearby">

@@ -5,6 +5,13 @@ import { NextResponse } from 'next/server';
 export async function GET(request: Request) {
     const nationalityParam = new URL(request.url).searchParams.get('nationality');
 
+    if (nationalityParam === 'Korean Drama') {
+
+    }
+
+    if (nationalityParam === 'Chinese Drama') {
+    }
+
     if (nationalityParam === 'Thai Drama') {
         const response = await fetch('https://www.gmm25.com/shows.html');
         const html = await response.text();

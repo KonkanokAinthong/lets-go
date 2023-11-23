@@ -16,6 +16,83 @@ async function getTrendingKoreanCelebrities() {
   }
 }
 
+const kcelebrities = [
+  {
+    name: 'Kim Seon Ho',
+    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/1p7xMHRNsrUJacXqOFs1EZqSIvp.jpg',
+  },
+  {
+    name: 'Jackson Wang',
+    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/yPhD9nXzmOVA4IUyVsqv7ZzvTKX.jpg',
+  },
+  {
+    name: 'Song Jung-gi',
+    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/kgjb5OppOVTh5tz3hhnfDVnTvDv.jpg',
+  },
+  {
+    name: 'Kwan Na Ra',
+    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/4U0cNinwOf7DdsBYA3BFi7arDmz.jpg',
+  },
+  {
+    name: 'Kim Jinyoung',
+    image:
+      'https://s359.kapook.com/r/600/auto/pagebuilder/a6250c2e-d0a4-4db1-a4e2-35354e4a586d.jpg',
+  },
+  {
+    name: 'Bak Ji-hyo',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Park_Jihyo_for_Pearly_Gates_Korea_02.jpg/480px-Park_Jihyo_for_Pearly_Gates_Korea_02.jpg',
+  },
+  {
+    name: 'มินนี่',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/%28G%29I-DLE%27s_Minnie_on_June_2023.jpg/440px-%28G%29I-DLE%27s_Minnie_on_June_2023.jpg',
+  },
+  {
+    name: 'Song-Ji-hun',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/140120_%ED%94%BC_%EB%81%93%EB%8A%94_%EC%B2%AD%EC%B6%98_vip%EC%8B%9C%EC%82%AC%ED%9A%8C-%EB%B9%84.jpg/440px-140120_%ED%94%BC_%EB%81%93%EB%8A%94_%EC%B2%AD%EC%B6%98_vip%EC%8B%9C%EC%82%AC%ED%9A%8C-%EB%B9%84.jpg',
+  },
+  {
+    name: 'Baekho',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/180509_%EB%B0%B1%ED%98%B8_01.jpg/440px-180509_%EB%B0%B1%ED%98%B8_01.jpg',
+  },
+];
+
+const kdramaRecommendations = [
+  {
+    actor: 'Kim Seon Ho',
+    series: [
+      {
+        title: 'Start-Up',
+        posterImage:
+          'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/hxJQ3A2wtreuWDnVBbzzXI3YlOE.jpg',
+      },
+    ],
+  },
+  {
+    actor: 'Song Jung-gi',
+    series: [
+      {
+        title: 'Vincenzo',
+        posterImage:
+          'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/dvXJgEDQXhL9Ouot2WkBHpQiHGd.jpg',
+      },
+    ],
+  },
+  {
+    actor: 'Kwan Na Ra',
+    series: [
+      {
+        title: 'Itaewon Class',
+        posterImage:
+          'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/qg7q0piY0fTt2enlIRHwKKRwNjS.jpg',
+      },
+    ],
+  },
+];
+
 export default function Page() {
   const { data: celebs, isLoading: isTrendingLoading } = useQuery(
     'trendingKoreanCelebrities',
@@ -68,9 +145,9 @@ export default function Page() {
               md: 4,
             }}
           >
-            {celebs?.map((celebrity: any) => (
+            {kcelebrities?.map((celebrity: any) => (
               <div
-                key={celebrity.title}
+                key={celebrity.name}
                 style={{
                   justifyContent: 'center',
                   alignItems: 'center',
@@ -78,10 +155,12 @@ export default function Page() {
                   flexDirection: 'column',
                 }}
               >
-                <Avatar src={celebrity?.image} alt="test" size={150} />
-                <Title order={6} ta="center">
-                  <Link href={`/kr/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
-                </Title>
+                <Stack>
+                  <Avatar src={celebrity?.image} alt="test" size={150} />
+                  <Title order={6} ta="center">
+                    <Link href={`/kr/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
+                  </Title>
+                </Stack>
               </div>
             ))}
           </SimpleGrid>
@@ -99,15 +178,16 @@ export default function Page() {
               align="center"
               slidesToScroll={4}
             >
-              {/* {series.map((serie: any) => (
-                <Carousel.Slide key={serie.title}>
-                  <Title order={3} ta="center">
-                    <Image src={serie?.image} alt={serie?.title} />
-                    <Link href={`/kr/series/${serie.title}`}>{serie.title}</Link>
-                    <Text size="xs">{serie.description}</Text>
-                  </Title>
+              {kdramaRecommendations.map((serie: any) => (
+                <Carousel.Slide key={serie.series[0]?.title}>
+                  <Stack>
+                    <Image src={serie.series[0]?.posterImage} alt={serie.series[0]?.title} />
+                    <Title order={6} ta="center">
+                      {serie.series[0]?.title}
+                    </Title>
+                  </Stack>
                 </Carousel.Slide>
-              ))} */}
+              ))}
             </Carousel>
           </Stack>
         </section>
