@@ -34,7 +34,7 @@ const searchCelebrity = async (name: string) => {
       },
     }
   );
-  return data.data.results[0];
+  return data.data?.results?.[0] ?? [];
 };
 
 const getCelebrityInfo = async (person_id: string) => {
@@ -69,7 +69,7 @@ const getPlacebyTextSearch = async (place: string) => {
 
 export default function Page() {
   const { name } = useParams();
-  const placeName = 'Temple in Bangkok';
+  const placeName = 'หัวหิน';
   const { data: celebrity, isLoading: isCelebrityLoading } = useQuery('celebrity', () =>
     searchCelebrity(name as string)
   );

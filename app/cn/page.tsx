@@ -7,15 +7,9 @@ import Link from 'next/link';
 import { useQuery } from 'react-query';
 
 async function getTrendingChineseCelebrities() {
-  const response = await axios.get('/api/trending/celebrities?nationality=Chinese');
+  const response = await axios.get('/api/scrape?nationality=Chinese');
 
-  return response?.data.data ?? [];
-}
-
-async function getRecommendedChineseSeries() {
-  const response = await axios.get('/api/recommended/series?nationality=Chinese Drama');
-
-  return response.data ?? [];
+  return response?.data ?? [];
 }
 
 export default function Page() {
@@ -25,10 +19,6 @@ export default function Page() {
   );
 
   console.log(celebrities);
-
-  const { data: series } = useQuery('recommendedChineseSeries', getRecommendedChineseSeries);
-
-  console.log(series);
 
   return (
     <Container c="white">
@@ -42,9 +32,9 @@ export default function Page() {
             md: 4,
           }}
         >
-          {/* {filteredLists?.map((celebrity: any) => (
+          {celebrities?.map((celebrity: any) => (
             <div
-              key={celebrity.title}
+              key={celebrity?.name}
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -52,13 +42,13 @@ export default function Page() {
                 flexDirection: 'column',
               }}
             >
-              <Avatar size={150} src={celebrity.image} alt={celebrity.title} />
+              <Avatar size={150} src={celebrity?.image} alt={celebrity.name} />
 
-              <Title order={3}>
-                <Link href={`/cn/celebrities/${celebrity.title}`}>{celebrity.title}</Link>
+              <Title order={6}>
+                <Link href={`/cn/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
               </Title>
             </div>
-          ))} */}
+          ))}
         </SimpleGrid>
 
         <section>

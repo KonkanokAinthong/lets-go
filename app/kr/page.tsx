@@ -16,30 +16,15 @@ async function getTrendingKoreanCelebrities() {
   }
 }
 
-async function getRecommendedKoreanSeries() {
-  try {
-    const response = await axios.get('/api/recommended/series?nationality=Korean Drama');
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error('Failed to fetch data');
-  }
-}
-
 export default function Page() {
   const { data: celebs, isLoading: isTrendingLoading } = useQuery(
     'trendingKoreanCelebrities',
     getTrendingKoreanCelebrities
   );
 
-  const { data: series, isLoading: isSeriesLoading } = useQuery(
-    'recommendedKoreanSeries',
-    getRecommendedKoreanSeries
-  );
-
   console.log(celebs);
 
-  if (isTrendingLoading || isSeriesLoading) {
+  if (isTrendingLoading) {
     return (
       <Container>
         <Stack>
@@ -80,7 +65,7 @@ export default function Page() {
               md: 3,
             }}
           >
-            {celebs?.celebLists?.map((celebrity: any) => (
+            {celebs?.map((celebrity: any) => (
               <div
                 key={celebrity.title}
                 style={{
@@ -90,9 +75,9 @@ export default function Page() {
                   flexDirection: 'column',
                 }}
               >
-                <Avatar src={celebrity.image} alt="test" size={150} />
-                <Title order={3}>
-                  <Link href={`/kr/celebrities/${celebrity.title}`}>{celebrity.title}</Link>
+                <Avatar src={celebrity?.image} alt="test" size={150} />
+                <Title order={6}>
+                  <Link href={`/kr/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
                 </Title>
               </div>
             ))}
@@ -111,7 +96,7 @@ export default function Page() {
               align="center"
               slidesToScroll={4}
             >
-              {series.map((serie: any) => (
+              {/* {series.map((serie: any) => (
                 <Carousel.Slide key={serie.title}>
                   <Title order={3} ta="center">
                     <Image src={serie?.image} alt={serie?.title} />
@@ -119,7 +104,7 @@ export default function Page() {
                     <Text size="xs">{serie.description}</Text>
                   </Title>
                 </Carousel.Slide>
-              ))}
+              ))} */}
             </Carousel>
           </Stack>
         </section>

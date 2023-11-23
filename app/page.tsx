@@ -18,14 +18,10 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
 
-async function getTrendingCelebrities() {
-  try {
-    const response = await axios.get('/api/trending/celebrities');
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error('Failed to fetch data');
-  }
+async function getRecommendedCelebrities() {
+  const response = await axios.get('/api/recommended/celebrities');
+
+  return response?.data.data ?? [];
 }
 
 const NATIONALITY = {
@@ -34,18 +30,13 @@ const NATIONALITY = {
   Thai: 'th',
 };
 
-export default function HomePage() {
-  const { data: trending, isLoading: isTrendingLoading } = useQuery(
-    'trendingCelebrities',
-    getTrendingCelebrities
+export default function Page() {
+  const { data: recommendedCelebrities } = useQuery(
+    'recommendedCelebrities',
+    getRecommendedCelebrities
   );
 
-  console.log(trending);
-
-  if (isTrendingLoading) {
-    return <Loader />;
-  }
-
+  console.log(recommendedCelebrities);
   return (
     <Container size="xl">
       <Stack gap="xl">
@@ -131,7 +122,7 @@ export default function HomePage() {
               align="center"
               slidesToScroll={4}
             >
-              {trending?.trendingLists?.map((celebrity: any) => (
+              {recommendedCelebrities?.trendingLists?.map((celebrity: any) => (
                 <Carousel.Slide key={celebrity.title}>
                   <Stack justify="center" align="center">
                     <Avatar size={150} src={celebrity?.image} alt={celebrity?.title} />

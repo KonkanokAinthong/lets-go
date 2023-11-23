@@ -8,6 +8,8 @@ export async function GET(request: Request) {
     const html = await response.text();
     const $ = load(html);
 
+    const celebrities = ["Yang Yunqing", "Sunnee"]
+
     const trending = $('li.fs-item');
 
     const trendingLists = trending
