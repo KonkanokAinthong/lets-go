@@ -28,10 +28,13 @@ export default function Page() {
     return (
       <Container>
         <Stack>
+          <Title order={1} ta="center" c="white">
+            Top Trending Korean Celebrities
+          </Title>
           <SimpleGrid
             cols={{
               xs: 12,
-              md: 3,
+              md: 4,
             }}
           >
             {Array.from({ length: 12 }).map((_, index) => (
@@ -44,7 +47,7 @@ export default function Page() {
                   flexDirection: 'column',
                 }}
               >
-                <Skeleton key={index} w={200} h={200} />
+                <Skeleton key={index} circle w={150} h={150} />
               </div>
             ))}
           </SimpleGrid>
@@ -62,7 +65,7 @@ export default function Page() {
           <SimpleGrid
             cols={{
               xs: 12,
-              md: 3,
+              md: 4,
             }}
           >
             {celebs?.map((celebrity: any) => (
@@ -76,7 +79,7 @@ export default function Page() {
                 }}
               >
                 <Avatar src={celebrity?.image} alt="test" size={150} />
-                <Title order={6}>
+                <Title order={6} ta="center">
                   <Link href={`/kr/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
                 </Title>
               </div>

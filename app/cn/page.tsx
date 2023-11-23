@@ -1,7 +1,7 @@
 'use client';
 
 import { Carousel } from '@mantine/carousel';
-import { Avatar, Container, Image, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import { Avatar, Container, SimpleGrid, Skeleton, Stack, Title } from '@mantine/core';
 import axios from 'axios';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
@@ -13,12 +13,42 @@ async function getTrendingChineseCelebrities() {
 }
 
 export default function Page() {
-  const { data: celebrities } = useQuery(
+  const { data: celebrities, isLoading } = useQuery(
     'trendingChineseCelebrities',
     getTrendingChineseCelebrities
   );
 
-  console.log(celebrities);
+  if (isLoading) {
+    return (
+      <Container>
+        <Stack>
+          <Title order={1} ta="center" c="white">
+            Top Trending Chinese Celebrities
+          </Title>
+          <SimpleGrid
+            cols={{
+              xs: 12,
+              md: 4,
+            }}
+          >
+            {Array.from({ length: 12 }).map((_, index) => (
+              <div
+                key={index}
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <Skeleton key={index} circle w={150} h={150} />
+              </div>
+            ))}
+          </SimpleGrid>
+        </Stack>
+      </Container>
+    );
+  }
 
   return (
     <Container c="white">
@@ -44,7 +74,7 @@ export default function Page() {
             >
               <Avatar size={150} src={celebrity?.image} alt={celebrity.name} />
 
-              <Title order={6}>
+              <Title order={6} ta="center">
                 <Link href={`/cn/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
               </Title>
             </div>

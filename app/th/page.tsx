@@ -1,8 +1,9 @@
 'use client';
 
 import { Carousel } from '@mantine/carousel';
-import { Avatar, Container, Grid, Image, Stack, Title } from '@mantine/core';
+import { Avatar, Container, Grid, Image, SimpleGrid, Skeleton, Stack, Title } from '@mantine/core';
 import axios from 'axios';
+import { is } from 'cheerio/lib/api/traversing';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
 
@@ -38,7 +39,7 @@ export default function Page() {
     'Thitipoom Techaapaikhun',
   ];
 
-  const { data: celebrities } = useQuery('trendingThaiCelebrities', () =>
+  const { data: celebrities, isLoading } = useQuery('trendingThaiCelebrities', () =>
     searchCelebrity(thaiCelebs)
   );
 
@@ -56,6 +57,38 @@ export default function Page() {
   const uniqueSeries = trendingSeries?.filter((obj) => uniqueNames?.includes(obj?.name));
 
   console.log(uniqueSeries);
+
+  if (isLoading) {
+    return (
+      <Container>
+        <Stack>
+          <Title order={1} ta="center" c="white">
+            Top Trending Thai Celebrities
+          </Title>
+          <SimpleGrid
+            cols={{
+              xs: 12,
+              md: 4,
+            }}
+          >
+            {Array.from({ length: 12 }).map((_, index) => (
+              <div
+                key={index}
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  display: 'flex',
+                  flexDirection: 'column',
+                }}
+              >
+                <Skeleton key={index} circle w={150} h={150} />
+              </div>
+            ))}
+          </SimpleGrid>
+        </Stack>
+      </Container>
+    );
+  }
 
   return (
     <Container c="white">
@@ -88,7 +121,7 @@ export default function Page() {
                       alt={celebrity.name}
                     />
 
-                    <Title order={3}>
+                    <Title order={3} ta="center">
                       <Link href={`/th/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
                     </Title>
                   </div>
