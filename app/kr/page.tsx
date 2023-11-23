@@ -8,7 +8,7 @@ import { useQuery } from 'react-query';
 
 async function getTrendingKoreanCelebrities() {
   try {
-    const response = await axios.get('http://localhost:3000/api/scrape');
+    const response = await axios.get('/api/scrape?nationality=Korean');
     return response.data;
   } catch (error) {
     console.error(error);
@@ -27,7 +27,7 @@ async function getRecommendedKoreanSeries() {
 }
 
 export default function Page() {
-  const { data: trending, isLoading: isTrendingLoading } = useQuery(
+  const { data: celebs, isLoading: isTrendingLoading } = useQuery(
     'trendingKoreanCelebrities',
     getTrendingKoreanCelebrities
   );
@@ -36,6 +36,8 @@ export default function Page() {
     'recommendedKoreanSeries',
     getRecommendedKoreanSeries
   );
+
+  console.log(celebs);
 
   if (isTrendingLoading || isSeriesLoading) {
     return (
@@ -78,7 +80,7 @@ export default function Page() {
               md: 3,
             }}
           >
-            {trending?.trendingLists?.map((celebrity: any) => (
+            {celebs?.celebLists?.map((celebrity: any) => (
               <div
                 key={celebrity.title}
                 style={{

@@ -9,7 +9,7 @@ import { useQuery } from 'react-query';
 async function getTrendingChineseCelebrities() {
   const response = await axios.get('/api/trending/celebrities?nationality=Chinese');
 
-  return response?.data?.filteredLists ?? [];
+  return response?.data.data ?? [];
 }
 
 async function getRecommendedChineseSeries() {
@@ -19,10 +19,12 @@ async function getRecommendedChineseSeries() {
 }
 
 export default function Page() {
-  const { data: filteredLists } = useQuery(
+  const { data: celebrities } = useQuery(
     'trendingChineseCelebrities',
     getTrendingChineseCelebrities
   );
+
+  console.log(celebrities);
 
   const { data: series } = useQuery('recommendedChineseSeries', getRecommendedChineseSeries);
 
@@ -34,8 +36,13 @@ export default function Page() {
         <Title order={1} ta="center" c="white">
           Top Trending Chinese Celebrities
         </Title>
-        <SimpleGrid cols={3}>
-          {filteredLists?.map((celebrity: any) => (
+        <SimpleGrid
+          cols={{
+            xs: 12,
+            md: 4,
+          }}
+        >
+          {/* {filteredLists?.map((celebrity: any) => (
             <div
               key={celebrity.title}
               style={{
@@ -51,7 +58,7 @@ export default function Page() {
                 <Link href={`/cn/celebrities/${celebrity.title}`}>{celebrity.title}</Link>
               </Title>
             </div>
-          ))}
+          ))} */}
         </SimpleGrid>
 
         <section>
@@ -63,10 +70,9 @@ export default function Page() {
               slideSize={{ base: '100%', sm: '50%', md: '25%' }}
               slideGap="md"
               loop
-              align="center"
               slidesToScroll={4}
             >
-              {series?.map((serie: any) => (
+              {/* {series?.map((serie: any) => (
                 <Carousel.Slide key={serie.title}>
                   <Title order={3} ta="center">
                     <Image src={serie?.image} alt={serie?.title} />
@@ -74,7 +80,7 @@ export default function Page() {
                     <Text size="xs">{serie.description}</Text>
                   </Title>
                 </Carousel.Slide>
-              ))}
+              ))} */}
             </Carousel>
           </Stack>
         </section>

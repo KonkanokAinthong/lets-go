@@ -9,12 +9,13 @@ import {
   Box,
   Burger,
   Group,
+  Image,
   Loader,
   NavLink,
   Title,
   rem,
 } from '@mantine/core';
-import { IconNavigationCheck, IconSearch } from '@tabler/icons-react';
+import { IconSearch } from '@tabler/icons-react';
 import { useState } from 'react';
 import axios from 'axios';
 
@@ -47,7 +48,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <Group justify="space-between" style={{ flex: 1 }}>
             <Box>
               <NavLink
-                leftSection={<IconNavigationCheck color="#ff6a1a" />}
+                leftSection={<Image src="/logo.png" width={40} height={40} alt="logo" />}
                 label={
                   <Title order={3} c="#ff6a1a">
                     Let's go
@@ -76,7 +77,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <AppShell.Navbar py="md" px={4}>
         <Box>
           <NavLink
-            leftSection={<IconNavigationCheck color="#ff6a1a" />}
+            leftSection={<Image src="/logo.png" width={40} height={40} alt="logo" />}
             label={
               <Title order={3} c="#ff6a1a">
                 Let's go

@@ -1,45 +1,137 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { load } from 'cheerio';
 import { NextResponse } from 'next/server';
+import puppeteer from 'puppeteer';
+import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
 
 export async function GET(request: Request) {
     const nationalityParam = new URL(request.url).searchParams.get('nationality');
-    const response = await fetch('https://mydramalist.com/stats/leaderboards/monthly');
-    const html = await response.text();
-    const $ = load(html);
+    const browser = await puppeteer.launch({
+        headless: 'new',
+    });
 
-    const trending = $('li.fs-item');
+    const page = await browser.newPage();
+    await page.setViewport({ width: 1300, height: 1000 });
 
-    const trendingLists = trending
-        .map((tredningListIndex, trendingListElement) => {
-            const $el = $(trendingListElement);
-            const titles = $el
-                .find('div.fs-details > div.details > a > b')
-                .map((titleElementIndex, titleElement) => $(titleElement).text())
-                .get();
+    if (nationalityParam === 'Chinese') {
+        await page.goto('https://entertainment.trueid.net/detail/oAKNDN8dQ8o2', {
+            waitUntil: 'domcontentloaded',
+        });
 
-            const images = $el
-                .find('div.fs-details > a > img')
-                .map((imageIndex, imageElement) => $(imageElement).attr('src'))
-                .get();
+        // Scroll to the very top of the page
+        await page.evaluate(() => {
+            window.scrollTo(0, 0);
+        });
 
-            const nationality = $el.find('div.fs-details > div.details > div').text();
+        // Scroll to the bottom of the page with puppeteer-autoscroll-down
+        await scrollPageToBottom(page, {
+            size: 500,
+        });
 
-            const data = titles.map((title, index) => ({
-                title,
-                image: images[index] || null,
-                nationality,
-            }));
+        await page.waitForSelector('._UtcWG');
 
-            return data;
-        })
-        .get();
+        const html = await page.content();
+        const $ = load(html);
 
-    if (nationalityParam) {
-        const filteredLists = trendingLists.filter((item) => item.nationality === nationalityParam);
+        const data = [];
 
-        return NextResponse.json({ filteredLists });
+        const keywords = ['สวน', 'ถนน', 'วัด', 'ตลาด', 'ร้าน', 'บาร์', 'จังหวัด', 'เมือง', 'อำเภอ', 'ตำบล', 'Old Phuket Town', 'ภูเก็ต', 'กรุงเทพ', 'ตลาดนัดจตุจักร', 'ตลาดนัดอัมพวา', 'ทะเลหัวหิน'];
+
+        $('._UtcWG').each((index, element) => {
+            const name = $(element).find('blockquote > p > strong').text();
+            const placeVisited = $(element).find('._2R5zX').text();
+            const image = $(element).find('._2R5zX').text();
+
+            data.push({
+                name,
+                placeVisited,
+                image,
+            });
+        });
+
+        console.log(data);
+        return NextResponse.json(data);
     }
 
-    return NextResponse.json({ trendingLists });
+    if (nationalityParam === 'Korean') {
+        await page.goto('https://entertainment.trueid.net/detail/oAKNDN8dQ8o2', {
+            waitUntil: 'domcontentloaded',
+        });
+
+        // Scroll to the very top of the page
+        await page.evaluate(() => {
+            window.scrollTo(0, 0);
+        });
+
+        // Scroll to the bottom of the page with puppeteer-autoscroll-down
+        await scrollPageToBottom(page, {
+            size: 500,
+        });
+
+        await page.waitForSelector('._UtcWG');
+
+        const html = await page.content();
+        const $ = load(html);
+
+        const data = [];
+
+        const keywords = ['สวน', 'ถนน'];
+
+        $('._UtcWG').each((index, element) => {
+            const name = $(element).find('blockquote > p > strong').text();
+            const placeVisited = $(element).find('._2R5zX').text();
+            const image = $(element).find('._2R5zX').text();
+
+            data.push({
+                name,
+                placeVisited,
+                image,
+            });
+        });
+
+        console.log(data);
+        return NextResponse.json(data);
+    }
+
+    if (nationalityParam === 'Thai') {
+        await page.goto('https://www.mintmagth.com/people/offgun-taynew-beluca-huahin/?fbclid=IwAR1NNttw_jtkyLAcFCeMOyeYq_2d13NDmAVDqypV8sb4HWkJ7mUT9ukt7WU', {
+            waitUntil: 'domcontentloaded',
+        });
+
+        // Scroll to the very top of the page
+        await page.evaluate(() => {
+            window.scrollTo(0, 0);
+        });
+
+        // Scroll to the bottom of the page with puppeteer-autoscroll-down
+        await scrollPageToBottom(page, {
+            size: 500,
+        });
+
+        await page.waitForSelector('div.content-detail');
+
+        const html = await page.content();
+        const $ = load(html);
+
+        const data = [];
+
+        const keywords = ['หัวหิน'];
+
+        $('._UtcWG').each((index, element) => {
+            const name = $(element).find('strong').text();
+            const placeVisited = $(element).find('._2R5zX').text();
+            const image = $(element).find('img').attr('src');
+
+            data.push({
+                name,
+                placeVisited,
+                image,
+            });
+        });
+
+        console.log(data);
+        return NextResponse.json(data);
+    }
+
+    browser.close();
 }

@@ -1,9 +1,11 @@
 'use client';
 
 import {
+  Avatar,
   Center,
   Container,
   Divider,
+  Grid,
   Image,
   Stack,
   Tabs,
@@ -14,6 +16,7 @@ import {
   Title,
 } from '@mantine/core';
 import axios from 'axios';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useQuery } from 'react-query';
 
@@ -29,33 +32,52 @@ const getPlacebyTextSearch = async (place: string) => {
   }
 };
 
-// const getNearbyPlaces = async (place: string) => {
-//   try {
-//     const response = await axios.get(`/api/nearby-places?place=${place}`);
-//     return response.data.data.results;
-//   } catch (error) {
-//     console.error(error);
-//     throw new Error('Failed to fetch data');
-//   }
-// };
+const TMDB_API_TOKEN =
+  'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNDg5YjUyNDg3MTdmZjY2NmY3NzhkNzE3NmVmYjdjZiIsInN1YiI6IjY1NTk5ZTI5ZWE4NGM3MTA5NmRmMjk2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.e0lqhUBzvqt4L-OleXqsj8bx_p6yQK46wPabFdYFO1s';
+
+const searchCelebrity = async (name: string) => {
+  const data = await axios.get(
+    `https://api.themoviedb.org/3/search/person?query=${name}&include_adult=false&language=en-US&page=1`,
+    {
+      headers: {
+        Authorization: `Bearer ${TMDB_API_TOKEN}`,
+      },
+    }
+  );
+  return data.data.results[0];
+};
+
+const getCelebrityInfo = async (person_id: string) => {
+  const data = await axios.get(`https://api.themoviedb.org/3/person/${person_id}`, {
+    headers: {
+      Authorization: `Bearer ${TMDB_API_TOKEN}`,
+    },
+  });
+
+  return data.data;
+};
 
 export default function Page() {
   const { name } = useParams();
   const placeName = 'Temple in Bangkok';
   const { data: places } = useQuery('place', () => getPlacebyTextSearch(placeName as string));
-  // const { data: nearbyPlaces } = useQuery('nearbyPlaces', () =>
-  //   getNearbyPlaces(placeName as string)
-  // );
-  // console.log(places);
-  // console.log(nearbyPlaces);
 
-  console.log(places);
+  const { data } = useQuery('celebrity', () => searchCelebrity('Kim Seon Ho' as string));
+  const { data: info } = useQuery('info', () => getCelebrityInfo(data?.id));
+
+  console.log(data);
+
+  console.log(info);
 
   return (
     <Container c="white">
       <Stack>
         <Center>
-          {/* <Avatar size={200} src={data?.query?.pages?.[randomKey]?.thumbnail?.source} alt="test" /> */}
+          <Avatar
+            size={200}
+            src={`https://image.tmdb.org/t/p/original/${info?.profile_path}`}
+            alt="test"
+          />
         </Center>
         <Title order={1} ta="center">
           {decodeURIComponent(name as string)}
@@ -67,18 +89,42 @@ export default function Page() {
             <TabsTab value="visited-places">การท่องเที่ยว</TabsTab>
             <TabsTab value="nearby">สถานที่ท่องเที่ยวใกล้เคียง</TabsTab>
           </TabsList>
-          {/* <TabsPanel value="info">
-            {data?.query?.pages?.[randomKey]?.extract ? (
-              <Text
-                size="xs"
-                dangerouslySetInnerHTML={{
-                  __html: data?.query?.pages?.[randomKey]?.extract,
-                }}
-              />
-            ) : (
-              <Text size="xs">ไม่มีข้อมูล</Text>
-            )}
-          </TabsPanel> */}
+          <TabsPanel value="info">
+            <Stack>
+              <div>
+                {info?.biography ? (
+                  <Text size="xs">{info?.biography}</Text>
+                ) : (
+                  <Text size="xs">ไม่มีข้อมูล</Text>
+                )}
+              </div>
+              <div>
+                <Stack>
+                  <Title order={3}>Known For</Title>
+                  <Grid>
+                    {data?.known_for?.map((item) => (
+                      <Grid.Col
+                        span={{
+                          xs: 12,
+                          md: 4,
+                        }}
+                      >
+                        <Stack key={item.id}>
+                          <Image
+                            src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
+                            alt="test"
+                          />
+                          <Text component={Link} href="" ta="center">
+                            {item.name ?? item.title}
+                          </Text>
+                        </Stack>
+                      </Grid.Col>
+                    ))}
+                  </Grid>
+                </Stack>
+              </div>
+            </Stack>
+          </TabsPanel>
           <TabsPanel value="visited-places">
             <Stack justify="center" align="center">
               {places?.map((place: any) => (

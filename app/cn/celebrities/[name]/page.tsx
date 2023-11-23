@@ -17,6 +17,7 @@ import {
   Title,
 } from '@mantine/core';
 import axios from 'axios';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useQuery } from 'react-query';
 
@@ -140,9 +141,9 @@ export default function Page() {
                             src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
                             alt="test"
                           />
-                          <Title order={6} ta="center">
-                            {item.name}
-                          </Title>
+                          <Text component={Link} href="" ta="center">
+                            {item.name ?? item.title}
+                          </Text>
                         </Stack>
                       </Grid.Col>
                     ))}
