@@ -1,9 +1,8 @@
 'use client';
 
 import { Carousel } from '@mantine/carousel';
-import { Avatar, Container, Grid, Image, SimpleGrid, Skeleton, Stack, Title } from '@mantine/core';
+import { Avatar, Container, Grid, Image, Skeleton, Stack, Title } from '@mantine/core';
 import axios from 'axios';
-import { is } from 'cheerio/lib/api/traversing';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
 
@@ -56,35 +55,35 @@ export default function Page() {
 
   const uniqueSeries = trendingSeries?.filter((obj) => uniqueNames?.includes(obj?.name));
 
-  console.log(uniqueSeries);
-
   if (isLoading) {
     return (
-      <Container>
+      <Container size="xl">
         <Stack>
           <Title order={1} ta="center" c="white">
             Top Trending Thai Celebrities
           </Title>
-          <SimpleGrid
-            cols={{
-              xs: 12,
-              md: 4,
-            }}
-          >
+          <Grid columns={24} gutter={64} justify="center" align="center">
             {Array.from({ length: 12 }).map((_, index) => (
-              <div
-                key={index}
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  display: 'flex',
-                  flexDirection: 'column',
+              <Grid.Col
+                span={{
+                  xs: 12,
+                  md: 8,
                 }}
               >
-                <Skeleton key={index} circle w={150} h={150} />
-              </div>
+                <div
+                  key={index}
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <Skeleton key={index} circle w={124} h={124} />
+                </div>
+              </Grid.Col>
             ))}
-          </SimpleGrid>
+          </Grid>
         </Stack>
       </Container>
     );
@@ -98,34 +97,32 @@ export default function Page() {
             <Title order={1} ta="center" c="white">
               Top Trending Thai Celebrities
             </Title>
-            <Grid>
+            <Grid gutter={64} columns={24} justify="center" align="center">
               {celebrities?.map((celebrity: any) => (
                 <Grid.Col
                   key={celebrity.name}
                   span={{
                     xs: 12,
-                    md: 4,
+                    md: 8,
                   }}
                 >
                   <div
                     style={{
-                      justifyContent: 'center',
-                      alignItems: 'center',
                       display: 'flex',
                       flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      gap: 16,
                     }}
                   >
-                    <Stack>
-                      <Avatar
-                        size={150}
-                        src={`https://image.tmdb.org/t/p/original/${celebrity.profile_path}`}
-                        alt={celebrity.name}
-                      />
-
-                      <Title order={6} ta="center">
-                        {celebrity.name}
-                      </Title>
-                    </Stack>
+                    <Avatar
+                      size={124}
+                      src={`https://image.tmdb.org/t/p/original/${celebrity.profile_path}`}
+                      alt={celebrity.name}
+                    />
+                    <Title order={6} ta="center">
+                      <Link href={`/th/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
+                    </Title>
                   </div>
                 </Grid.Col>
               ))}
@@ -141,7 +138,6 @@ export default function Page() {
             <Carousel
               slideSize={{ base: '100%', sm: '50%', md: '25%' }}
               slideGap="md"
-              loop
               align="center"
               slidesToScroll="auto"
             >

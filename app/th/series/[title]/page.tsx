@@ -38,7 +38,7 @@ export default function Page() {
 
   if (isTrendingLoading || isSeriesLoading) {
     return (
-      <Container>
+      <Container size="xl" c="white">
         <Stack>
           <SimpleGrid
             cols={{
@@ -65,7 +65,7 @@ export default function Page() {
     );
   }
   return (
-    <Container c="white">
+    <Container size="xl" c="white">
       <Stack>
         <Title order={1} ta="center" c="white">
           Top Trending Korean Celebrities

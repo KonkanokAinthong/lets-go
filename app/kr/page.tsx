@@ -5,6 +5,7 @@ import {
   Avatar,
   Container,
   Grid,
+  GridCol,
   Image,
   SimpleGrid,
   Skeleton,
@@ -111,50 +112,51 @@ export default function Page() {
 
   if (isTrendingLoading) {
     return (
-      <Container>
+      <Container size="xl" c="white">
         <Stack>
           <Title order={1} ta="center" c="white">
             Top Trending Korean Celebrities
           </Title>
-          <SimpleGrid
-            cols={{
-              xs: 12,
-              md: 3,
-            }}
-          >
+          <Grid columns={24} gutter={64} justify="center" align="center">
             {Array.from({ length: 12 }).map((_, index) => (
-              <div
-                key={index}
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  display: 'flex',
-                  flexDirection: 'column',
+              <Grid.Col
+                span={{
+                  xs: 12,
+                  md: 8,
                 }}
               >
-                <Skeleton key={index} circle w={150} h={150} />
-              </div>
+                <div
+                  key={index}
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <Skeleton key={index} circle w={124} h={124} />
+                </div>
+              </Grid.Col>
             ))}
-          </SimpleGrid>
+          </Grid>
         </Stack>
       </Container>
     );
   }
   return (
-    <Container c="white">
+    <Container size="xl" c="white">
       <Stack justify="center" align="center">
         <Title order={1} mb={48} ta="center" c="white">
           Top Trending Korean Celebrities
         </Title>
 
-        <Grid gutter={64} justify="center" align="center">
+        <Grid gutter={64} columns={24} justify="center" align="center">
           {kcelebrities?.map((celebrity: any) => (
             <Grid.Col
               key={celebrity.name}
               span={{
-                xs: 6,
-                sm: 6,
-                md: 4,
+                xs: 12,
+                md: 8,
               }}
             >
               <div
@@ -166,7 +168,7 @@ export default function Page() {
                   gap: 16,
                 }}
               >
-                <Avatar src={celebrity?.image} alt="test" size={150} />
+                <Avatar src={celebrity?.image} alt="test" size="124" />
                 <Title order={6} ta="center">
                   <Link href={`/kr/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
                 </Title>
@@ -183,7 +185,6 @@ export default function Page() {
             <Carousel
               slideSize={{ base: '100%', sm: '50%', md: '25%' }}
               slideGap="md"
-              loop
               align="center"
               slidesToScroll="auto"
             >

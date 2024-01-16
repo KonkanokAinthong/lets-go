@@ -1,7 +1,7 @@
 'use client';
 
 import { Carousel } from '@mantine/carousel';
-import { Avatar, Container, Image, SimpleGrid, Skeleton, Stack, Text, Title } from '@mantine/core';
+import { Avatar, Container, Grid, Image, Skeleton, Stack, Title } from '@mantine/core';
 import axios from 'axios';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
@@ -79,70 +79,72 @@ export default function Page() {
     getTrendingChineseCelebrities
   );
 
-  console.log(celebrities);
-
   if (isLoading) {
     return (
-      <Container>
+      <Container size="xl" c="white">
         <Stack>
           <Title order={1} ta="center" c="white">
             Top Trending Chinese Celebrities
           </Title>
-          <SimpleGrid
-            cols={{
-              xs: 12,
-              md: 4,
-            }}
-          >
+          <Grid columns={24} gutter={64} justify="center" align="center">
             {Array.from({ length: 12 }).map((_, index) => (
-              <div
-                key={index}
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  display: 'flex',
-                  flexDirection: 'column',
+              <Grid.Col
+                span={{
+                  xs: 12,
+                  md: 8,
                 }}
               >
-                <Skeleton key={index} circle w={150} h={150} />
-              </div>
+                <div
+                  key={index}
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
+                >
+                  <Skeleton key={index} circle w={124} h={124} />
+                </div>
+              </Grid.Col>
             ))}
-          </SimpleGrid>
+          </Grid>
         </Stack>
       </Container>
     );
   }
 
   return (
-    <Container c="white">
+    <Container size="xl" c="white">
       <Stack>
         <Title order={1} ta="center" c="white">
           Top Trending Chinese Celebrities
         </Title>
-        <SimpleGrid
-          cols={{
-            xs: 12,
-            md: 4,
-          }}
-        >
+        <Grid gutter={64} columns={24} align="center" justify="center">
           {mockCelebrities?.map((celebrity: any) => (
-            <div
+            <Grid.Col
               key={celebrity?.name}
-              style={{
-                justifyContent: 'center',
-                alignItems: 'center',
-                display: 'flex',
-                flexDirection: 'column',
+              span={{
+                xs: 12,
+                md: 8,
               }}
             >
-              <Avatar size={150} src={celebrity?.image} alt={celebrity.name} />
-
-              <Title order={6} ta="center">
-                <Link href={`/cn/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
-              </Title>
-            </div>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 16,
+                }}
+              >
+                <Avatar size={124} src={celebrity?.image} alt={celebrity.name} />
+                <Title order={6} ta="center">
+                  <Link href={`/cn/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
+                </Title>
+              </div>
+            </Grid.Col>
           ))}
-        </SimpleGrid>
+        </Grid>
 
         <section>
           <Stack my="xl">
@@ -152,7 +154,7 @@ export default function Page() {
             <Carousel
               slideSize={{ base: '100%', sm: '50%', md: '25%' }}
               slideGap="md"
-              loop
+              align="center"
               slidesToScroll="auto"
             >
               {mockSeries?.map((serie: any) => (

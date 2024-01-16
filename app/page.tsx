@@ -54,7 +54,6 @@ export default function Page() {
     getRecommendedCelebrities
   );
 
-  console.log(recommendedCelebrities);
   return (
     <Container size="xl">
       <Stack gap="xl">
