@@ -176,7 +176,7 @@ export default function Page() {
               slideGap="md"
               loop
               align="center"
-              slidesToScroll={4}
+              slidesToScroll="auto"
             >
               {kdramaRecommendations.map((serie: any) => (
                 <Carousel.Slide key={serie.series[0]?.title}>

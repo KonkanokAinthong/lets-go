@@ -153,7 +153,7 @@ export default function Page() {
               slideSize={{ base: '100%', sm: '50%', md: '25%' }}
               slideGap="md"
               loop
-              slidesToScroll={4}
+              slidesToScroll="auto"
             >
               {mockSeries?.map((serie: any) => (
                 <Carousel.Slide key={serie.title}>

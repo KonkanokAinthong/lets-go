@@ -138,7 +138,7 @@ export default function Page() {
               slideGap="md"
               loop
               align="center"
-              slidesToScroll={4}
+              slidesToScroll="auto"
             >
               {mock?.map((celebrity: any) => (
                 <Carousel.Slide key={celebrity.name}>

@@ -143,7 +143,7 @@ export default function Page() {
               slideGap="md"
               loop
               align="center"
-              slidesToScroll={4}
+              slidesToScroll="auto"
             >
               {uniqueSeries?.map((serie: any) => (
                 <Carousel.Slide key={serie.name}>
