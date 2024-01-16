@@ -106,7 +106,7 @@ export default function Page() {
               slideGap="md"
               loop
               align="center"
-              slidesToScroll={4}
+              slidesToScroll="auto"
             >
               {series.map((serie: any) => (
                 <Carousel.Slide key={serie.title}>
