@@ -1,7 +1,17 @@
 'use client';
 
 import { Carousel } from '@mantine/carousel';
-import { Avatar, Container, Image, SimpleGrid, Skeleton, Stack, Text, Title } from '@mantine/core';
+import {
+  Avatar,
+  Container,
+  Grid,
+  Image,
+  SimpleGrid,
+  Skeleton,
+  Stack,
+  Text,
+  Title,
+} from '@mantine/core';
 import axios from 'axios';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
@@ -99,8 +109,6 @@ export default function Page() {
     getTrendingKoreanCelebrities
   );
 
-  console.log(celebs);
-
   if (isTrendingLoading) {
     return (
       <Container>
@@ -111,7 +119,7 @@ export default function Page() {
           <SimpleGrid
             cols={{
               xs: 12,
-              md: 4,
+              md: 3,
             }}
           >
             {Array.from({ length: 12 }).map((_, index) => (
@@ -134,37 +142,38 @@ export default function Page() {
   }
   return (
     <Container c="white">
-      <Stack>
-        <Title order={1} ta="center" c="white">
+      <Stack justify="center" align="center">
+        <Title order={1} mb={48} ta="center" c="white">
           Top Trending Korean Celebrities
         </Title>
-        <div>
-          <SimpleGrid
-            cols={{
-              xs: 12,
-              md: 4,
-            }}
-          >
-            {kcelebrities?.map((celebrity: any) => (
+
+        <Grid gutter={64} justify="center" align="center">
+          {kcelebrities?.map((celebrity: any) => (
+            <Grid.Col
+              key={celebrity.name}
+              span={{
+                xs: 6,
+                sm: 6,
+                md: 4,
+              }}
+            >
               <div
-                key={celebrity.name}
                 style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
                   display: 'flex',
                   flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 16,
                 }}
               >
-                <Stack>
-                  <Avatar src={celebrity?.image} alt="test" size={150} />
-                  <Title order={6} ta="center">
-                    <Link href={`/kr/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
-                  </Title>
-                </Stack>
+                <Avatar src={celebrity?.image} alt="test" size={150} />
+                <Title order={6} ta="center">
+                  <Link href={`/kr/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
+                </Title>
               </div>
-            ))}
-          </SimpleGrid>
-        </div>
+            </Grid.Col>
+          ))}
+        </Grid>
 
         <section>
           <Stack my="xl">

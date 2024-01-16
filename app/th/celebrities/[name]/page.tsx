@@ -119,9 +119,9 @@ export default function Page() {
             <Stack>
               <div>
                 {celebrityInfo?.biography ? (
-                  <Text size="xs">{celebrityInfo?.biography}</Text>
+                  <Text size="md">{celebrityInfo?.biography}</Text>
                 ) : (
-                  <Text size="xs">ไม่มีข้อมูล</Text>
+                  <Text size="md">ไม่มีข้อมูล</Text>
                 )}
               </div>
               <div>

@@ -121,9 +121,9 @@ export default function Page() {
             <Stack>
               <div>
                 {celebrityInfo?.biography ? (
-                  <Text size="xs">{celebrityInfo?.biography}</Text>
+                  <Text size="md">{celebrityInfo?.biography}</Text>
                 ) : decodeURIComponent(name as string) === 'Ju Jingyi' ? (
-                  <Text size="xs">
+                  <Text size="md">
                     จวี จิ้งอี (จีนตัวย่อ: 鞠婧祎; จีนตัวเต็ม: 鞠婧禕; พินอิน: Jū Jìngyī; เกิด 18
                     มิถุนายน ค.ศ. 1994) หรือที่รู้จักกันในชื่อ เสี่ยวจวี (小鞠) เป็นนักร้อง นักเต้น
                     นักแสดงชาวจีน โด่งดังและเป็นที่รู้จักจากบทบาทในเรื่อง ตำนานรักนางพญางูขาว
@@ -138,7 +138,7 @@ export default function Page() {
                     "สวยที่สุดในรอบ 4000 ปี" และทำให้ความนิยมของเธอเพิ่มขึ้นนับตั้งแต่นั้น[3][4]
                   </Text>
                 ) : (
-                  <Text size="xs">ไม่มีข้อมูล</Text>
+                  <Text size="md">ไม่มีข้อมูล</Text>
                 )}
               </div>
               <div>
