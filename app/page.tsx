@@ -1,58 +1,41 @@
 'use client';
 
 import { Carousel } from '@mantine/carousel';
-import { Avatar, Box, Button, Container, Grid, GridCol, Image, Stack, Title } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Card,
+  Container,
+  Grid,
+  GridCol,
+  Image,
+  Stack,
+  Text,
+  Title,
+  rem,
+} from '@mantine/core';
 
 import axios from 'axios';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
 
-async function getRecommendedCelebrities() {
-  const response = await axios.get('/api/scrape');
+const getCelebsNews = async () => {
+  const response = await axios.get('/api/celebs-news');
 
-  return response?.data ?? [];
-}
-
-const NATIONALITY = {
-  'South Korean': 'kr',
-  Chinese: 'cn',
-  Thai: 'th',
+  return response?.data.news ?? [];
 };
 
-const mock = [
-  {
-    name: 'Kim Seon Ho',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/7/7e/Kim_Seonho_TEACHA0508.png',
-    nationality: 'South Korean',
-  },
-  {
-    name: 'Jackson Wang',
-    image:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Jackson_Wang_at_a_mini_fanmeeting_outside_%22Show%21_Music_Core%22_studios%2C_1_June_2019_02.jpg/440px-Jackson_Wang_at_a_mini_fanmeeting_outside_%22Show%21_Music_Core%22_studios%2C_1_June_2019_02.jpg',
-    nationality: 'Chinese',
-  },
-  {
-    name: 'Jumpol Adulkittiporn',
-    image: 'https://image.tmdb.org/t/p/original//alCgpzXB50QWfck3KFlfzkRnXSW.jpg',
-    nationality: 'Thai',
-  },
-  {
-    name: 'Atthaphan Phunsawat',
-    image: 'https://image.tmdb.org/t/p/original//uJ1THfL7y8tuWpCNpow6eoPIr27.jpg',
-    nationality: 'Thai',
-  },
-  {
-    name: 'Tawan Vihokratana',
-    image: 'https://image.tmdb.org/t/p/original//3UvwJGTDRXVYjUfaiLQuk7vKqHR.jpg',
-    nationality: 'Thai',
-  },
-];
+const getTop10Locations = async () => {
+  const response = await axios.get('/api/top10-locations');
+
+  return response?.data.locations ?? [];
+};
 
 export default function Page() {
-  const { data: recommendedCelebrities } = useQuery(
-    'recommendedCelebrities',
-    getRecommendedCelebrities
-  );
+  const { data: celebsNews } = useQuery('getCelebsNews', getCelebsNews);
+  const { data: top10Locations } = useQuery('getTop10Locations', getTop10Locations);
+
+  console.log(top10Locations);
 
   return (
     <Container size="xl">
@@ -60,6 +43,40 @@ export default function Page() {
         <Title order={1} ta="center" c="white">
           Superstar Check in Thailand
         </Title>
+        <section>
+          <Carousel align="center" withIndicators loop>
+            {celebsNews?.map((news) => (
+              <Carousel.Slide w="100%">
+                <Card
+                  w="100%"
+                  h={300}
+                  key={news.name}
+                  style={{
+                    position: 'relative',
+                  }}
+                >
+                  <Stack dir="column" align="center" justify="center">
+                    <Image src={news.image} w="100%" h="100%" />
+                  </Stack>
+                  <Title
+                    order={3}
+                    c="white"
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      padding: 16,
+                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    }}
+                  >
+                    {news.title}
+                  </Title>
+                </Card>
+              </Carousel.Slide>
+            ))}
+          </Carousel>
+        </section>
         <section>
           <Stack>
             <Grid justify="center" align="center">
@@ -128,35 +145,44 @@ export default function Page() {
           </Stack>
         </section>
         <section>
-          <Stack>
-            <Title order={1} mb="xl" ta="center" c="white">
-              Recommended Celebrities
-            </Title>
-            <Carousel
-              slideSize={{ base: '100%', sm: '50%', md: '25%' }}
-              slideGap="md"
-              loop
-              align="center"
-              slidesToScroll="auto"
-            >
-              {mock?.map((celebrity: any) => (
-                <Carousel.Slide key={celebrity.name}>
-                  <Stack justify="center" align="center">
-                    <Avatar size={150} src={celebrity?.image} alt={celebrity?.name} />
-                    <Title order={6} ta="center">
-                      <Link
-                        href={`/${
-                          NATIONALITY[celebrity.nationality as keyof typeof NATIONALITY]
-                        }/celebrities/${celebrity.name}`}
-                      >
-                        {celebrity.name}
-                      </Link>
-                    </Title>
-                  </Stack>
-                </Carousel.Slide>
-              ))}
-            </Carousel>
-          </Stack>
+          {/* <Stack >
+            <Title order={1} mb="xl" ta="start" c="white">
+              Top 10 สถานที่ท่องเที่ยวยอดนิยม
+            </Title> */}
+          <Grid columns={12} align="stretch">
+            {top10Locations?.map((location, index) => (
+              <GridCol span={{ xs: 12, sm: 6, md: 12 / 5 }}>
+                <Card
+                  shadow="sm"
+                  radius="lg"
+                  p="xl"
+                  style={{
+                    position: 'relative',
+                  }}
+                >
+                  <Image src={'https://picsum.photos/400/400'} alt={location.title} />
+                  <Title
+                    order={3}
+                    c="white"
+                    style={{
+                      position: 'absolute',
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      padding: 16,
+                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    }}
+                  >
+                    อันดับ {index + 1}
+                  </Title>
+                  <Text size="md" c="black">
+                    {location.title}
+                  </Text>
+                </Card>
+              </GridCol>
+            ))}
+          </Grid>
+          {/* </Stack> */}
         </section>
       </Stack>
     </Container>
