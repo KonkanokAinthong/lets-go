@@ -35,8 +35,6 @@ export default function Page() {
   const { data: celebsNews } = useQuery('getCelebsNews', getCelebsNews);
   const { data: top10Locations } = useQuery('getTop10Locations', getTop10Locations);
 
-  console.log(top10Locations);
-
   return (
     <Container size="xl">
       <Stack gap="xl">

@@ -2,6 +2,7 @@
 
 import {
   Avatar,
+  Card,
   Center,
   Container,
   Divider,
@@ -15,11 +16,33 @@ import {
   Text,
   Title,
 } from '@mantine/core';
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import axios from 'axios';
 import { useParams } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
 const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
+
+function toRad(value) {
+  return (value * Math.PI) / 180;
+}
+
+function getDistance(point1, point2) {
+  const R = 6371; // Earth's radius in kilometers
+  const dLat = toRad(point2.lat - point1.lat);
+  const dLon = toRad(point2.lng - point1.lng);
+  const lat1 = toRad(point1.lat);
+  const lat2 = toRad(point2.lat);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c;
+
+  return distance;
+}
 
 const getPlacebyTextSearch = async (places: string[]) => {
   try {
@@ -37,6 +60,44 @@ const getPlacebyTextSearch = async (places: string[]) => {
     return [];
   }
 };
+
+const celebrityData = [
+  {
+    name: 'Lee Min-ho',
+    visits: [
+      { lat: 13.7563, lng: 100.5018, place: 'Bangkok' },
+      { lat: 7.9519, lng: 98.3381, place: 'Phuket' },
+    ],
+  },
+  {
+    name: 'Song Hye-kyo',
+    visits: [
+      { lat: 18.7061, lng: 98.9817, place: 'Chiang Mai' },
+      { lat: 12.5683, lng: 99.9576, place: 'Hua Hin' },
+    ],
+  },
+  {
+    name: 'Park Seo-joon',
+    visits: [
+      { lat: 13.7563, lng: 100.5018, place: 'Bangkok' },
+      { lat: 9.1412, lng: 99.9236, place: 'Koh Samui' },
+    ],
+  },
+  {
+    name: 'Kim Go-eun',
+    visits: [
+      { lat: 8.0862, lng: 98.9062, place: 'Krabi' },
+      { lat: 7.74, lng: 98.7739, place: 'Phi Phi Islands' },
+    ],
+  },
+  {
+    name: 'Ji Chang-wook',
+    visits: [
+      { lat: 12.9177, lng: 100.893, place: 'Pattaya' },
+      { lat: 14.3559, lng: 100.5614, place: 'Ayutthaya' },
+    ],
+  },
+];
 
 const TMDB_API_TOKEN =
   'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNDg5YjUyNDg3MTdmZjY2NmY3NzhkNzE3NmVmYjdjZiIsInN1YiI6IjY1NTk5ZTI5ZWE4NGM3MTA5NmRmMjk2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.e0lqhUBzvqt4L-OleXqsj8bx_p6yQK46wPabFdYFO1s';
@@ -71,12 +132,28 @@ async function getTrendingKoreanCelebrities() {
 }
 
 export default function Page() {
+  const [map, setMap] = useState(null);
+
   const { name } = useParams();
   const decodedName = decodeURIComponent(name as string);
+  const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
   const { data: celebs, isLoading: isTrendingLoading } = useQuery(
     ['trendingKoreanCelebrities', decodedName],
     getTrendingKoreanCelebrities
   );
+
+  const onLoad = useCallback(
+    (map) => {
+      const bounds = new window.google.maps.LatLngBounds(currentLocation);
+      map.fitBounds(bounds);
+      setMap(map);
+    },
+    [currentLocation]
+  );
+
+  const onUnmount = useCallback((map) => {
+    setMap(null);
+  }, []);
 
   const filter = celebs?.filter((celeb) => celeb.name === decodedName)[0];
 
@@ -88,6 +165,31 @@ export default function Page() {
     searchCelebrity(decodedName as string)
   );
   const { data: info } = useQuery(['info', data?.id], () => getCelebrityInfo(data?.id));
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCurrentLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.error('Error getting current location:', error);
+        }
+      );
+    }
+  }, []);
+
+  const containerStyle = {
+    width: '100%',
+    height: '400px',
+  };
+
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU',
+  });
 
   return (
     <Container c="white">
@@ -175,14 +277,75 @@ export default function Page() {
             </Stack>
           </TabsPanel>
           <TabsPanel value="nearby">
-            <iframe
-              title="map"
-              src="https://www.google.com/maps/place/Jae+Wan,+1700+%E0%B8%96%E0%B8%99%E0%B8%99+%E0%B8%9A%E0%B8%A3%E0%B8%A3%E0%B8%97%E0%B8%B1%E0%B8%94%E0%B8%97%E0%B8%AD%E0%B8%87+Khwaeng+Rong+Muang,+Khet+Pathum+Wan,+Bangkok+10330/@13.7396492,100.5222225,17z/data=!4m14!1m7!3m6!1s0x30e299293ebc3217:0xdb2ef36a28b04a9e!2zSmFlIFdhbiwgMTcwMCDguJbguJnguJkg4Lia4Lij4Lij4LiX4Lix4LiU4LiX4Lit4LiHIEtod2FlbmcgUm9uZyBNdWFuZywgS2hldCBQYXRodW0gV2FuLCBCYW5na29rIDEwMzMw!8m2!3d13.7396492!4d100.5222225!16s%2Fg%2F1ydxc43jr!3m5!1s0x30e299293ebc3217:0xdb2ef36a28b04a9e!8m2!3d13.7396492!4d100.5222225!16s%2Fg%2F1ydxc43jr"
-              width="100%"
-              height="450"
-              allowFullScreen
-              loading="lazy"
-            />
+            <div>
+              {isLoaded && currentLocation ? (
+                <>
+                  <GoogleMap
+                    mapContainerStyle={containerStyle}
+                    center={currentLocation}
+                    zoom={10}
+                    onLoad={onLoad}
+                    onUnmount={onUnmount}
+                  >
+                    {celebrityData
+                      .filter((celebrity) =>
+                        celebrity.visits.some(
+                          (visit) =>
+                            getDistance(currentLocation, { lat: visit.lat, lng: visit.lng }) <= 50 // Filter places within 50km radius
+                        )
+                      )
+                      .map((celebrity, index) =>
+                        celebrity.visits
+                          .filter(
+                            (visit) =>
+                              getDistance(currentLocation, { lat: visit.lat, lng: visit.lng }) <= 50 // Filter places within 50km radius
+                          )
+                          .map((visit, visitIndex) => (
+                            <Marker
+                              key={`${index}-${visitIndex}`}
+                              position={{ lat: visit.lat, lng: visit.lng }}
+                            >
+                              {visit.place}
+                            </Marker>
+                          ))
+                      )}
+                  </GoogleMap>
+                  {/* <Stack mt="md">
+                    {celebrityData
+                      .filter((celebrity) =>
+                        celebrity.visits.some(
+                          (visit) =>
+                            getDistance(currentLocation, { lat: visit.lat, lng: visit.lng }) <= 50 // Filter places within 50km radius
+                        )
+                      )
+                      .map((celebrity, index) => (
+                        <div key={index}>
+                          <Title order={3}>{celebrity.name}</Title>
+                          <Stack>
+                            {celebrity.visits
+                              .filter(
+                                (visit) =>
+                                  getDistance(currentLocation, {
+                                    lat: visit.lat,
+                                    lng: visit.lng,
+                                  }) <= 50 // Filter places within 50km radius
+                              )
+                              .map((visit, visitIndex) => (
+                                <Card key={visitIndex} shadow="sm" p="md" radius="md" withBorder>
+                                  <Text size="sm" color="dimmed">
+                                    {visit.place}
+                                  </Text>
+                                </Card>
+                              ))}
+                          </Stack>
+                        </div>
+                      ))}
+                  </Stack> */}
+                </>
+              ) : (
+                <p>Loading...</p>
+              )}
+            </div>
           </TabsPanel>
         </Tabs>
       </Stack>
