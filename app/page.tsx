@@ -8,185 +8,172 @@ import {
   Container,
   Divider,
   Grid,
-  GridCol,
   Image,
   Stack,
   Text,
   Title,
 } from '@mantine/core';
-
 import axios from 'axios';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
 
-const getCelebsNews = async () => {
+export const getCelebsNews = async () => {
   const response = await axios.get('/api/celebs-news');
-
   return response?.data.news ?? [];
 };
 
-const getTop10Locations = async () => {
+export const getTop10Locations = async () => {
   const response = await axios.get('/api/top10-locations');
-
+  console.log(response.data);
   return response?.data.locations ?? [];
 };
 
-export default function Page() {
+export const CelebsNewsCarousel = () => {
   const { data: celebsNews } = useQuery('getCelebsNews', getCelebsNews);
+
+  return (
+    <Carousel align="center" withIndicators loop>
+      {celebsNews?.map((news) => (
+        <Carousel.Slide key={news.name} w="100%">
+          <Card w="100%" h={300} style={{ position: 'relative' }}>
+            <Stack dir="column" align="center" justify="center">
+              <Image src={news.image} w="100%" h="100%" />
+            </Stack>
+            <Title
+              order={3}
+              c="white"
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                padding: 16,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              }}
+            >
+              {news.title}
+            </Title>
+          </Card>
+        </Carousel.Slide>
+      ))}
+    </Carousel>
+  );
+};
+
+const SuperstarCheckInThailand = () => {
+  const getRandomCelebsImages = async () => {
+    const response = await axios.get('/api/recommended/celebrities?national=th');
+    return response?.data.images ?? [];
+  };
+  const celebNearMeImage = getRandomCelebsImages();
+
+  return (
+    <section>
+      <Grid justify="center" align="center" gutter="xl" p="lg">
+        <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
+          <Stack justify="center" align="center">
+            <Box href="near-me" component={Link}>
+              <Image src={celebNearMeImage} alt="Celeb Near Me" />
+            </Box>
+            <Button size="lg" component={Link} href="/kr" variant="filled">
+              Superstar nearby me
+            </Button>
+          </Stack>
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
+          <Stack justify="center" align="center">
+            <Box href="kr" component={Link}>
+              <Image src={getRandomCelebsImages()} alt="Random Image" />
+            </Box>
+            <Button size="lg" component={Link} href="/kr" variant="filled">
+              South Korea
+            </Button>
+          </Stack>
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
+          <Stack justify="center" align="center">
+            <Box href="cn" component={Link}>
+              <Image src={getRandomCelebsImages()} alt="Random Image" />
+            </Box>
+            <Button size="lg" component={Link} href="/cn" variant="filled">
+              China
+            </Button>
+          </Stack>
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
+          <Stack justify="center" align="center">
+            <Box href="th" component={Link}>
+              <Image src={getRandomCelebsImages()} alt="Random Image" />
+            </Box>
+            <Button size="lg" component={Link} href="/th" variant="filled">
+              Thailand
+            </Button>
+          </Stack>
+        </Grid.Col>
+      </Grid>
+    </section>
+  );
+};
+
+const Top10Locations = () => {
   const { data: top10Locations } = useQuery('getTop10Locations', getTop10Locations);
 
   return (
+    <section>
+      <Grid columns={12} align="stretch">
+        {top10Locations?.map((location, index) => (
+          <Grid.Col key={location.title} span={{ xs: 12, sm: 6, md: 12 / 5 }}>
+            <Card
+              shadow="sm"
+              radius="lg"
+              p="xl"
+              style={{ position: 'relative' }}
+              component={Link}
+              href={`/locations/${location.title}`}
+            >
+              <Image src={location?.image} alt={location.title} />
+              <Title
+                order={3}
+                c="white"
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  padding: 16,
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                }}
+              >
+                อันดับ {index + 1}
+              </Title>
+              <Text size="md" c="black" lineClamp={3}>
+                {location.title}
+              </Text>
+            </Card>
+          </Grid.Col>
+        ))}
+      </Grid>
+    </section>
+  );
+};
+
+export default function Page() {
+  return (
     <Container size="xl">
       <Stack gap="xl">
-        <section>
-          <Carousel align="center" withIndicators loop>
-            {celebsNews?.map((news) => (
-              <Carousel.Slide w="100%">
-                <Card
-                  w="100%"
-                  h={300}
-                  key={news.name}
-                  style={{
-                    position: 'relative',
-                  }}
-                >
-                  <Stack dir="column" align="center" justify="center">
-                    <Image src={news.image} w="100%" h="100%" />
-                  </Stack>
-                  <Title
-                    order={3}
-                    c="white"
-                    style={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      padding: 16,
-                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    }}
-                  >
-                    {news.title}
-                  </Title>
-                </Card>
-              </Carousel.Slide>
-            ))}
-          </Carousel>
-        </section>
-        <Title order={1} ta="center" c="white">
+        <CelebsNewsCarousel />
+        <Title order={1} ta="start" c="white">
           Superstar Check in Thailand
         </Title>
-        <section>
-          <Stack>
-            <Grid justify="center" align="center">
-              <GridCol
-                span={{
-                  xs: 12,
-                  md: 4,
-                }}
-              >
-                <Stack justify="center" align="center">
-                  <Box href="cn" component={Link} w={400} h={400}>
-                    <Image
-                      src="https://wallpapers.com/images/high/lalisa-manoban-for-mac-yxyymuu7q2mld0kz.webp"
-                      alt="test"
-                      w={400}
-                      h={400}
-                    />
-                  </Box>
-                  <Button size="lg" component={Link} href="/kr" variant="white" c="black">
-                    South Korea
-                  </Button>
-                </Stack>
-              </GridCol>
-              <GridCol
-                span={{
-                  xs: 12,
-                  md: 4,
-                }}
-              >
-                <Stack justify="center" align="center">
-                  <Box href="cn" component={Link} w={400} h={400}>
-                    <Image
-                      src="https://images.lifestyleasia.com/wp-content/uploads/sites/3/2022/12/14170608/jackson-wang-1600x900.jpeg?tr=w-1600"
-                      alt="test"
-                      w={400}
-                      h={400}
-                    />
-                  </Box>
-
-                  <Button size="lg" component={Link} href="/cn" variant="white" c="black">
-                    China
-                  </Button>
-                </Stack>
-              </GridCol>
-              <GridCol
-                span={{
-                  xs: 12,
-                  md: 4,
-                }}
-              >
-                <Stack justify="center" align="center">
-                  <Box href="cn" component={Link} w={400} h={400}>
-                    <Image
-                      w={400}
-                      h={400}
-                      src="https://pbs.twimg.com/media/FI1KJB8X0AAI50K?format=jpg&name=large"
-                      alt="test"
-                    />
-                  </Box>
-                  <Button size="lg" component={Link} href="/th" variant="white" c="black">
-                    Thailand
-                  </Button>
-                </Stack>
-              </GridCol>
-            </Grid>
-          </Stack>
-        </section>
+        <SuperstarCheckInThailand />
         <Divider />
-
         <Box>
           <Title order={1} ta="left" c="white">
-            Top 10 สถานที่ท่องเที่ยวยอดนิยม
+            Top 10 tourist destinations
           </Title>
         </Box>
-
         <Divider />
-        <section>
-          <Grid columns={12} align="stretch">
-            {top10Locations?.map((location, index) => (
-              <GridCol span={{ xs: 12, sm: 6, md: 12 / 5 }}>
-                <Card
-                  shadow="sm"
-                  radius="lg"
-                  p="xl"
-                  style={{
-                    position: 'relative',
-                  }}
-                >
-                  <Image src={'https://picsum.photos/400/400'} alt={location.title} />
-                  <Title
-                    order={3}
-                    c="white"
-                    style={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
-                      padding: 16,
-                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    }}
-                  >
-                    อันดับ {index + 1}
-                  </Title>
-                  <Text size="md" c="black" lineClamp={3}>
-                    {location.title}
-                  </Text>
-                </Card>
-              </GridCol>
-            ))}
-          </Grid>
-          {/* </Stack> */}
-        </section>
+        <Top10Locations />
       </Stack>
     </Container>
   );

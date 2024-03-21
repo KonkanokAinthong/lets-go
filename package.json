@@ -18,9 +18,9 @@
     "storybook:build": "storybook build"
   },
   "dependencies": {
-    "@mantine/carousel": "^7.2.1",
-    "@mantine/core": "7.2.1",
-    "@mantine/hooks": "7.2.1",
+    "@mantine/carousel": "^7.6.2",
+    "@mantine/core": "^7.6.2",
+    "@mantine/hooks": "^7.6.2",
     "@next/bundle-analyzer": "^14.0.1",
     "@react-google-maps/api": "^2.19.3",
     "@tabler/icons-react": "^2.40.0",
