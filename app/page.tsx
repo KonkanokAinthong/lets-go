@@ -38,9 +38,6 @@ export default function Page() {
   return (
     <Container size="xl">
       <Stack gap="xl">
-        <Title order={1} ta="center" c="white">
-          Superstar Check in Thailand
-        </Title>
         <section>
           <Carousel align="center" withIndicators loop>
             {celebsNews?.map((news) => (
@@ -75,6 +72,9 @@ export default function Page() {
             ))}
           </Carousel>
         </section>
+        <Title order={1} ta="center" c="white">
+          Superstar Check in Thailand
+        </Title>
         <section>
           <Stack>
             <Grid justify="center" align="center">
