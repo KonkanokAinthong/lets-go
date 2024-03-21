@@ -1,18 +1,7 @@
 'use client';
 
 import { Carousel } from '@mantine/carousel';
-import {
-  Avatar,
-  Container,
-  Grid,
-  GridCol,
-  Image,
-  SimpleGrid,
-  Skeleton,
-  Stack,
-  Text,
-  Title,
-} from '@mantine/core';
+import { Avatar, Container, Grid, Image, Skeleton, Stack, Title } from '@mantine/core';
 import axios from 'axios';
 import Link from 'next/link';
 import { useQuery } from 'react-query';

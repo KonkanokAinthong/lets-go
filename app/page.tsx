@@ -9,6 +9,7 @@ import {
   Divider,
   Grid,
   Image,
+  Skeleton,
   Stack,
   Text,
   Title,
@@ -27,6 +28,50 @@ export const getTop10Locations = async () => {
   console.log(response.data);
   return response?.data.locations ?? [];
 };
+
+const kcelebrities = [
+  {
+    name: 'Kim Seon Ho',
+    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/1p7xMHRNsrUJacXqOFs1EZqSIvp.jpg',
+  },
+  {
+    name: 'Jackson Wang',
+    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/yPhD9nXzmOVA4IUyVsqv7ZzvTKX.jpg',
+  },
+  {
+    name: 'Song Jung-gi',
+    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/kgjb5OppOVTh5tz3hhnfDVnTvDv.jpg',
+  },
+  {
+    name: 'Kwan Na Ra',
+    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/4U0cNinwOf7DdsBYA3BFi7arDmz.jpg',
+  },
+  {
+    name: 'Kim Jinyoung',
+    image:
+      'https://s359.kapook.com/r/600/auto/pagebuilder/a6250c2e-d0a4-4db1-a4e2-35354e4a586d.jpg',
+  },
+  {
+    name: 'Bak Ji-hyo',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Park_Jihyo_for_Pearly_Gates_Korea_02.jpg/480px-Park_Jihyo_for_Pearly_Gates_Korea_02.jpg',
+  },
+  {
+    name: 'มินนี่',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/%28G%29I-DLE%27s_Minnie_on_June_2023.jpg/440px-%28G%29I-DLE%27s_Minnie_on_June_2023.jpg',
+  },
+  {
+    name: 'Song-Ji-hun',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/140120_%ED%94%BC_%EB%81%93%EB%8A%94_%EC%B2%AD%EC%B6%98_vip%EC%8B%9C%EC%82%AC%ED%9A%8C-%EB%B9%84.jpg/440px-140120_%ED%94%BC_%EB%81%93%EB%8A%94_%EC%B2%AD%EC%B6%98_vip%EC%8B%9C%EC%82%AC%ED%9A%8C-%EB%B9%84.jpg',
+  },
+  {
+    name: 'Baekho',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/180509_%EB%B0%B1%ED%98%B8_01.jpg/440px-180509_%EB%B0%B1%ED%98%B8_01.jpg',
+  },
+];
 
 export const CelebsNewsCarousel = () => {
   const { data: celebsNews } = useQuery('getCelebsNews', getCelebsNews);
@@ -61,11 +106,10 @@ export const CelebsNewsCarousel = () => {
 };
 
 const SuperstarCheckInThailand = () => {
-  const getRandomCelebsImages = async () => {
-    const response = await axios.get('/api/recommended/celebrities?national=th');
-    return response?.data.images ?? [];
+  const getRandomCelebImage = () => {
+    const randomIndex = Math.floor(Math.random() * kcelebrities.length);
+    return kcelebrities[randomIndex].image;
   };
-  const celebNearMeImage = getRandomCelebsImages();
 
   return (
     <section>
@@ -73,7 +117,7 @@ const SuperstarCheckInThailand = () => {
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
             <Box href="near-me" component={Link}>
-              <Image src={celebNearMeImage} alt="Celeb Near Me" />
+              <Image src={getRandomCelebImage()} alt="Celeb Near Me" />
             </Box>
             <Button size="lg" component={Link} href="/kr" variant="filled">
               Superstar nearby me
@@ -83,7 +127,7 @@ const SuperstarCheckInThailand = () => {
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
             <Box href="kr" component={Link}>
-              <Image src={getRandomCelebsImages()} alt="Random Image" />
+              <Image src={getRandomCelebImage()} alt="Korean Celebrity" />
             </Box>
             <Button size="lg" component={Link} href="/kr" variant="filled">
               South Korea
@@ -93,7 +137,7 @@ const SuperstarCheckInThailand = () => {
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
             <Box href="cn" component={Link}>
-              <Image src={getRandomCelebsImages()} alt="Random Image" />
+              <Image src={getRandomCelebImage()} alt="Chinese Celebrity" />
             </Box>
             <Button size="lg" component={Link} href="/cn" variant="filled">
               China
@@ -103,7 +147,7 @@ const SuperstarCheckInThailand = () => {
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
             <Box href="th" component={Link}>
-              <Image src={getRandomCelebsImages()} alt="Random Image" />
+              <Image src={getRandomCelebImage()} alt="Thai Celebrity" />
             </Box>
             <Button size="lg" component={Link} href="/th" variant="filled">
               Thailand
@@ -116,7 +160,25 @@ const SuperstarCheckInThailand = () => {
 };
 
 const Top10Locations = () => {
-  const { data: top10Locations } = useQuery('getTop10Locations', getTop10Locations);
+  const { data: top10Locations, isLoading } = useQuery('getTop10Locations', getTop10Locations);
+
+  if (isLoading) {
+    return (
+      <section>
+        <Grid columns={12} align="stretch">
+          {[...Array(10)].map((_, index) => (
+            <Grid.Col key={index} span={{ xs: 12, sm: 6, md: 12 / 5 }}>
+              <Card shadow="sm" radius="lg" p="xl">
+                <Skeleton height={200} width="100%" />
+                <Skeleton height={20} width="70%" mt="md" />
+                <Skeleton height={20} width="50%" mt="sm" />
+              </Card>
+            </Grid.Col>
+          ))}
+        </Grid>
+      </section>
+    );
+  }
 
   return (
     <section>

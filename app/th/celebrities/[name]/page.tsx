@@ -110,7 +110,7 @@ export default function Page() {
         </Title>
 
         <Tabs defaultValue="info">
-          <TabsList mb="xl">
+          <TabsList mb="xl" grow>
             <TabsTab value="info">ประวัติ</TabsTab>
             <TabsTab value="visited-places">การท่องเที่ยว</TabsTab>
             <TabsTab value="nearby">สถานที่ท่องเที่ยวใกล้เคียง</TabsTab>
