@@ -6,13 +6,13 @@ import {
   Button,
   Card,
   Container,
+  Divider,
   Grid,
   GridCol,
   Image,
   Stack,
   Text,
   Title,
-  rem,
 } from '@mantine/core';
 
 import axios from 'axios';
@@ -85,7 +85,7 @@ export default function Page() {
                 }}
               >
                 <Stack justify="center" align="center">
-                  <Box w={400} h={400}>
+                  <Box href="cn" component={Link} w={400} h={400}>
                     <Image
                       src="https://wallpapers.com/images/high/lalisa-manoban-for-mac-yxyymuu7q2mld0kz.webp"
                       alt="test"
@@ -105,7 +105,7 @@ export default function Page() {
                 }}
               >
                 <Stack justify="center" align="center">
-                  <Box w={400} h={400}>
+                  <Box href="cn" component={Link} w={400} h={400}>
                     <Image
                       src="https://images.lifestyleasia.com/wp-content/uploads/sites/3/2022/12/14170608/jackson-wang-1600x900.jpeg?tr=w-1600"
                       alt="test"
@@ -126,7 +126,7 @@ export default function Page() {
                 }}
               >
                 <Stack justify="center" align="center">
-                  <Box w={400} h={400}>
+                  <Box href="cn" component={Link} w={400} h={400}>
                     <Image
                       w={400}
                       h={400}
@@ -142,11 +142,16 @@ export default function Page() {
             </Grid>
           </Stack>
         </section>
+        <Divider />
+
+        <Box>
+          <Title order={1} ta="left" c="white">
+            Top 10 สถานที่ท่องเที่ยวยอดนิยม
+          </Title>
+        </Box>
+
+        <Divider />
         <section>
-          {/* <Stack >
-            <Title order={1} mb="xl" ta="start" c="white">
-              Top 10 สถานที่ท่องเที่ยวยอดนิยม
-            </Title> */}
           <Grid columns={12} align="stretch">
             {top10Locations?.map((location, index) => (
               <GridCol span={{ xs: 12, sm: 6, md: 12 / 5 }}>
