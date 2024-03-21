@@ -178,7 +178,7 @@ export default function Page() {
                   >
                     อันดับ {index + 1}
                   </Title>
-                  <Text size="md" c="black">
+                  <Text size="md" c="black" lineClamp={3}>
                     {location.title}
                   </Text>
                 </Card>
