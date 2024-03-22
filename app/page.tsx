@@ -15,7 +15,10 @@ import {
   Title,
 } from '@mantine/core';
 import axios from 'axios';
+import Autoplay from 'embla-carousel-autoplay';
+
 import Link from 'next/link';
+import { useRef } from 'react';
 import { useQuery } from 'react-query';
 
 export const getCelebsNews = async () => {
@@ -25,7 +28,6 @@ export const getCelebsNews = async () => {
 
 export const getTop10Locations = async () => {
   const response = await axios.get('/api/top10-locations');
-  console.log(response.data);
   return response?.data.locations ?? [];
 };
 
@@ -73,11 +75,86 @@ const kcelebrities = [
   },
 ];
 
+// Thai Celebrities visited places in Thailand
+const thaiCelebs = [
+  {
+    name: 'Jumpol Adulkittiporn',
+    image: 'https://media.themoviedb.org/t/p/w600_and_h900_bestv2/alCgpzXB50QWfck3KFlfzkRnXSW.jpg',
+  },
+  {
+    name: 'Atthaphan Phunsawat',
+    image: 'https://media.themoviedb.org/t/p/w600_and_h900_bestv2/uJ1THfL7y8tuWpCNpow6eoPIr27.jpg',
+  },
+  {
+    name: 'Tawan Vihokratana',
+    image: 'https://i.mydramalist.com/kp1zd_5c.jpg',
+  },
+  {
+    name: 'Thitipoom Techaapaikhun',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Gun_Atthaphan.jpg/440px-Gun_Atthaphan.jpg',
+  },
+];
+
+const mockCelebrities = [
+  {
+    name: 'เนเน่ พรนับพัน',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Nene%E9%83%91%E4%B9%83%E9%A6%A8.jpg/440px-Nene%E9%83%91%E4%B9%83%E9%A6%A8.jpg',
+  },
+  {
+    name: 'ซันนี่ เกวลิน หรือ ซันนี่ หยาง',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Sunnee_as_Thai_Festival_Ambassador.jpg/440px-Sunnee_as_Thai_Festival_Ambassador.jpg',
+  },
+  {
+    name: 'มีมี่ พร้อมวิไล หรือ มีมี่ ลี',
+    image: 'https://f.ptcdn.info/829/077/000/rew3y51lnk6uWXZKxfDlK-o.jpg',
+  },
+  {
+    name: 'นาย กรชิต หรือ นาย INTO1',
+    image: 'https://mpics.mgronline.com/pics/Images/565000010259901.JPEG',
+  },
+  {
+    name: 'แพทริค ณัฐวรรธ์ หรือ แพทริค INTO',
+    image: 'https://s359.kapook.com/pagebuilder/91cfa2ce-7761-4df4-b198-fc05f2ad347e.jpg',
+  },
+  {
+    name: 'หยางหยาง',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Yang_profile_pic.jpg/440px-Yang_profile_pic.jpg',
+  },
+  {
+    name: 'กงจวิ้น',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/GJ_Cannes2.jpg/440px-GJ_Cannes2.jpg',
+  },
+  {
+    name: 'Ju Jingyi',
+    image:
+      'https://sudsapda.com/app/uploads/2020/11/006VxdWHgy1gjxdf3by06j32yo1z4x6p-scaled-e1605325397374.jpg',
+  },
+  {
+    name: 'Cheng Xiao',
+    image:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/180317_%EC%9A%B0%EC%A3%BC%EC%86%8C%EB%85%80_%EB%AF%B8%EB%8B%88%ED%8C%AC%EB%AF%B8%ED%8C%85_%EC%A7%81%EC%B0%8D_%2819%29.jpg/440px-180317_%EC%9A%B0%EC%A3%BC%EC%86%8C%EB%85%80_%EB%AF%B8%EB%8B%88%ED%8C%AC%EB%AF%B8%ED%8C%85_%EC%A7%81%EC%B0%8D_%2819%29.jpg',
+  },
+  { name: 'หลี่ข่ายซิน', image: 'https://entertain.teenee.com/chinese_star/img8/670257.jpg' },
+];
+
 export const CelebsNewsCarousel = () => {
+  const autoplay = useRef(Autoplay({ delay: 5000 }));
   const { data: celebsNews } = useQuery('getCelebsNews', getCelebsNews);
 
   return (
-    <Carousel align="center" withIndicators loop>
+    <Carousel
+      align="center"
+      withIndicators
+      loop
+      onMouseEnter={autoplay.current.stop}
+      onMouseLeave={autoplay.current.reset}
+      plugins={[autoplay.current]}
+    >
       {celebsNews?.map((news) => (
         <Carousel.Slide key={news.name} w="100%">
           <Card w="100%" h={300} style={{ position: 'relative' }}>
@@ -106,9 +183,25 @@ export const CelebsNewsCarousel = () => {
 };
 
 const SuperstarCheckInThailand = () => {
-  const getRandomCelebImage = () => {
-    const randomIndex = Math.floor(Math.random() * kcelebrities.length);
-    return kcelebrities[randomIndex].image;
+  const getRandomCelebImage = (region) => {
+    let celebrities = [];
+
+    switch (region) {
+      case 'kr':
+        celebrities = kcelebrities;
+        break;
+      case 'cn':
+        celebrities = mockCelebrities;
+        break;
+      case 'th':
+        celebrities = thaiCelebs;
+        break;
+      default:
+        celebrities = [...kcelebrities, ...mockCelebrities, ...thaiCelebs];
+    }
+
+    const randomIndex = Math.floor(Math.random() * celebrities.length);
+    return celebrities[randomIndex].image;
   };
 
   return (
@@ -117,7 +210,7 @@ const SuperstarCheckInThailand = () => {
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
             <Box href="near-me" component={Link}>
-              <Image src={getRandomCelebImage()} alt="Celeb Near Me" />
+              <Image src="https://picsum.photos/400/400" alt="Celeb Near Me" height={400} />
             </Box>
             <Button size="lg" component={Link} href="/kr" variant="filled">
               Superstar nearby me
@@ -127,7 +220,7 @@ const SuperstarCheckInThailand = () => {
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
             <Box href="kr" component={Link}>
-              <Image src={getRandomCelebImage()} alt="Korean Celebrity" />
+              <Image src={getRandomCelebImage('kr')} alt="Korean Celebrity" height={400} />
             </Box>
             <Button size="lg" component={Link} href="/kr" variant="filled">
               South Korea
@@ -137,7 +230,7 @@ const SuperstarCheckInThailand = () => {
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
             <Box href="cn" component={Link}>
-              <Image src={getRandomCelebImage()} alt="Chinese Celebrity" />
+              <Image src={getRandomCelebImage('cn')} alt="Chinese Celebrity" height={400} />
             </Box>
             <Button size="lg" component={Link} href="/cn" variant="filled">
               China
@@ -147,7 +240,7 @@ const SuperstarCheckInThailand = () => {
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
             <Box href="th" component={Link}>
-              <Image src={getRandomCelebImage()} alt="Thai Celebrity" />
+              <Image src={getRandomCelebImage('th')} alt="Thai Celebrity" height={400} />
             </Box>
             <Button size="lg" component={Link} href="/th" variant="filled">
               Thailand
