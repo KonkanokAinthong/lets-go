@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import puppeteer from 'puppeteer';
 
 export async function GET(request: Request) {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ headless: 'new' });
   const page = await browser.newPage();
   await page.goto('https://travel.trueid.net/travelguide');
 
