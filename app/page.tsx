@@ -142,7 +142,7 @@ const mockCelebrities = [
   { name: 'หลี่ข่ายซิน', image: 'https://entertain.teenee.com/chinese_star/img8/670257.jpg' },
 ];
 
-export const CelebsNewsCarousel = () => {
+const CelebsNewsCarousel = () => {
   const autoplay = useRef(Autoplay({ delay: 5000 }));
   const { data: celebsNews } = useQuery('getCelebsNews', getCelebsNews);
 
