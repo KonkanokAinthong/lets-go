@@ -21,12 +21,12 @@ import Link from 'next/link';
 import { useRef } from 'react';
 import { useQuery } from 'react-query';
 
-export const getCelebsNews = async () => {
+const getCelebsNews = async () => {
   const response = await axios.get('/api/celebs-news');
   return response?.data.news ?? [];
 };
 
-export const getTop10Locations = async () => {
+const getTop10Locations = async () => {
   const response = await axios.get('/api/top10-locations');
   return response?.data.locations ?? [];
 };
