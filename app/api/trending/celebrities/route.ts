@@ -5,133 +5,151 @@ import puppeteer from 'puppeteer';
 import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
 
 export async function GET(request: Request) {
-    const nationalityParam = new URL(request.url).searchParams.get('nationality');
-    const browser = await puppeteer.launch({
-        headless: 'new',
+  const nationalityParam = new URL(request.url).searchParams.get('nationality');
+  const browser = await puppeteer.launch();
+
+  const page = await browser.newPage();
+  await page.setViewport({ width: 1300, height: 1000 });
+
+  if (nationalityParam === 'Chinese') {
+    await page.goto('https://entertainment.trueid.net/detail/oAKNDN8dQ8o2', {
+      waitUntil: 'domcontentloaded',
     });
 
-    const page = await browser.newPage();
-    await page.setViewport({ width: 1300, height: 1000 });
+    // Scroll to the very top of the page
+    await page.evaluate(() => {
+      window.scrollTo(0, 0);
+    });
 
-    if (nationalityParam === 'Chinese') {
-        await page.goto('https://entertainment.trueid.net/detail/oAKNDN8dQ8o2', {
-            waitUntil: 'domcontentloaded',
-        });
+    // Scroll to the bottom of the page with puppeteer-autoscroll-down
+    await scrollPageToBottom(page, {
+      size: 500,
+    });
 
-        // Scroll to the very top of the page
-        await page.evaluate(() => {
-            window.scrollTo(0, 0);
-        });
+    await page.waitForSelector('._UtcWG');
 
-        // Scroll to the bottom of the page with puppeteer-autoscroll-down
-        await scrollPageToBottom(page, {
-            size: 500,
-        });
+    const html = await page.content();
+    const $ = load(html);
 
-        await page.waitForSelector('._UtcWG');
+    const data = [];
 
-        const html = await page.content();
-        const $ = load(html);
+    const keywords = [
+      'สวน',
+      'ถนน',
+      'วัด',
+      'ตลาด',
+      'ร้าน',
+      'บาร์',
+      'จังหวัด',
+      'เมือง',
+      'อำเภอ',
+      'ตำบล',
+      'Old Phuket Town',
+      'ภูเก็ต',
+      'กรุงเทพ',
+      'ตลาดนัดจตุจักร',
+      'ตลาดนัดอัมพวา',
+      'ทะเลหัวหิน',
+    ];
 
-        const data = [];
+    $('._UtcWG').each((index, element) => {
+      const name = $(element).find('blockquote > p > strong').text();
+      const placeVisited = $(element).find('._2R5zX').text();
+      const image = $(element).find('._2R5zX').text();
 
-        const keywords = ['สวน', 'ถนน', 'วัด', 'ตลาด', 'ร้าน', 'บาร์', 'จังหวัด', 'เมือง', 'อำเภอ', 'ตำบล', 'Old Phuket Town', 'ภูเก็ต', 'กรุงเทพ', 'ตลาดนัดจตุจักร', 'ตลาดนัดอัมพวา', 'ทะเลหัวหิน'];
+      data.push({
+        name,
+        placeVisited,
+        image,
+      });
+    });
 
-        $('._UtcWG').each((index, element) => {
-            const name = $(element).find('blockquote > p > strong').text();
-            const placeVisited = $(element).find('._2R5zX').text();
-            const image = $(element).find('._2R5zX').text();
+    console.log(data);
+    return NextResponse.json(data);
+  }
 
-            data.push({
-                name,
-                placeVisited,
-                image,
-            });
-        });
+  if (nationalityParam === 'Korean') {
+    await page.goto('https://entertainment.trueid.net/detail/oAKNDN8dQ8o2', {
+      waitUntil: 'domcontentloaded',
+    });
 
-        console.log(data);
-        return NextResponse.json(data);
-    }
+    // Scroll to the very top of the page
+    await page.evaluate(() => {
+      window.scrollTo(0, 0);
+    });
 
-    if (nationalityParam === 'Korean') {
-        await page.goto('https://entertainment.trueid.net/detail/oAKNDN8dQ8o2', {
-            waitUntil: 'domcontentloaded',
-        });
+    // Scroll to the bottom of the page with puppeteer-autoscroll-down
+    await scrollPageToBottom(page, {
+      size: 500,
+    });
 
-        // Scroll to the very top of the page
-        await page.evaluate(() => {
-            window.scrollTo(0, 0);
-        });
+    await page.waitForSelector('._UtcWG');
 
-        // Scroll to the bottom of the page with puppeteer-autoscroll-down
-        await scrollPageToBottom(page, {
-            size: 500,
-        });
+    const html = await page.content();
+    const $ = load(html);
 
-        await page.waitForSelector('._UtcWG');
+    const data = [];
 
-        const html = await page.content();
-        const $ = load(html);
+    const keywords = ['สวน', 'ถนน'];
 
-        const data = [];
+    $('._UtcWG').each((index, element) => {
+      const name = $(element).find('blockquote > p > strong').text();
+      const placeVisited = $(element).find('._2R5zX').text();
+      const image = $(element).find('._2R5zX').text();
 
-        const keywords = ['สวน', 'ถนน'];
+      data.push({
+        name,
+        placeVisited,
+        image,
+      });
+    });
 
-        $('._UtcWG').each((index, element) => {
-            const name = $(element).find('blockquote > p > strong').text();
-            const placeVisited = $(element).find('._2R5zX').text();
-            const image = $(element).find('._2R5zX').text();
+    console.log(data);
+    return NextResponse.json(data);
+  }
 
-            data.push({
-                name,
-                placeVisited,
-                image,
-            });
-        });
+  if (nationalityParam === 'Thai') {
+    await page.goto(
+      'https://www.mintmagth.com/people/offgun-taynew-beluca-huahin/?fbclid=IwAR1NNttw_jtkyLAcFCeMOyeYq_2d13NDmAVDqypV8sb4HWkJ7mUT9ukt7WU',
+      {
+        waitUntil: 'domcontentloaded',
+      }
+    );
 
-        console.log(data);
-        return NextResponse.json(data);
-    }
+    // Scroll to the very top of the page
+    await page.evaluate(() => {
+      window.scrollTo(0, 0);
+    });
 
-    if (nationalityParam === 'Thai') {
-        await page.goto('https://www.mintmagth.com/people/offgun-taynew-beluca-huahin/?fbclid=IwAR1NNttw_jtkyLAcFCeMOyeYq_2d13NDmAVDqypV8sb4HWkJ7mUT9ukt7WU', {
-            waitUntil: 'domcontentloaded',
-        });
+    // Scroll to the bottom of the page with puppeteer-autoscroll-down
+    await scrollPageToBottom(page, {
+      size: 500,
+    });
 
-        // Scroll to the very top of the page
-        await page.evaluate(() => {
-            window.scrollTo(0, 0);
-        });
+    await page.waitForSelector('div.content-detail');
 
-        // Scroll to the bottom of the page with puppeteer-autoscroll-down
-        await scrollPageToBottom(page, {
-            size: 500,
-        });
+    const html = await page.content();
+    const $ = load(html);
 
-        await page.waitForSelector('div.content-detail');
+    const data = [];
 
-        const html = await page.content();
-        const $ = load(html);
+    const keywords = ['หัวหิน'];
 
-        const data = [];
+    $('._UtcWG').each((index, element) => {
+      const name = $(element).find('strong').text();
+      const placeVisited = $(element).find('._2R5zX').text();
+      const image = $(element).find('img').attr('src');
 
-        const keywords = ['หัวหิน'];
+      data.push({
+        name,
+        placeVisited,
+        image,
+      });
+    });
 
-        $('._UtcWG').each((index, element) => {
-            const name = $(element).find('strong').text();
-            const placeVisited = $(element).find('._2R5zX').text();
-            const image = $(element).find('img').attr('src');
+    console.log(data);
+    return NextResponse.json(data);
+  }
 
-            data.push({
-                name,
-                placeVisited,
-                image,
-            });
-        });
-
-        console.log(data);
-        return NextResponse.json(data);
-    }
-
-    browser.close();
+  browser.close();
 }
