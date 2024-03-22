@@ -1,6 +1,6 @@
 'use client';
 
-import { Carousel } from '@mantine/carousel';
+import { Carousel, CarouselSlide } from '@mantine/carousel';
 import {
   Box,
   Button,
@@ -8,6 +8,7 @@ import {
   Container,
   Divider,
   Grid,
+  GridCol,
   Image,
   Skeleton,
   Stack,
@@ -156,7 +157,7 @@ const CelebsNewsCarousel = () => {
       plugins={[autoplay.current]}
     >
       {celebsNews?.map((news) => (
-        <Carousel.Slide key={news.name} w="100%">
+        <CarouselSlide key={news.name} w="100%">
           <Card w="100%" h={300} style={{ position: 'relative' }}>
             <Stack dir="column" align="center" justify="center">
               <Image src={news.image} w="100%" h="100%" />
@@ -176,7 +177,7 @@ const CelebsNewsCarousel = () => {
               {news.title}
             </Title>
           </Card>
-        </Carousel.Slide>
+        </CarouselSlide>
       ))}
     </Carousel>
   );
@@ -260,13 +261,13 @@ const Top10Locations = () => {
       <section>
         <Grid columns={12} align="stretch">
           {[...Array(10)].map((_, index) => (
-            <Grid.Col key={index} span={{ xs: 12, sm: 6, md: 12 / 5 }}>
+            <GridCol key={index} span={{ xs: 12, sm: 6, md: 12 / 5 }}>
               <Card shadow="sm" radius="lg" p="xl">
                 <Skeleton height={200} width="100%" />
                 <Skeleton height={20} width="70%" mt="md" />
                 <Skeleton height={20} width="50%" mt="sm" />
               </Card>
-            </Grid.Col>
+            </GridCol>
           ))}
         </Grid>
       </section>
@@ -277,7 +278,7 @@ const Top10Locations = () => {
     <section>
       <Grid columns={12} align="stretch">
         {top10Locations?.map((location, index) => (
-          <Grid.Col key={location.title} span={{ xs: 12, sm: 6, md: 12 / 5 }}>
+          <GridCol key={location.title} span={{ xs: 12, sm: 6, md: 12 / 5 }}>
             <Card
               shadow="sm"
               radius="lg"
@@ -305,7 +306,7 @@ const Top10Locations = () => {
                 {location.title}
               </Text>
             </Card>
-          </Grid.Col>
+          </GridCol>
         ))}
       </Grid>
     </section>
