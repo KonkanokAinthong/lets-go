@@ -1,35 +1,81 @@
-// pages/api/trip-planner.ts
 import { NextApiRequest, NextApiResponse } from 'next';
+import OpenAI from 'openai';
 
-const CLAUDE_API_KEY = 'YOUR_CLAUDE_API_KEY';
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
-  const { celebrity } = req.body;
+  const { message } = req.body;
 
   try {
-    const prompt = `Generate a trip plan based on the following celebrity's visited places:\n\n${JSON.stringify(
-      celebrity.visits
-    )}\n\nTrip Plan:`;
-
-    const response = await fetch('https://api.anthropic.com/v1/complete', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-Key': CLAUDE_API_KEY,
-      },
-      body: JSON.stringify({
-        prompt,
-        model: 'claude-v1',
-        max_tokens_to_sample: 500,
-      }),
+    const completion = await openai.chat.completions.create({
+      messages: [
+        { role: 'system', content: 'You are a helpful assistant.' },
+        { role: 'user', content: message },
+      ],
+      model: 'gpt-3.5-turbo',
     });
 
-    const data = await response.json();
-    const tripPlan = data.completion.trim();
-
-    res.status(200).json({ tripPlan });
+    const aiResponse = completion.choices[0].message.content;
+    return res.status(200).json({ response: aiResponse });
   } catch (error) {
-    console.error('Error generating trip plan:', error);
-    res.status(500).json({ error: 'Failed to generate trip plan' });
+    console.error('Error generating AI response:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+// pages/api/trip-planner.ts
+
+// import { NextApiRequest, NextApiResponse } from 'next';
+// import { Configuration, OpenAIApi } from 'openai';
+// import prisma from '../../lib/prisma';
+
+// const configuration = new Configuration({
+//   apiKey: process.env.OPENAI_API_KEY,
+// });
+// const openai = new OpenAIApi(configuration);
+
+// export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+//   if (req.method === 'POST') {
+//     const { message } = req.body;
+
+//     try {
+//       // Retrieve famous places visited by celebrities from the database
+//       const visitedPlaces = await prisma.visitedPlace.findMany({
+//         include: {
+//           celebrity: true,
+//         },
+//       });
+
+//       // Format the visited places information for the AI prompt
+//       const visitedPlacesInfo = visitedPlaces
+//         .map(
+//           (place) =>
+//             `${place.celebrity.name} visited ${place.name} in ${place.location.lat}, ${place.location.lng} on ${place.date}.`
+//         )
+//         .join('\n');
+
+//       const prompt = `You are a trip planner assistant specialized in recommending famous places visited by celebrities in Thailand. Use the following information to provide accurate and personalized trip suggestions:
+
+// Famous places visited by celebrities:
+// ${visitedPlacesInfo}
+
+// User's message: ${message}
+// `;
+
+//       const completion = await openai.createChatCompletion({
+//         model: 'gpt-3.5-turbo',
+//         messages: [{ role: 'user', content: prompt }],
+//       });
+
+//       const aiResponse = completion.data.choices[0].message.content;
+//       return res.status(200).json({ response: aiResponse });
+//     } catch (error) {
+//       console.error('Error generating AI response:', error);
+//       return res.status(500).json({ error: 'Internal server error' });
+//     }
+//   }
+
+//   return res.status(405).json({ error: 'Method not allowed' });
+// }
