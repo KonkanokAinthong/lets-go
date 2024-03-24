@@ -17,23 +17,29 @@ import {
 } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import { useState } from 'react';
-import axios from 'axios';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
-  const [value, setValue] = useState('');
+
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async (query: string) => {
-    setValue(query);
-    setLoading(true);
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+      const data = await response.json();
 
-    const { data } = await axios.get(`/api/search-places?place=${query}`);
-    const places = data.data.predictions.map((prediction: any) => prediction.description);
-
-    setOptions(places);
-    setLoading(false);
+      if (response.ok) {
+        setOptions(data.data);
+      } else {
+        console.error('Error:', data.error);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -60,7 +66,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <Group>
               <Autocomplete
                 placeholder="Type to search"
-                value={value}
                 data={options}
                 onChange={handleSearch}
                 rightSection={loading ? <Loader size={16} /> : null}

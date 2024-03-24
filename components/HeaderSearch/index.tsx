@@ -5,29 +5,35 @@
 import { Autocomplete, Group, Burger, rem, NavLink, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconNavigationCheck, IconSearch } from '@tabler/icons-react';
-
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import classes from './HeaderSearch.module.css';
 
-// const links = [
-//   { link: '/about', label: 'Features' },
-//   { link: '/pricing', label: 'Pricing' },
-//   { link: '/learn', label: 'Learn' },
-//   { link: '/community', label: 'Community' },
-// ];
+const celebrityData = [
+  { name: 'Lee Min-ho', visits: ['Bangkok', 'Phuket'] },
+  { name: 'Song Hye-kyo', visits: ['Chiang Mai', 'Hua Hin'] },
+  { name: 'Park Seo-joon', visits: ['Bangkok', 'Koh Samui'] },
+  { name: 'Kim Go-eun', visits: ['Krabi', 'Phi Phi Islands'] },
+  { name: 'Ji Chang-wook', visits: ['Pattaya', 'Ayutthaya'] },
+];
 
 export function HeaderSearch() {
   const [opened, { toggle }] = useDisclosure(false);
+  const [searchValue, setSearchValue] = useState('');
+  const router = useRouter();
 
-  //   const items = links.map((link) => (
-  //     <a
-  //       key={link.label}
-  //       href={link.link}
-  //       className={classes.link}
-  //       onClick={(event) => event.preventDefault()}
-  //     >
-  //       {link.label}
-  //     </a>
-  //   ));
+  const handleSearch = (value: string) => {
+    setSearchValue(value);
+  };
+
+  const handleSubmit = () => {
+    const selectedCelebrity = celebrityData.find(
+      (celebrity) => celebrity.name.toLowerCase() === searchValue.toLowerCase()
+    );
+    if (selectedCelebrity) {
+      router.push(`/celebrity/${encodeURIComponent(selectedCelebrity.name)}`);
+    }
+  };
 
   return (
     <header className={classes.header}>
@@ -46,16 +52,15 @@ export function HeaderSearch() {
             />
           </Group>
         </Group>
-
         <Group>
-          {/* <Group ml={50} gap={5} className={classes.links} visibleFrom="sm">
-            {items}
-          </Group> */}
           <Autocomplete
             className={classes.search}
-            placeholder="Search"
+            placeholder="Search celebrities"
             leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
-            // visibleFrom="xs"
+            data={celebrityData.map((celebrity) => celebrity.name)}
+            value={searchValue}
+            onChange={handleSearch}
+            onItemSubmit={handleSubmit}
           />
         </Group>
       </div>

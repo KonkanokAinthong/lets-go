@@ -2,7 +2,6 @@
 
 import {
   Avatar,
-  Card,
   Center,
   Container,
   Divider,
@@ -16,7 +15,7 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-maps/api';
 import axios from 'axios';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
@@ -184,12 +183,20 @@ export default function Page() {
 
   const containerStyle = {
     width: '100%',
-    height: '400px',
+    height: '600px',
   };
 
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU',
   });
+
+  if (loadError) {
+    return <div>Error loading Google Maps API</div>;
+  }
+
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Container c="white">
@@ -287,7 +294,7 @@ export default function Page() {
                     onLoad={onLoad}
                     onUnmount={onUnmount}
                   >
-                    {celebrityData
+                    {/* {celebrityData
                       .filter((celebrity) =>
                         celebrity.visits.some(
                           (visit) =>
@@ -308,7 +315,28 @@ export default function Page() {
                               {visit.place}
                             </Marker>
                           ))
-                      )}
+                      )} */}
+                    {celebrityData.map((celebrity, index) =>
+                      celebrity.visits.map((visit, visitIndex) => (
+                        <Marker
+                          key={`${index}-${visitIndex}`}
+                          position={{ lat: visit.lat, lng: visit.lng }}
+                          icon={{
+                            url: `https://image.tmdb.org/t/p/original/${info?.profile_path}`,
+                            scaledSize: new window.google.maps.Size(40, 40),
+                            anchor: new window.google.maps.Point(20, 20),
+                            labelOrigin: new window.google.maps.Point(20, 60),
+                          }}
+                          title={celebrity.name}
+                          label={{
+                            text: celebrity.name,
+                            color: 'black',
+                            fontWeight: 'bold',
+                            fontSize: '16px',
+                          }}
+                        />
+                      ))
+                    )}
                   </GoogleMap>
                   {/* <Stack mt="md">
                     {celebrityData

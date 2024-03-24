@@ -15,11 +15,12 @@ import {
   Text,
   Title,
 } from '@mantine/core';
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import axios from 'axios';
 import Autoplay from 'embla-carousel-autoplay';
 
 import Link from 'next/link';
-import { useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 
 const getCelebsNews = async () => {
@@ -184,6 +185,34 @@ const CelebsNewsCarousel = () => {
 };
 
 const SuperstarCheckInThailand = () => {
+  const { isLoaded, loadError } = useJsApiLoader({
+    googleMapsApiKey: 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU',
+  });
+  const [map, setMap] = useState(null);
+  const [currentLocation, setCurrentLocation] = useState(null);
+
+  const onLoad = useCallback((map) => {
+    setMap(map);
+  }, []);
+
+  const onUnmount = useCallback((map) => {
+    setMap(null);
+  }, []);
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCurrentLocation({ lat: latitude, lng: longitude });
+        },
+        (error) => {
+          console.error('Error getting current location:', error);
+        }
+      );
+    }
+  }, []);
+
   const getRandomCelebImage = (region) => {
     let celebrities = [];
 
@@ -205,15 +234,26 @@ const SuperstarCheckInThailand = () => {
     return celebrities[randomIndex].image;
   };
 
+  if (loadError) return 'Error loading maps';
+  if (!isLoaded) return 'Loading Maps';
+
   return (
     <section>
       <Grid justify="center" align="center" gutter="xl" p="lg">
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            <Box href="near-me" component={Link}>
-              <Image src="https://picsum.photos/400/400" alt="Celeb Near Me" height={400} />
-            </Box>
-            <Button size="lg" component={Link} href="/kr" variant="filled">
+            {currentLocation && (
+              <GoogleMap
+                mapContainerStyle={{ width: '100%', height: '400px' }}
+                center={currentLocation}
+                zoom={10}
+                onLoad={onLoad}
+                onUnmount={onUnmount}
+              >
+                <Marker position={currentLocation} />
+              </GoogleMap>
+            )}
+            <Button size="lg" component={Link} href="/kr" variant="default">
               Superstar nearby me
             </Button>
           </Stack>
@@ -223,7 +263,7 @@ const SuperstarCheckInThailand = () => {
             <Box href="kr" component={Link}>
               <Image src={getRandomCelebImage('kr')} alt="Korean Celebrity" height={400} />
             </Box>
-            <Button size="lg" component={Link} href="/kr" variant="filled">
+            <Button size="lg" component={Link} href="/kr" variant="default">
               South Korea
             </Button>
           </Stack>
@@ -233,7 +273,7 @@ const SuperstarCheckInThailand = () => {
             <Box href="cn" component={Link}>
               <Image src={getRandomCelebImage('cn')} alt="Chinese Celebrity" height={400} />
             </Box>
-            <Button size="lg" component={Link} href="/cn" variant="filled">
+            <Button size="lg" component={Link} href="/cn" variant="default">
               China
             </Button>
           </Stack>
@@ -243,7 +283,7 @@ const SuperstarCheckInThailand = () => {
             <Box href="th" component={Link}>
               <Image src={getRandomCelebImage('th')} alt="Thai Celebrity" height={400} />
             </Box>
-            <Button size="lg" component={Link} href="/th" variant="filled">
+            <Button size="lg" component={Link} href="/th" variant="default">
               Thailand
             </Button>
           </Stack>
