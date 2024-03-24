@@ -159,7 +159,7 @@ const CelebsNewsCarousel = () => {
     >
       {celebsNews?.map((news) => (
         <CarouselSlide key={news.name} w="100%">
-          <Card w="100%" h={300} style={{ position: 'relative' }}>
+          <Card w="100%" h={300} style={{ position: 'relative' }} component={Link} href={news.link}>
             <Stack dir="column" align="center" justify="center">
               <Image src={news.image} w="100%" h="100%" />
             </Stack>
@@ -325,7 +325,7 @@ const Top10Locations = () => {
               p="xl"
               style={{ position: 'relative' }}
               component={Link}
-              href={`/locations/${location.title}`}
+              href={location.link}
             >
               <Image src={location?.image} alt={location.title} />
               <Title

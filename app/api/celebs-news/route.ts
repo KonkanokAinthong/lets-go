@@ -9,12 +9,12 @@ export async function GET(request: Request) {
   const html = await response.text();
   const $ = load(html);
 
-  const news = $('.container > .css-1hxxfeu.e1jz6ffu5 > .css-1vslxzv.e1jz6ffu8')
+  const news = $('.css-1vslxzv.e1jz6ffu8')
     .map((i, el) => {
       const $el = $(el);
       const title = $el.find('h2').text();
       const image = $el.find('img').attr('src');
-      const link = $el.attr('href');
+      const link = $el.find('a').attr('href');
 
       return {
         title,
