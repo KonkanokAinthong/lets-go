@@ -1,5 +1,6 @@
 'use client';
 
+import ChatInterface from '@/components/ChatInterface';
 import {
   Avatar,
   Center,
@@ -217,6 +218,7 @@ export default function Page() {
             <TabsTab value="info">ประวัติ</TabsTab>
             <TabsTab value="visited-places">การท่องเที่ยว</TabsTab>
             <TabsTab value="nearby">สถานที่ท่องเที่ยวใกล้เคียง</TabsTab>
+            <TabsTab value="chatgpt-planner">ChatGPT Trip Planner</TabsTab>
           </TabsList>
           <TabsPanel value="info">
             <Stack>
@@ -374,6 +376,9 @@ export default function Page() {
                 <p>Loading...</p>
               )}
             </div>
+          </TabsPanel>
+          <TabsPanel value="chatgpt-planner">
+            <ChatInterface />
           </TabsPanel>
         </Tabs>
       </Stack>
