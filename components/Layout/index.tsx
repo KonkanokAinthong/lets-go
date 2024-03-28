@@ -20,32 +20,44 @@ import { useState } from 'react';
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const [opened, { toggle }] = useDisclosure();
-
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async (query: string) => {
-    try {
-      setLoading(true);
-      const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
-      const data = await response.json();
+    if (query.trim().length >= 3) {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+        const data = await response.json();
 
-      if (response.ok) {
-        setOptions(data.data);
-      } else {
-        console.error('Error:', data.error);
+        if (response) {
+          const formattedOptions = data?.celebrities?.map?.((celebrity) => ({
+            value: celebrity.name,
+            label: celebrity.name,
+            visitedPlaces: celebrity.visitedPlaces,
+          }));
+          setOptions(formattedOptions);
+        } else {
+          console.error('Error:', data.error);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      setLoading(false);
+    } else {
+      setOptions([]);
     }
   };
 
   return (
     <AppShell
       header={{ height: 60 }}
-      navbar={{ width: 300, breakpoint: 'sm', collapsed: { desktop: true, mobile: !opened } }}
+      navbar={{
+        width: 300,
+        breakpoint: 'sm',
+        collapsed: { desktop: true, mobile: !opened },
+      }}
       padding="md"
     >
       <AppShell.Header>
@@ -68,6 +80,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 placeholder="Type to search"
                 data={options}
                 onChange={handleSearch}
+                minLength={3}
                 rightSection={loading ? <Loader size={16} /> : null}
                 leftSection={
                   <IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
@@ -78,7 +91,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </Group>
         </Group>
       </AppShell.Header>
-
       <AppShell.Navbar py="md" px={4}>
         <Box>
           <NavLink
@@ -92,7 +104,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
           />
         </Box>
       </AppShell.Navbar>
-
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
   );

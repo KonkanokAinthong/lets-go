@@ -231,7 +231,14 @@ const SuperstarCheckInThailand = () => {
     }
 
     const randomIndex = Math.floor(Math.random() * celebrities.length);
-    return celebrities[randomIndex].image;
+    const selectedCeleb = celebrities[randomIndex];
+
+    // Check if the selected celebrity has an image URL
+    if (selectedCeleb && selectedCeleb.image) {
+      return selectedCeleb.image;
+    }
+    // If the selected celebrity doesn't have an image URL, return a placeholder image or an empty string
+    return 'https://via.placeholder.com/600x900?text=No+Image';
   };
 
   if (loadError) return 'Error loading maps';

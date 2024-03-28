@@ -1,14 +1,9 @@
 import { NextResponse } from 'next/server';
 
-const mockCelebrityData = [
+const celebrities = [
   {
-    id: 1,
-    name: 'Kim Seon Ho',
-    image: 'https://example.com/kim-seon-ho.jpg',
-    visits: [
-      { lat: 13.7563, lng: 100.5018, place: 'Bangkok' },
-      { lat: 7.9519, lng: 98.3381, place: 'Phuket' },
-    ],
+    name: 'Kim Seon-ho',
+    visitedPlaces: ['Paris', 'London', 'New York'],
   },
 ];
 
@@ -16,12 +11,17 @@ export async function GET(req) {
   const query = new URL(req.url).searchParams.get('query');
 
   if (typeof query !== 'string') {
-    return NextResponse.json({ error: 'Invalid query' }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid query parameter' });
   }
 
-  const searchResults = mockCelebrityData.filter((celebrity) =>
-    celebrity.name.toLowerCase().includes(query.toLowerCase())
-  );
+  const searchQuery = query.toLowerCase();
 
-  return NextResponse.json({ data: searchResults });
+  const filteredCelebrities = celebrities.filter((celebrity) => {
+    const name = celebrity.name.toLowerCase();
+    const visitedPlaces = celebrity.visitedPlaces.map((place) => place.toLowerCase());
+
+    return name.includes(searchQuery) || visitedPlaces.some((place) => place.includes(searchQuery));
+  });
+
+  return NextResponse.json({ celebrities: filteredCelebrities });
 }
