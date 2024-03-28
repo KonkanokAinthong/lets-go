@@ -60,7 +60,7 @@ export function HeaderSearch() {
             data={celebrityData.map((celebrity) => celebrity.name)}
             value={searchValue}
             onChange={handleSearch}
-            onItemSubmit={handleSubmit}
+            onSubmit={handleSubmit}
           />
         </Group>
       </div>
