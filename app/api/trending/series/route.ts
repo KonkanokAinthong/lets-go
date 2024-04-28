@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { load } from 'cheerio';
 import { NextResponse } from 'next/server';
 
@@ -15,11 +14,11 @@ export async function GET(request: Request) {
       const $el = $(el);
       const titles = $el
         .find('div.fs-details > div.details > a > b')
-        .map((i, el) => $(el).text())
+        .map((_, el1) => $(el1).text())
         .get();
       const images = $el
         .find('div.fs-details > a > img')
-        .map((i, el) => $(el).attr('src'))
+        .map((_, el2) => $(el2).attr('src'))
         .get();
 
       const nationality = $el.find('div.fs-details > div.details > div').text();

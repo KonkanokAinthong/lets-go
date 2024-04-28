@@ -7,7 +7,7 @@ const celebrities = [
   },
 ];
 
-export async function GET(req) {
+export async function GET(req: Request) {
   const query = new URL(req.url).searchParams.get('query');
 
   if (typeof query !== 'string') {
