@@ -7,27 +7,34 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconNavigationCheck, IconSearch } from '@tabler/icons-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useQuery } from 'react-query';
 import classes from './HeaderSearch.module.css';
 
-const celebrityData = [
-  { name: 'Lee Min-ho', visits: ['Bangkok', 'Phuket'] },
-  { name: 'Song Hye-kyo', visits: ['Chiang Mai', 'Hua Hin'] },
-  { name: 'Park Seo-joon', visits: ['Bangkok', 'Koh Samui'] },
-  { name: 'Kim Go-eun', visits: ['Krabi', 'Phi Phi Islands'] },
-  { name: 'Ji Chang-wook', visits: ['Pattaya', 'Ayutthaya'] },
-];
+async function fetchCelebrities(searchTerm) {
+  const response = await fetch(`/api/celebrities?search=${searchTerm}`);
+  const data = await response.json();
+  return data;
+}
 
 export function HeaderSearch() {
   const [opened, { toggle }] = useDisclosure(false);
   const [searchValue, setSearchValue] = useState('');
   const router = useRouter();
 
+  const { data: celebrities, isLoading } = useQuery(
+    ['celebrities', searchValue],
+    () => fetchCelebrities(searchValue),
+    {
+      enabled: searchValue.length > 0,
+    }
+  );
+
   const handleSearch = (value: string) => {
     setSearchValue(value);
   };
 
   const handleSubmit = () => {
-    const selectedCelebrity = celebrityData.find(
+    const selectedCelebrity = celebrities?.find(
       (celebrity) => celebrity.name.toLowerCase() === searchValue.toLowerCase()
     );
     if (selectedCelebrity) {
@@ -57,10 +64,11 @@ export function HeaderSearch() {
             className={classes.search}
             placeholder="Search celebrities"
             leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
-            data={celebrityData.map((celebrity) => celebrity.name)}
+            data={celebrities?.map((celebrity) => celebrity.name) || []}
             value={searchValue}
             onChange={handleSearch}
             onSubmit={handleSubmit}
+            loading={isLoading}
           />
         </Group>
       </div>

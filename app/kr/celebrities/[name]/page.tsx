@@ -1,8 +1,8 @@
 'use client';
 
-import ChatInterface from '@/components/ChatInterface';
 import {
   Avatar,
+  Button,
   Center,
   Container,
   Divider,
@@ -18,9 +18,17 @@ import {
 } from '@mantine/core';
 import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-maps/api';
 import axios from 'axios';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import ChatInterface from '@/components/ChatInterface';
+import {
+  IconArrowBack,
+  IconArrowBigLeft,
+  IconArrowBigLeftFilled,
+  IconArrowLeftCircle,
+  IconArrowsLeft,
+} from '@tabler/icons-react';
 
 const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
 
@@ -133,6 +141,7 @@ async function getTrendingKoreanCelebrities() {
 
 export default function Page() {
   const [map, setMap] = useState(null);
+  const navigate = useRouter();
 
   const { name } = useParams();
   const decodedName = decodeURIComponent(name as string);
@@ -144,8 +153,8 @@ export default function Page() {
 
   const onLoad = useCallback(
     (map) => {
-      const bounds = new window.google.maps.LatLngBounds(currentLocation);
-      map.fitBounds(bounds);
+      map.setCenter(currentLocation);
+      map.setZoom(10);
       setMap(map);
     },
     [currentLocation]
@@ -202,6 +211,16 @@ export default function Page() {
   return (
     <Container c="white">
       <Stack>
+        <div>
+          <Button variant="white" onClick={() => navigate.back()}>
+            <IconArrowBigLeftFilled
+              style={{
+                color: 'black',
+              }}
+              size={24}
+            />
+          </Button>
+        </div>
         <Center>
           <Avatar
             size={200}
@@ -218,7 +237,7 @@ export default function Page() {
             <TabsTab value="info">ประวัติ</TabsTab>
             <TabsTab value="visited-places">การท่องเที่ยว</TabsTab>
             <TabsTab value="nearby">สถานที่ท่องเที่ยวใกล้เคียง</TabsTab>
-            <TabsTab value="chatgpt-planner">ChatGPT Trip Planner</TabsTab>
+            <TabsTab value="chatgpt-planner">Trip Planner</TabsTab>
           </TabsList>
           <TabsPanel value="info">
             <Stack>
