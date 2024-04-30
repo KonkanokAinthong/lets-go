@@ -6,37 +6,44 @@ import { useDisclosure } from '@mantine/hooks';
 import {
   AppShell,
   Autocomplete,
+  AutocompleteProps,
+  Avatar,
   Box,
   Burger,
   Group,
   Image,
   Loader,
   NavLink,
+  Text,
   Title,
   rem,
 } from '@mantine/core';
 import { IconSearch } from '@tabler/icons-react';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const navigate = useRouter();
   const [opened, { toggle }] = useDisclosure();
-  const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState<
+    { value: string; label: string; visitedPlaces: string[] }[]
+  >([]);
   const [loading, setLoading] = useState(false);
 
   const handleSearch = async (query: string) => {
     if (query.trim().length >= 3) {
       try {
         setLoading(true);
-        const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+        const response = await fetch(`/api/search?search=${encodeURIComponent(query)}`);
         const data = await response.json();
-
-        if (response) {
-          const formattedOptions = data?.celebrities?.map?.((celebrity) => ({
-            value: celebrity.name,
-            label: celebrity.name,
-            visitedPlaces: celebrity.visitedPlaces,
+        if (response.ok) {
+          console.log(data);
+          const formattedData = data.map((result: any) => ({
+            value: result.id.toString(),
+            label: result.label,
+            avatarPath: result.profile_path,
           }));
-          setOptions(formattedOptions);
+          setOptions(formattedData);
         } else {
           console.error('Error:', data.error);
         }
@@ -50,14 +57,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const handleItemSubmit = (option: { value: string; label: string; avatarPath: string }) => {
+    // Navigate to the selected item's page
+    navigate.push(`/celebrity/${option.label}`);
+  };
+
+  const renderAutocompleteOption: AutocompleteProps['renderOption'] = ({ option }) => (
+    <Group gap="sm">
+      <Avatar src={option.avatarPath} size={36} radius="xl" />
+      <div>
+        <Text size="sm">{option.label}</Text>
+      </div>
+    </Group>
+  );
+
+  console.log('options:', options);
+
   return (
     <AppShell
       header={{ height: 60 }}
-      navbar={{
-        width: 300,
-        breakpoint: 'sm',
-        collapsed: { desktop: true, mobile: !opened },
-      }}
+      navbar={{ width: 300, breakpoint: 'sm', collapsed: { desktop: true, mobile: !opened } }}
       padding="md"
     >
       <AppShell.Header>
@@ -69,12 +88,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 leftSection={<Image src="/logo.png" width={40} height={40} alt="logo" />}
                 label={
                   <Title order={3} c="#ff6a1a">
-                    Let's go
+                    {' '}
+                    Let's go{' '}
                   </Title>
                 }
                 href="/"
               />
             </Box>
+
             <Group>
               <Autocomplete
                 placeholder="Type to search"
@@ -86,6 +107,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   <IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                 }
                 visibleFrom="xs"
+                renderOption={renderAutocompleteOption}
+                onOptionSubmit={handleItemSubmit}
               />
             </Group>
           </Group>
@@ -97,7 +120,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
             leftSection={<Image src="/logo.png" width={40} height={40} alt="logo" />}
             label={
               <Title order={3} c="#ff6a1a">
-                Let's go
+                {' '}
+                Let's go{' '}
               </Title>
             }
             href="/"

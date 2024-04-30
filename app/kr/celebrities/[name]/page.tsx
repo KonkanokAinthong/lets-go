@@ -21,14 +21,8 @@ import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { IconArrowBigLeftFilled } from '@tabler/icons-react';
 import ChatInterface from '@/components/ChatInterface';
-import {
-  IconArrowBack,
-  IconArrowBigLeft,
-  IconArrowBigLeftFilled,
-  IconArrowLeftCircle,
-  IconArrowsLeft,
-} from '@tabler/icons-react';
 
 const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
 

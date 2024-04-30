@@ -9,19 +9,35 @@ export async function GET(req: NextRequest) {
   const search = searchParams.get('search');
 
   try {
-    const response = await axios.get(`https://api.themoviedb.org/3/search/person?query=${search}`, {
-      headers: {
-        Authorization: `Bearer ${TMDB_API_KEY}`,
-      },
-    });
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/search/person?query=${search}&include_adult=false&language=en-US&page=1`,
+      {
+        headers: {
+          Authorization: `Bearer ${TMDB_API_KEY}`,
+          Accept: 'application/json',
+        },
+      }
+    );
+
+    console.log(response.data.results[0]);
 
     return new Response(
       JSON.stringify(
         response.data.results.map((result) => ({
           id: result.id,
-          name: result.name,
+          value: result.id,
+          label: result.name,
+          profile_path: result?.profile_path
+            ? `https://image.tmdb.org/t/p/w500${result.profile_path}`
+            : null,
         }))
-      )
+      ),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        status: 200,
+      }
     );
   } catch (error) {
     console.error('Error fetching celebrities:', error);
