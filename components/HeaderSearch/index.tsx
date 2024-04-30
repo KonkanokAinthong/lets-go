@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { useQuery } from 'react-query';
 import classes from './HeaderSearch.module.css';
 
-async function fetchCelebrities(searchTerm) {
+async function fetchCelebrities(searchTerm: string) {
   const response = await fetch(`/api/celebrities?search=${searchTerm}`);
   const data = await response.json();
   return data;
@@ -20,7 +20,6 @@ export function HeaderSearch() {
   const [opened, { toggle }] = useDisclosure(false);
   const [searchValue, setSearchValue] = useState('');
   const router = useRouter();
-
   const { data: celebrities, isLoading } = useQuery(
     ['celebrities', searchValue],
     () => fetchCelebrities(searchValue),
@@ -28,6 +27,8 @@ export function HeaderSearch() {
       enabled: searchValue.length > 0,
     }
   );
+
+  console.log(celebrities);
 
   const handleSearch = (value: string) => {
     setSearchValue(value);
@@ -38,7 +39,7 @@ export function HeaderSearch() {
       (celebrity) => celebrity.name.toLowerCase() === searchValue.toLowerCase()
     );
     if (selectedCelebrity) {
-      router.push(`/celebrity/${encodeURIComponent(selectedCelebrity.name)}`);
+      router.push(`/celebrity/${selectedCelebrity.id}`);
     }
   };
 
@@ -52,7 +53,8 @@ export function HeaderSearch() {
               leftSection={<IconNavigationCheck color="#ff6a1a" />}
               label={
                 <Title order={3} c="#ff6a1a">
-                  Let's go
+                  {' '}
+                  Let's go{' '}
                 </Title>
               }
               href="/"

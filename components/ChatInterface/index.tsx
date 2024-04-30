@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { TextInput, Button, Paper, Text, Space, Box, Title, Avatar, Select } from '@mantine/core';
+import { TextInput, Paper, Text, Box, Title, Avatar, Select, Stack } from '@mantine/core';
 import { IconSend } from '@tabler/icons-react';
 
 const ChatInterface = () => {
@@ -7,10 +7,8 @@ const ChatInterface = () => {
   const [inputValue, setInputValue] = useState('');
   const [budget, setBudget] = useState('');
   const chatContainerRef = useRef(null);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  const [selectedBudget, setSelectedBudget] = useState('');
+  const [selectedProvince, setSelectedProvince] = useState('');
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -18,10 +16,15 @@ const ChatInterface = () => {
     }
   };
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   const handleSendMessage = async () => {
     if (inputValue.trim() !== '') {
       setMessages([...messages, { text: inputValue, sender: 'user' }]);
       setInputValue('');
+
       try {
         const response = await fetch('/api/trip-planner', {
           method: 'POST',
@@ -30,9 +33,10 @@ const ChatInterface = () => {
           },
           body: JSON.stringify({
             message: inputValue,
-            context: `You are a trip planner assistant helping to plan a trip to Thailand with a budget of ${budget} THB.`,
+            context: `You are a trip planner assistant helping to plan a trip to Thailand with a budget of ${budget} THB. If the user's input is in Thai, respond in Thai. If the user's input is in English, respond in English. Provide your response in bullet points for easy readability, rather than in paragraphs.`,
           }),
         });
+
         const data = await response.json();
         if (data.response) {
           setMessages((prevMessages) => [
@@ -49,7 +53,10 @@ const ChatInterface = () => {
         console.error('Error:', error);
         setMessages((prevMessages) => [
           ...prevMessages,
-          { text: 'An error occurred. Please try again later.', sender: 'assistant' },
+          {
+            text: 'An error occurred. Please try again later.',
+            sender: 'assistant',
+          },
         ]);
       }
     }
@@ -67,20 +74,106 @@ const ChatInterface = () => {
       <Title order={3} mb="md">
         Thailand Trip Planner
       </Title>
-      <Select
-        label="Budget (THB)"
-        placeholder="Select budget"
-        value={budget}
-        onChange={setBudget}
-        data={[
-          { value: '10000', label: '10,000 THB' },
-          { value: '20000', label: '20,000 THB' },
-          { value: '30000', label: '30,000 THB' },
-          { value: '40000', label: '40,000 THB' },
-          { value: '50000', label: '50,000 THB' },
-        ]}
-        mb="md"
-      />
+      <Stack>
+        <Select
+          label="Budget (THB)"
+          placeholder="Select budget"
+          value={selectedBudget}
+          onChange={setSelectedBudget}
+          data={[
+            { value: '1000', label: '1,000 THB' },
+            { value: '2000', label: '2,000 THB' },
+            { value: '5000', label: '5,000 THB' },
+            { value: '10000', label: '10,000 THB' },
+          ]}
+        />
+
+        <Select
+          label="Province"
+          placeholder="Select province"
+          value={selectedProvince}
+          onChange={setSelectedProvince}
+          data={[
+            { value: 'bangkok', label: 'Bangkok' },
+            { value: 'amnatCharoen', label: 'Amnat Charoen' },
+            { value: 'angThong', label: 'Ang Thong' },
+            { value: 'buengKan', label: 'Bueng Kan' },
+            { value: 'buriram', label: 'Buriram' },
+            { value: 'chachoengsao', label: 'Chachoengsao' },
+            { value: 'chainat', label: 'Chainat' },
+            { value: 'chaiyaphum', label: 'Chaiyaphum' },
+            { value: 'chanthaburi', label: 'Chanthaburi' },
+            { value: 'chiangMai', label: 'Chiang Mai' },
+            { value: 'chiangRai', label: 'Chiang Rai' },
+            { value: 'chonburi', label: 'Chonburi' },
+            { value: 'chumphon', label: 'Chumphon' },
+            { value: 'kalasin', label: 'Kalasin' },
+            { value: 'kamphaengPhet', label: 'Kamphaeng Phet' },
+            { value: 'kanchanaburi', label: 'Kanchanaburi' },
+            { value: 'khonKaen', label: 'Khon Kaen' },
+            { value: 'krabi', label: 'Krabi' },
+            { value: 'lampang', label: 'Lampang' },
+            { value: 'lamphun', label: 'Lamphun' },
+            { value: 'loei', label: 'Loei' },
+            { value: 'lopburi', label: 'Lopburi' },
+            { value: 'mae Hong Son', label: 'Mae Hong Son' },
+            { value: 'maha Sarakham', label: 'Maha Sarakham' },
+            { value: 'mukdahan', label: 'Mukdahan' },
+            { value: 'nakhonNayok', label: 'Nakhon Nayok' },
+            { value: 'nakhonPathom', label: 'Nakhon Pathom' },
+            { value: 'nakhonPhanom', label: 'Nakhon Phanom' },
+            { value: 'nakhonRatchasima', label: 'Nakhon Ratchasima' },
+            { value: 'nakhonSawan', label: 'Nakhon Sawan' },
+            { value: 'nakhonSiThammarat', label: 'Nakhon Si Thammarat' },
+            { value: 'nan', label: 'Nan' },
+            { value: 'narathiwat', label: 'Narathiwat' },
+            { value: 'nongBuaLamphu', label: 'Nong Bua Lamphu' },
+            { value: 'nongKhai', label: 'Nong Khai' },
+            { value: 'nonthaburi', label: 'Nonthaburi' },
+            { value: 'pathumThani', label: 'Pathum Thani' },
+            { value: 'pattani', label: 'Pattani' },
+            { value: 'phangNga', label: 'Phang Nga' },
+            { value: 'phatthalung', label: 'Phatthalung' },
+            { value: 'phayao', label: 'Phayao' },
+            { value: 'phetchabun', label: 'Phetchabun' },
+            { value: 'phetchaburi', label: 'Phetchaburi' },
+            { value: 'phichit', label: 'Phichit' },
+            { value: 'phitsanulok', label: 'Phitsanulok' },
+            { value: 'phra Nakhon Si Ayutthaya', label: 'Phra Nakhon Si Ayutthaya' },
+            { value: 'phrae', label: 'Phrae' },
+            { value: 'phuket', label: 'Phuket' },
+            { value: 'prachinBuri', label: 'Prachin Buri' },
+            { value: 'prachuapKhiriKhan', label: 'Prachuap Khiri Khan' },
+            { value: 'ranong', label: 'Ranong' },
+            { value: 'ratchaburi', label: 'Ratchaburi' },
+            { value: 'rayong', label: 'Rayong' },
+            { value: 'roiEt', label: 'Roi Et' },
+            { value: 'saKaeo', label: 'Sa Kaeo' },
+            { value: 'sakonNakhon', label: 'Sakon Nakhon' },
+            { value: 'samutPrakan', label: 'Samut Prakan' },
+            { value: 'samutSakhon', label: 'Samut Sakhon' },
+            { value: 'samutSongkhram', label: 'Samut Songkhram' },
+            { value: 'saraburi', label: 'Saraburi' },
+            { value: 'satun', label: 'Satun' },
+            { value: 'singBuri', label: 'Sing Buri' },
+            { value: 'siSaKet', label: 'Si Sa Ket' },
+            { value: 'songkhla', label: 'Songkhla' },
+            { value: 'sukhothai', label: 'Sukhothai' },
+            { value: 'suphanburi', label: 'Suphanburi' },
+            { value: 'suratThani', label: 'Surat Thani' },
+            { value: 'surin', label: 'Surin' },
+            { value: 'tak', label: 'Tak' },
+            { value: 'trang', label: 'Trang' },
+            { value: 'trat', label: 'Trat' },
+            { value: 'ubonRatchathani', label: 'Ubon Ratchathani' },
+            { value: 'udonThani', label: 'Udon Thani' },
+            { value: 'uthaithani', label: 'Uthai Thani' },
+            { value: 'uttaradit', label: 'Uttaradit' },
+            { value: 'yala', label: 'Yala' },
+            { value: 'yasothon', label: 'Yasothon' },
+          ]}
+        />
+      </Stack>
       <Box
         style={{
           flex: 1,

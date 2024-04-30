@@ -36,6 +36,12 @@ export default function Page() {
     'Atthaphan Phunsawat',
     'Tawan Vihokratana',
     'Thitipoom Techaapaikhun',
+    'Ranee Campen',
+    'Nadech Kugimiya',
+    'Urassaya Sperbund',
+    'Prin Suparat',
+    'Davika Hoorne',
+    'Kimberly Ann Voltemas',
   ];
 
   const { data: celebrities, isLoading } = useQuery('trendingThaiCelebrities', () =>

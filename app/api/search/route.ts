@@ -1,27 +1,30 @@
-import { NextResponse } from 'next/server';
+import axios from 'axios';
+import { NextRequest } from 'next/server';
 
-const celebrities = [
-  {
-    name: 'Kim Seon-ho',
-    visitedPlaces: ['Paris', 'London', 'New York'],
-  },
-];
+const TMDB_API_KEY =
+  'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNDg5YjUyNDg3MTdmZjY2NmY3NzhkNzE3NmVmYjdjZiIsInN1YiI6IjY1NTk5ZTI5ZWE4NGM3MTA5NmRmMjk2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.e0lqhUBzvqt4L-OleXqsj8bx_p6yQK46wPabFdYFO1s';
 
-export async function GET(req: Request) {
-  const query = new URL(req.url).searchParams.get('query');
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const search = searchParams.get('search');
 
-  if (typeof query !== 'string') {
-    return NextResponse.json({ error: 'Invalid query parameter' });
+  try {
+    const response = await axios.get(`https://api.themoviedb.org/3/search/person?query=${search}`, {
+      headers: {
+        Authorization: `Bearer ${TMDB_API_KEY}`,
+      },
+    });
+
+    return new Response(
+      JSON.stringify(
+        response.data.results.map((result) => ({
+          id: result.id,
+          name: result.name,
+        }))
+      )
+    );
+  } catch (error) {
+    console.error('Error fetching celebrities:', error);
+    return new Response(JSON.stringify({ error: 'Failed to fetch celebrities' }), { status: 500 });
   }
-
-  const searchQuery = query.toLowerCase();
-
-  const filteredCelebrities = celebrities.filter((celebrity) => {
-    const name = celebrity.name.toLowerCase();
-    const visitedPlaces = celebrity.visitedPlaces.map((place) => place.toLowerCase());
-
-    return name.includes(searchQuery) || visitedPlaces.some((place) => place.includes(searchQuery));
-  });
-
-  return NextResponse.json({ celebrities: filteredCelebrities });
 }
