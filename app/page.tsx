@@ -245,13 +245,19 @@ const SuperstarCheckInThailand = () => {
     const randomIndex = Math.floor(Math.random() * celebrities.length);
     const selectedCeleb = celebrities[randomIndex];
 
+    console.log(selectedCeleb);
+
     // Check if the selected celebrity has an image URL
-    if (selectedCeleb && selectedCeleb.image) {
-      return selectedCeleb.image;
+    if (selectedCeleb) {
+      return selectedCeleb;
     }
     // If the selected celebrity doesn't have an image URL, return a placeholder image or an empty string
     return 'https://via.placeholder.com/600x900?text=No+Image';
   };
+
+  const images_th = getRandomCelebImage('th');
+  const images_cn = getRandomCelebImage('cn');
+  const images_kr = getRandomCelebImage('kr');
 
   if (loadError) return 'Error loading maps';
   if (!isLoaded) return 'Loading Maps';
@@ -279,30 +285,30 @@ const SuperstarCheckInThailand = () => {
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            <Box href="kr" component={Link}>
-              <Image src={getRandomCelebImage('kr')} alt="Korean Celebrity" height={400} />
+            <Box href={images_kr?.name} component={Link}>
+              <Image src={images_kr?.image} alt="Korean Celebrity" height={400} />
             </Box>
-            <Button size="lg" component={Link} href="/kr" variant="default">
+            <Button size="lg" component={Link} href={images_kr?.name} variant="default">
               South Korea
             </Button>
           </Stack>
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            <Box href="cn" component={Link}>
-              <Image src={getRandomCelebImage('cn')} alt="Chinese Celebrity" height={400} />
+            <Box href={images_cn?.name} component={Link}>
+              <Image src={images_cn?.image} alt="Chinese Celebrity" height={400} />
             </Box>
-            <Button size="lg" component={Link} href="/cn" variant="default">
+            <Button size="lg" component={Link} href={images_cn?.name} variant="default">
               China
             </Button>
           </Stack>
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            <Box href="th" component={Link}>
-              <Image src={getRandomCelebImage('th')} alt="Thai Celebrity" height={400} />
+            <Box href={images_th?.name} component={Link}>
+              <Image src={images_th?.image} alt="Thai Celebrity" height={400} />
             </Box>
-            <Button size="lg" component={Link} href="/th" variant="default">
+            <Button size="lg" component={Link} href={images_th?.name} variant="default">
               Thailand
             </Button>
           </Stack>
