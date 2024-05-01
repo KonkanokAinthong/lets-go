@@ -1,13 +1,16 @@
 'use client';
 
 import {
+  Anchor,
   Avatar,
+  Breadcrumbs,
   Button,
   Center,
   Container,
   Divider,
   Grid,
   Image,
+  Skeleton,
   Stack,
   Tabs,
   TabsList,
@@ -21,7 +24,7 @@ import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { IconArrowBigLeftFilled } from '@tabler/icons-react';
+import { IconArrowBigLeftFilled, IconArrowLeft } from '@tabler/icons-react';
 import ChatInterface from '@/components/ChatInterface';
 
 const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
@@ -205,195 +208,200 @@ export default function Page() {
   return (
     <Container c="white">
       <Stack>
-        <div>
-          <Button variant="white" onClick={() => navigate.back()}>
-            <IconArrowBigLeftFilled
-              style={{
-                color: 'black',
-              }}
-              size={24}
-            />
-          </Button>
-        </div>
-        <Center>
-          <Avatar
-            size={200}
-            src={`https://image.tmdb.org/t/p/original/${info?.profile_path}`}
-            alt="test"
-          />
-        </Center>
-        <Title order={1} ta="center">
-          {decodeURIComponent(name as string)}
-        </Title>
+        <header>
+          <Breadcrumbs>
+            <Button
+              variant="subtle"
+              c="white"
+              leftSection={<IconArrowLeft size={16} />}
+              onClick={() => navigate.back()}
+            >
+              Back
+            </Button>
+          </Breadcrumbs>
+        </header>
+        <main>
+          <section>
+            <Center>
+              {info ? (
+                <Avatar
+                  size={200}
+                  src={`https://image.tmdb.org/t/p/original/${info?.profile_path}`}
+                  alt={decodeURIComponent(name as string)}
+                />
+              ) : (
+                <Skeleton height={200} circle />
+              )}
+            </Center>
+            <Title order={1} ta="center">
+              {decodeURIComponent(name as string)}
+            </Title>
+          </section>
 
-        <Tabs defaultValue="info">
-          <TabsList mb="xl" grow>
-            <TabsTab value="info">ประวัติ</TabsTab>
-            <TabsTab value="visited-places">การท่องเที่ยว</TabsTab>
-            <TabsTab value="nearby">สถานที่ท่องเที่ยวใกล้เคียง</TabsTab>
-            <TabsTab value="chatgpt-planner">Trip Planner</TabsTab>
-          </TabsList>
-          <TabsPanel value="info">
-            <Stack>
-              <div>
-                {info?.biography ? (
-                  <Text size="md">{info?.biography}</Text>
+          <Tabs defaultValue="info">
+            <nav>
+              <TabsList mb="xl" grow>
+                <TabsTab value="info">ประวัติ</TabsTab>
+                <TabsTab value="visited-places">การท่องเที่ยว</TabsTab>
+                <TabsTab value="nearby">สถานที่ท่องเที่ยวใกล้เคียง</TabsTab>
+                <TabsTab value="chatgpt-planner">Trip Planner</TabsTab>
+              </TabsList>
+            </nav>
+            <TabsPanel value="info">
+              <Stack>
+                <section>
+                  {info ? (
+                    info.biography ? (
+                      <Text size="md">{info.biography}</Text>
+                    ) : (
+                      <Text size="md">ไม่มีข้อมูล</Text>
+                    )
+                  ) : (
+                    <Skeleton height={100} />
+                  )}
+                </section>
+                <section>
+                  <Stack>
+                    <Title order={3}>Known For</Title>
+                    {data ? (
+                      <Grid>
+                        {data.known_for?.map((item) => (
+                          <Grid.Col
+                            span={{
+                              xs: 12,
+                              md: 4,
+                            }}
+                            key={item.id}
+                          >
+                            <Stack>
+                              <Image
+                                src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
+                                alt={item.name ?? item.title}
+                              />
+                              <Text ta="center">{item.name ?? item.title}</Text>
+                            </Stack>
+                          </Grid.Col>
+                        ))}
+                      </Grid>
+                    ) : (
+                      <Grid>
+                        {Array(3)
+                          .fill(0)
+                          .map((_, index) => (
+                            <Grid.Col
+                              span={{
+                                xs: 12,
+                                md: 4,
+                              }}
+                              key={index}
+                            >
+                              <Stack>
+                                <Skeleton height={200} />
+                                <Skeleton height={20} width="50%" mx="auto" />
+                              </Stack>
+                            </Grid.Col>
+                          ))}
+                      </Grid>
+                    )}
+                  </Stack>
+                </section>
+              </Stack>
+            </TabsPanel>
+            <TabsPanel value="visited-places">
+              {places ? (
+                places.some((place) => place !== undefined) ? (
+                  places.map((place: any) => (
+                    <article key={place?.name}>
+                      <Stack>
+                        <Image
+                          src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place?.photos[0].photo_reference}&key=${API_KEY}`}
+                          alt={place?.name}
+                        />
+                        <Stack>
+                          <Title order={3} ta="center">
+                            {place?.name}
+                          </Title>
+                          <Text size="xs">{place?.formatted_address}</Text>
+                        </Stack>
+                        <iframe
+                          title={`Map of ${place?.name}`}
+                          src={`https://www.google.com/maps/embed/v1/view?key=${API_KEY}&center=${place?.geometry.location.lat},${place?.geometry.location.lng}&zoom=15`}
+                          width="100%"
+                          height="450"
+                          allowFullScreen
+                          loading="lazy"
+                        />
+                        <Divider size="md" w="100%" />
+                      </Stack>
+                    </article>
+                  ))
                 ) : (
-                  <Text size="md">ไม่มีข้อมูล</Text>
+                  <Text size="xs">ไม่มีข้อมูล</Text>
+                )
+              ) : (
+                <Stack justify="center" align="center">
+                  {Array(3)
+                    .fill(0)
+                    .map((_, index) => (
+                      <article key={index}>
+                        <Stack>
+                          <Skeleton height={200} />
+                          <Stack>
+                            <Skeleton height={30} width="50%" mx="auto" />
+                            <Skeleton height={20} width="80%" mx="auto" />
+                          </Stack>
+                          <Skeleton height={450} />
+                          <Divider size="md" w="100%" />
+                        </Stack>
+                      </article>
+                    ))}
+                </Stack>
+              )}
+            </TabsPanel>
+            <TabsPanel value="nearby">
+              <div>
+                {isLoaded && currentLocation ? (
+                  <>
+                    <GoogleMap
+                      mapContainerStyle={containerStyle}
+                      center={currentLocation}
+                      zoom={10}
+                      onLoad={onLoad}
+                      onUnmount={onUnmount}
+                    >
+                      {celebrityData.map((celebrity, index) =>
+                        celebrity.visits.map((visit, visitIndex) => (
+                          <Marker
+                            key={`${index}-${visitIndex}`}
+                            position={{ lat: visit.lat, lng: visit.lng }}
+                            icon={{
+                              url: `https://image.tmdb.org/t/p/original/${info?.profile_path}`,
+                              scaledSize: new window.google.maps.Size(40, 40),
+                              anchor: new window.google.maps.Point(20, 20),
+                              labelOrigin: new window.google.maps.Point(20, 60),
+                            }}
+                            title={celebrity.name}
+                            label={{
+                              text: celebrity.name,
+                              color: 'black',
+                              fontWeight: 'bold',
+                              fontSize: '16px',
+                            }}
+                          />
+                        ))
+                      )}
+                    </GoogleMap>
+                  </>
+                ) : (
+                  <Skeleton height={600} />
                 )}
               </div>
-              <div>
-                <Stack>
-                  <Title order={3}>Known For</Title>
-                  <Grid>
-                    {data?.known_for?.map((item) => (
-                      <Grid.Col
-                        span={{
-                          xs: 12,
-                          md: 4,
-                        }}
-                      >
-                        <Stack key={item.id}>
-                          <Image
-                            src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
-                            alt="test"
-                          />
-                          <Text ta="center">{item.name ?? item.title}</Text>
-                        </Stack>
-                      </Grid.Col>
-                    ))}
-                  </Grid>
-                </Stack>
-              </div>
-            </Stack>
-          </TabsPanel>
-          <TabsPanel value="visited-places">
-            <Stack justify="center" align="center">
-              {places?.some((place) => place !== undefined) ? (
-                places?.map((place: any) => (
-                  <Stack key={place?.name}>
-                    <Image
-                      src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place?.photos[0].photo_reference}&key=${API_KEY}`}
-                      alt="test"
-                    />
-                    <Stack>
-                      <Title order={3} ta="center">
-                        {place?.name}
-                      </Title>
-                      <Text size="xs">{place?.formatted_address}</Text>
-                    </Stack>
-                    <iframe
-                      title="map"
-                      src={`https://www.google.com/maps/embed/v1/view?key=${API_KEY}&center=${place?.geometry.location.lat},${place?.geometry.location.lng}&zoom=15`}
-                      width="100%"
-                      height="450"
-                      allowFullScreen
-                      loading="lazy"
-                    />
-                    <Divider size="md" w="100%" />
-                  </Stack>
-                ))
-              ) : (
-                <Text size="xs">ไม่มีข้อมูล</Text>
-              )}
-            </Stack>
-          </TabsPanel>
-          <TabsPanel value="nearby">
-            <div>
-              {isLoaded && currentLocation ? (
-                <>
-                  <GoogleMap
-                    mapContainerStyle={containerStyle}
-                    center={currentLocation}
-                    zoom={10}
-                    onLoad={onLoad}
-                    onUnmount={onUnmount}
-                  >
-                    {/* {celebrityData
-                      .filter((celebrity) =>
-                        celebrity.visits.some(
-                          (visit) =>
-                            getDistance(currentLocation, { lat: visit.lat, lng: visit.lng }) <= 50 // Filter places within 50km radius
-                        )
-                      )
-                      .map((celebrity, index) =>
-                        celebrity.visits
-                          .filter(
-                            (visit) =>
-                              getDistance(currentLocation, { lat: visit.lat, lng: visit.lng }) <= 50 // Filter places within 50km radius
-                          )
-                          .map((visit, visitIndex) => (
-                            <Marker
-                              key={`${index}-${visitIndex}`}
-                              position={{ lat: visit.lat, lng: visit.lng }}
-                            >
-                              {visit.place}
-                            </Marker>
-                          ))
-                      )} */}
-                    {celebrityData.map((celebrity, index) =>
-                      celebrity.visits.map((visit, visitIndex) => (
-                        <Marker
-                          key={`${index}-${visitIndex}`}
-                          position={{ lat: visit.lat, lng: visit.lng }}
-                          icon={{
-                            url: `https://image.tmdb.org/t/p/original/${info?.profile_path}`,
-                            scaledSize: new window.google.maps.Size(40, 40),
-                            anchor: new window.google.maps.Point(20, 20),
-                            labelOrigin: new window.google.maps.Point(20, 60),
-                          }}
-                          title={celebrity.name}
-                          label={{
-                            text: celebrity.name,
-                            color: 'black',
-                            fontWeight: 'bold',
-                            fontSize: '16px',
-                          }}
-                        />
-                      ))
-                    )}
-                  </GoogleMap>
-                  {/* <Stack mt="md">
-                    {celebrityData
-                      .filter((celebrity) =>
-                        celebrity.visits.some(
-                          (visit) =>
-                            getDistance(currentLocation, { lat: visit.lat, lng: visit.lng }) <= 50 // Filter places within 50km radius
-                        )
-                      )
-                      .map((celebrity, index) => (
-                        <div key={index}>
-                          <Title order={3}>{celebrity.name}</Title>
-                          <Stack>
-                            {celebrity.visits
-                              .filter(
-                                (visit) =>
-                                  getDistance(currentLocation, {
-                                    lat: visit.lat,
-                                    lng: visit.lng,
-                                  }) <= 50 // Filter places within 50km radius
-                              )
-                              .map((visit, visitIndex) => (
-                                <Card key={visitIndex} shadow="sm" p="md" radius="md" withBorder>
-                                  <Text size="sm" color="dimmed">
-                                    {visit.place}
-                                  </Text>
-                                </Card>
-                              ))}
-                          </Stack>
-                        </div>
-                      ))}
-                  </Stack> */}
-                </>
-              ) : (
-                <p>Loading...</p>
-              )}
-            </div>
-          </TabsPanel>
-          <TabsPanel value="chatgpt-planner">
-            <ChatInterface />
-          </TabsPanel>
-        </Tabs>
+            </TabsPanel>
+            <TabsPanel value="chatgpt-planner">
+              <ChatInterface />
+            </TabsPanel>
+          </Tabs>
+        </main>
       </Stack>
     </Container>
   );

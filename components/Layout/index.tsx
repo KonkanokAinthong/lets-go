@@ -37,7 +37,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         const response = await fetch(`/api/search?search=${encodeURIComponent(query)}`);
         const data = await response.json();
         if (response.ok) {
-          console.log(data);
           const formattedData = data.map((result: any) => ({
             value: result.id.toString(),
             label: result.label,
@@ -70,8 +69,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </div>
     </Group>
   );
-
-  console.log('options:', options);
 
   return (
     <AppShell

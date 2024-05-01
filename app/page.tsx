@@ -146,7 +146,11 @@ const mockCelebrities = [
 
 const CelebsNewsCarousel = () => {
   const autoplay = useRef(Autoplay({ delay: 5000 }));
-  const { data: celebsNews } = useQuery('getCelebsNews', getCelebsNews);
+  const { data: celebsNews } = useQuery('getCelebsNews', getCelebsNews, {
+    cacheTime: 5 * 60 * 1000, // Cache for 5 minutes
+    staleTime: 2 * 60 * 1000, // Consider data stale after 2 minutes
+    refetchOnWindowFocus: false, // Disable refetching on window focus
+  });
 
   return (
     <Carousel
@@ -309,7 +313,11 @@ const SuperstarCheckInThailand = () => {
 };
 
 const Top10Locations = () => {
-  const { data: top10Locations, isLoading } = useQuery('getTop10Locations', getTop10Locations);
+  const { data: top10Locations, isLoading } = useQuery('getTop10Locations', getTop10Locations, {
+    cacheTime: 10 * 60 * 1000, // Cache for 10 minutes
+    staleTime: 5 * 60 * 1000, // Consider data stale after 5 minutes
+    refetchOnWindowFocus: false, // Disable refetching on window focus
+  });
 
   if (isLoading) {
     return (

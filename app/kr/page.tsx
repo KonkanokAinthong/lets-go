@@ -96,7 +96,12 @@ const kdramaRecommendations = [
 export default function Page() {
   const { data: celebs, isLoading: isTrendingLoading } = useQuery(
     'trendingKoreanCelebrities',
-    getTrendingKoreanCelebrities
+    getTrendingKoreanCelebrities,
+    {
+      cacheTime: 5 * 60 * 1000, // Cache for 5 minutes
+      staleTime: 2 * 60 * 1000, // Consider data stale after 2 minutes
+      refetchOnWindowFocus: false, // Disable refetching on window focus
+    }
   );
 
   if (isTrendingLoading) {
