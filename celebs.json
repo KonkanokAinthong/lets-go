@@ -96,57 +96,71 @@
   },
   {
     "name": "Baekho",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": ["Savoey Seafood CO. Sukhumvit26"],
     "image": ""
   },
   {
     "name": "Jumpol Adulkittiporn",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": [""],
     "image": ""
   },
   {
     "name": "Atthaphan Phunsawat",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": [""],
     "image": ""
   },
   {
     "name": "Tawan Vihokratana",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": [""],
     "image": ""
   },
   {
     "name": "Thitipoom Techa-apaikhun",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": [""],
     "image": ""
   },
   {
     "name": "Ranee Campen",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": [
+      "วัดปากน้ำแขมหนู",
+      "ทุ่งโปรงทอง ปากน้ำกระแส",
+      "น้ำตกตาดวิมานทิพย์ จังหวัดบึงกาฬ",
+      "สะพานเฉลิมพระเกียรติฯ 80 พรรษา จังหวัดพัทลุง",
+      "ภูชี้ดาว จังหวัดเชียงราย"
+    ],
     "image": ""
   },
   {
     "name": "Nadech Kugimiya",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": [""],
     "image": ""
   },
   {
     "name": "Urassaya Sperbund",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": [""],
     "image": ""
   },
   {
     "name": "Prin Suparat",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": ["แม่น้ำแควน้อย"],
     "image": ""
   },
   {
     "name": "Davika Hoorne",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": [
+      "เขาหลัก จังหวัดพังงา",
+      "ทุ่งดอกบัวตองดอยแม่อูคอ จังหวัดแม่ฮ่องสอน",
+      "สะพานเขียว ย่านสวนลุมพินี กรุงเทพฯ",
+      "เขื่อนป่าสักชลสิทธิ์ จังหวัดลพบุรี",
+      "บ้านรักไทย จังหวัดแม่ฮ่องสอน",
+      "โมริ เนเชอรัล ฟาร์ม (Mori Natural Farm) จังหวัดเชียงใหม่",
+      "Vala Hua Hin จังหวัดเพชรบุรี"
+    ],
     "image": ""
   },
   {
     "name": "Kimberly Ann Voltemas",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": [""],
     "image": ""
   }
 ]

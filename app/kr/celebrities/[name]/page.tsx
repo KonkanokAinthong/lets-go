@@ -127,7 +127,7 @@ export default function Page() {
 
   const filter = celebs?.filter((celeb) => celeb.name === decodedName)[0];
 
-  console.log('filter', filter);
+  console.log(celebs);
 
   const { data: places } = useQuery(['places', filter?.places], () =>
     getPlacebyTextSearch(decodedName === 'Jackson Wang' ? ['หมูกระทะคนรวย'] : filter.places)

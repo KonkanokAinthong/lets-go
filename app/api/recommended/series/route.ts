@@ -3,61 +3,60 @@ import { load } from 'cheerio';
 import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
-    const nationalityParam = new URL(request.url).searchParams.get('nationality');
+  const nationalityParam = new URL(request.url).searchParams.get('nationality');
 
-    if (nationalityParam === 'Korean Drama') {
+  if (nationalityParam === 'Korean Drama') {
+  }
 
-    }
+  if (nationalityParam === 'Chinese Drama') {
+  }
 
-    if (nationalityParam === 'Chinese Drama') {
-    }
-
-    if (nationalityParam === 'Thai Drama') {
-        const response = await fetch('https://www.gmm25.com/shows.html');
-        const html = await response.text();
-        const $ = load(html);
-
-        return NextResponse.json([]);
-    }
-
-    const response = await fetch('https://mydramalist.com/shows/top');
+  if (nationalityParam === 'Thai Drama') {
+    const response = await fetch('https://www.gmm25.com/shows.html');
     const html = await response.text();
     const $ = load(html);
 
-    const series = $('div.box');
+    return NextResponse.json([]);
+  }
 
-    const seriesList = series
-        .map((i, el) => {
-            const $el = $(el);
+  const response = await fetch('https://mydramalist.com/shows/top');
+  const html = await response.text();
+  const $ = load(html);
 
-            const titles = $el
-                .find('h6.text-primary.title > a')
-                .map((i, el) => $(el).text())
-                .get()
-                .filter((title) => title.trim().length > 0 && title !== '');
-            const images = $el
-                .find('img')
-                .map((i, el) => $(el).attr('data-src'))
-                .get();
-            const description = $el.find('div > div > div.col-xs-9.row-cell.content > span').text();
+  const series = $('div.box');
 
-            const data = titles.map((title, index) => ({
-                title,
-                image: images[index] || null,
-                description,
-            }));
+  const seriesList = series
+    .map((i, el) => {
+      const $el = $(el);
 
-            return data;
-        })
+      const titles = $el
+        .find('h6.text-primary.title > a')
+        .map((i, el) => $(el).text())
+        .get()
+        .filter((title) => title.trim().length > 0 && title !== '');
+      const images = $el
+        .find('img')
+        .map((i, el) => $(el).attr('data-src'))
         .get();
+      const description = $el.find('div > div > div.col-xs-9.row-cell.content > span').text();
 
-    if (nationalityParam) {
-        const filteredLists = seriesList.filter((item) =>
-            item.description.toLowerCase().includes(nationalityParam.toLowerCase())
-        );
+      const data = titles.map((title, index) => ({
+        title,
+        image: images[index] || null,
+        description,
+      }));
 
-        return NextResponse.json(filteredLists);
-    }
+      return data;
+    })
+    .get();
 
-    return NextResponse.json(seriesList);
+  if (nationalityParam) {
+    const filteredLists = seriesList.filter((item) =>
+      item.description.toLowerCase().includes(nationalityParam.toLowerCase())
+    );
+
+    return NextResponse.json(filteredLists);
+  }
+
+  return NextResponse.json(seriesList);
 }
