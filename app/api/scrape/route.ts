@@ -3,6 +3,7 @@ import { load } from 'cheerio';
 import { NextResponse } from 'next/server';
 import puppeteer from 'puppeteer';
 import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
+import celebrities from '../../../celebs.json';
 
 function extractName(text: string) {
   const regex = /(?<=\().+?(?=\))/;
@@ -162,43 +163,7 @@ export async function GET(request: Request) {
     const html = await page.content();
     const $ = load(html);
 
-    const data = [
-      {
-        name: 'เนเน่ พรนับพัน',
-        placeVisited: ['สนามบินสุวรรณภูมิ'],
-        image: '',
-      },
-      {
-        name: 'ซันนี่ เกวลิน หรือ ซันนี่ หยาง',
-        placeVisited: ['ธันเดอร์โดม เมืองทองธานี'],
-        image: '',
-      },
-      {
-        name: 'มีมี่ พร้อมวิไล หรือ มีมี่ ลี',
-        placeVisited: ['Old Phuket Town'],
-        image: '',
-      },
-      {
-        name: 'แพทริค ณัฐวรรธ์ หรือ แพทริค INTO1',
-        placeVisited: '',
-        image: '',
-      },
-      {
-        name: 'กงจวิ้น',
-        placeVisited: '',
-        image: '',
-      },
-      {
-        name: 'เฉิงเซียว',
-        placeVisited: '',
-        image: '',
-      },
-      {
-        name: 'หลี่ข่ายซิน',
-        placeVisited: '',
-        image: '',
-      },
-    ];
+    const data = [...celebrities];
 
     $('._UtcWG').each((index, element) => {
       const name = $(element).find('strong').text();

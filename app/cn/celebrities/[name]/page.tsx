@@ -82,6 +82,9 @@ export default function Page() {
       enabled: !!celebrity?.id,
     }
   );
+  console.log(name);
+  console.log(celebrity);
+
   const { data: places, isLoading: isPlacesLoading } = useQuery('place', () =>
     getPlacebyTextSearch(placeName as string)
   );
@@ -89,13 +92,11 @@ export default function Page() {
   //   getNearbyPlaces(placeName as string)
   // );
 
+  console.log(places);
+
   if (isCelebrityLoading || isCelebbrityInfoLoading || isPlacesLoading) {
     return <Loader />;
   }
-
-  console.log(celebrityInfo);
-
-  console.log(celebrity);
 
   return (
     <Container c="white">
