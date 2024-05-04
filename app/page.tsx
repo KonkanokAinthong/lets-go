@@ -18,6 +18,7 @@ import {
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import axios from 'axios';
 import Autoplay from 'embla-carousel-autoplay';
+import Head from 'next/head';
 
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -95,6 +96,14 @@ const thaiCelebs = [
     name: 'Thitipoom Techaapaikhun',
     image:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Gun_Atthaphan.jpg/440px-Gun_Atthaphan.jpg',
+  },
+  {
+    name: 'Ranee Campen',
+    image: '',
+  },
+  {
+    name: 'Nadech Kumiya',
+    image: '',
   },
 ];
 
@@ -245,14 +254,10 @@ const SuperstarCheckInThailand = () => {
     const randomIndex = Math.floor(Math.random() * celebrities.length);
     const selectedCeleb = celebrities[randomIndex];
 
-    console.log(selectedCeleb);
-
     // Check if the selected celebrity has an image URL
     if (selectedCeleb) {
       return selectedCeleb;
     }
-    // If the selected celebrity doesn't have an image URL, return a placeholder image or an empty string
-    return 'https://via.placeholder.com/600x900?text=No+Image';
   };
 
   const images_th = getRandomCelebImage('th');
@@ -285,30 +290,30 @@ const SuperstarCheckInThailand = () => {
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            <Box href={images_kr?.name} component={Link}>
+            <Box href={`kr/celebrities/${images_kr?.name}`} component={Link}>
               <Image src={images_kr?.image} alt="Korean Celebrity" height={400} />
             </Box>
-            <Button size="lg" component={Link} href={images_kr?.name} variant="default">
+            <Button size="lg" component={Link} href="/kr" variant="default">
               South Korea
             </Button>
           </Stack>
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            <Box href={images_cn?.name} component={Link}>
+            <Box href={`cn/${images_cn?.name}`} component={Link}>
               <Image src={images_cn?.image} alt="Chinese Celebrity" height={400} />
             </Box>
-            <Button size="lg" component={Link} href={images_cn?.name} variant="default">
+            <Button size="lg" component={Link} href="/cn" variant="default">
               China
             </Button>
           </Stack>
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            <Box href={images_th?.name} component={Link}>
+            <Box href={`th/${images_th?.name}`} component={Link}>
               <Image src={images_th?.image} alt="Thai Celebrity" height={400} />
             </Box>
-            <Button size="lg" component={Link} href={images_th?.name} variant="default">
+            <Button size="lg" component={Link} href="/th" variant="default">
               Thailand
             </Button>
           </Stack>

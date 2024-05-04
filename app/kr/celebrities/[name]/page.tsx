@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  Anchor,
   Avatar,
   Breadcrumbs,
   Button,
@@ -24,7 +23,7 @@ import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { IconArrowBigLeftFilled, IconArrowLeft } from '@tabler/icons-react';
+import { IconArrowLeft } from '@tabler/icons-react';
 import ChatInterface from '@/components/ChatInterface';
 
 const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
@@ -53,12 +52,10 @@ const getPlacebyTextSearch = async (places: string[]) => {
   try {
     const promises = places?.map(async (place) => {
       const response = await axios.get(`/api/places?place=${place}`);
-      console.log(response);
       return response.data.data.results[0];
     });
 
     const results = await Promise.all(promises);
-    console.log(results);
     return results;
   } catch (error) {
     console.error(error);
@@ -104,13 +101,10 @@ const celebrityData = [
   },
 ];
 
-const TMDB_API_TOKEN =
-  'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNDg5YjUyNDg3MTdmZjY2NmY3NzhkNzE3NmVmYjdjZiIsInN1YiI6IjY1NTk5ZTI5ZWE4NGM3MTA5NmRmMjk2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.e0lqhUBzvqt4L-OleXqsj8bx_p6yQK46wPabFdYFO1s';
-
 const searchCelebrity = async (name: string) => {
   const data = await axios.get(`https://api.themoviedb.org/3/search/person?query=${name}`, {
     headers: {
-      Authorization: `Bearer ${TMDB_API_TOKEN}`,
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_TOKEN}`,
     },
   });
   return data.data.results[0];
@@ -119,7 +113,7 @@ const searchCelebrity = async (name: string) => {
 const getCelebrityInfo = async (person_id: string) => {
   const data = await axios.get(`https://api.themoviedb.org/3/person/${person_id}`, {
     headers: {
-      Authorization: `Bearer ${TMDB_API_TOKEN}`,
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_TOKEN}`,
     },
   });
 
@@ -135,6 +129,14 @@ async function getTrendingKoreanCelebrities() {
     throw new Error('Failed to fetch data');
   }
 }
+
+const fetchNearbyPlaces = async (location) => {
+  const { lat, lng } = location;
+  const response = await axios.get(
+    `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=1000&type=tourist_attraction&key=${API_KEY}`
+  );
+  return response.data.results;
+};
 
 export default function Page() {
   const [map, setMap] = useState(null);
@@ -172,6 +174,10 @@ export default function Page() {
   );
   const { data: info } = useQuery(['info', data?.id], () => getCelebrityInfo(data?.id));
 
+  const { data: nearbyPlaces } = useQuery(['nearbyPlaces', currentLocation], () =>
+    fetchNearbyPlaces(currentLocation)
+  );
+
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -194,7 +200,7 @@ export default function Page() {
   };
 
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   });
 
   if (loadError) {
@@ -310,31 +316,64 @@ export default function Page() {
             <TabsPanel value="visited-places">
               {places ? (
                 places.some((place) => place !== undefined) ? (
-                  places.map((place: any) => (
-                    <article key={place?.name}>
-                      <Stack>
-                        <Image
-                          src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place?.photos[0].photo_reference}&key=${API_KEY}`}
-                          alt={place?.name}
-                        />
-                        <Stack>
-                          <Title order={3} ta="center">
-                            {place?.name}
-                          </Title>
-                          <Text size="xs">{place?.formatted_address}</Text>
-                        </Stack>
-                        <iframe
-                          title={`Map of ${place?.name}`}
-                          src={`https://www.google.com/maps/embed/v1/view?key=${API_KEY}&center=${place?.geometry.location.lat},${place?.geometry.location.lng}&zoom=15`}
-                          width="100%"
-                          height="450"
-                          allowFullScreen
-                          loading="lazy"
-                        />
-                        <Divider size="md" w="100%" />
-                      </Stack>
-                    </article>
-                  ))
+                  <>
+                    <GoogleMap
+                      mapContainerStyle={containerStyle}
+                      center={currentLocation}
+                      zoom={10}
+                      onLoad={onLoad}
+                      onUnmount={onUnmount}
+                    >
+                      {places.map((place: any) => (
+                        <Marker
+                          key={place?.name}
+                          position={{
+                            lat: place?.geometry.location.lat,
+                            lng: place?.geometry.location.lng,
+                          }}
+                          icon={{
+                            url: `https://image.tmdb.org/t/p/original/${info?.profile_path}`,
+                            scaledSize: new window.google.maps.Size(40, 40),
+                            anchor: new window.google.maps.Point(20, 20),
+                            labelOrigin: new window.google.maps.Point(20, 60),
+                          }}
+                          title={place?.name}
+                          label={{
+                            text: place?.name,
+                            color: 'black',
+                            fontWeight: 'bold',
+                            fontSize: '16px',
+                          }}
+                        >
+                          <InfoWindow>
+                            <div>
+                              <h3>{place?.name}</h3>
+                              <p>{place?.formatted_address}</p>
+                            </div>
+                          </InfoWindow>
+                        </Marker>
+                      ))}
+                    </GoogleMap>
+                    <Stack mt="md">
+                      {places.map((place: any) => (
+                        <article key={place?.name}>
+                          <Stack>
+                            <Image
+                              src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place?.photos[0].photo_reference}&key=${API_KEY}`}
+                              alt={place?.name}
+                            />
+                            <Stack>
+                              <Title order={3} ta="center">
+                                {place?.name}
+                              </Title>
+                              <Text size="xs">{place?.formatted_address}</Text>
+                            </Stack>
+                            <Divider size="md" w="100%" />
+                          </Stack>
+                        </article>
+                      ))}
+                    </Stack>
+                  </>
                 ) : (
                   <Text size="xs">ไม่มีข้อมูล</Text>
                 )
@@ -358,6 +397,7 @@ export default function Page() {
                 </Stack>
               )}
             </TabsPanel>
+
             <TabsPanel value="nearby">
               <div>
                 {isLoaded && currentLocation ? (
@@ -365,31 +405,43 @@ export default function Page() {
                     <GoogleMap
                       mapContainerStyle={containerStyle}
                       center={currentLocation}
-                      zoom={10}
+                      zoom={15}
                       onLoad={onLoad}
                       onUnmount={onUnmount}
                     >
-                      {celebrityData.map((celebrity, index) =>
-                        celebrity.visits.map((visit, visitIndex) => (
-                          <Marker
-                            key={`${index}-${visitIndex}`}
-                            position={{ lat: visit.lat, lng: visit.lng }}
-                            icon={{
-                              url: `https://image.tmdb.org/t/p/original/${info?.profile_path}`,
-                              scaledSize: new window.google.maps.Size(40, 40),
-                              anchor: new window.google.maps.Point(20, 20),
-                              labelOrigin: new window.google.maps.Point(20, 60),
-                            }}
-                            title={celebrity.name}
-                            label={{
-                              text: celebrity.name,
-                              color: 'black',
-                              fontWeight: 'bold',
-                              fontSize: '16px',
-                            }}
-                          />
-                        ))
-                      )}
+                      <Marker
+                        position={currentLocation}
+                        icon={{
+                          url: `https://image.tmdb.org/t/p/original/${info?.profile_path}`,
+                          scaledSize: new window.google.maps.Size(40, 40),
+                          anchor: new window.google.maps.Point(20, 20),
+                          labelOrigin: new window.google.maps.Point(20, 60),
+                        }}
+                        title={info?.name}
+                        label={{
+                          text: info?.name,
+                          color: 'black',
+                          fontWeight: 'bold',
+                          fontSize: '16px',
+                        }}
+                      />
+                      {nearbyPlaces?.map((place: any) => (
+                        <Marker
+                          key={place.place_id}
+                          position={{
+                            lat: place.geometry.location.lat,
+                            lng: place.geometry.location.lng,
+                          }}
+                          title={place.name}
+                        >
+                          <InfoWindow>
+                            <div>
+                              <h3>{place.name}</h3>
+                              <p>{place.vicinity}</p>
+                            </div>
+                          </InfoWindow>
+                        </Marker>
+                      ))}
                     </GoogleMap>
                   </>
                 ) : (
