@@ -162,7 +162,43 @@ export async function GET(request: Request) {
     const html = await page.content();
     const $ = load(html);
 
-    const data = [];
+    const data = [
+      {
+        name: 'เนเน่ พรนับพัน',
+        placeVisited: ['สนามบินสุวรรณภูมิ'],
+        image: '',
+      },
+      {
+        name: 'ซันนี่ เกวลิน หรือ ซันนี่ หยาง',
+        placeVisited: ['ธันเดอร์โดม เมืองทองธานี'],
+        image: '',
+      },
+      {
+        name: 'มีมี่ พร้อมวิไล หรือ มีมี่ ลี',
+        placeVisited: ['Old Phuket Town'],
+        image: '',
+      },
+      {
+        name: 'แพทริค ณัฐวรรธ์ หรือ แพทริค INTO1',
+        placeVisited: '',
+        image: '',
+      },
+      {
+        name: 'กงจวิ้น',
+        placeVisited: '',
+        image: '',
+      },
+      {
+        name: 'เฉิงเซียว',
+        placeVisited: '',
+        image: '',
+      },
+      {
+        name: 'หลี่ข่ายซิน',
+        placeVisited: '',
+        image: '',
+      },
+    ];
 
     $('._UtcWG').each((index, element) => {
       const name = $(element).find('strong').text();

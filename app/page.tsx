@@ -18,7 +18,6 @@ import {
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import axios from 'axios';
 import Autoplay from 'embla-carousel-autoplay';
-import Head from 'next/head';
 
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';

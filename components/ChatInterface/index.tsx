@@ -9,6 +9,7 @@ const ChatInterface = () => {
   const chatContainerRef = useRef(null);
   const [selectedBudget, setSelectedBudget] = useState('');
   const [selectedProvince, setSelectedProvince] = useState('');
+  const [selectedDuration, setSelectedDuration] = useState('');
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -33,7 +34,11 @@ const ChatInterface = () => {
           },
           body: JSON.stringify({
             message: inputValue,
-            context: `You are a trip planner assistant helping to plan a trip to Thailand with a budget of ${budget} THB. If the user's input is in Thai, respond in Thai. If the user's input is in English, respond in English. Provide your response in bullet points for easy readability, rather than in paragraphs.`,
+            context: `You are a trip planner assistant helping to plan a trip to Thailand with the following details:
+              - Budget: ${selectedBudget} THB
+              - Province: ${selectedProvince}
+              - Duration: ${selectedDuration}
+              If the user's input is in Thai, respond in Thai. If the user's input is in English, respond in English. Provide your response in bullet points for easy readability, rather than in paragraphs.`,
           }),
         });
 
@@ -77,20 +82,20 @@ const ChatInterface = () => {
       <Stack>
         <Select
           label="Budget (THB)"
-          placeholder="Select budget"
+          placeholder="เลือกงบประมาณ"
           value={selectedBudget}
           onChange={setSelectedBudget}
           data={[
-            { value: '1000', label: '1,000 THB' },
-            { value: '2000', label: '2,000 THB' },
-            { value: '5000', label: '5,000 THB' },
-            { value: '10000', label: '10,000 THB' },
+            { value: '1000', label: '1,000 บาท' },
+            { value: '2000', label: '2,000 บาท' },
+            { value: '5000', label: '5,000 บาท' },
+            { value: '10000', label: '10,000 บาท' },
           ]}
         />
 
         <Select
           label="Province"
-          placeholder="Select province"
+          placeholder="เลือกจังหวัดที่ต้องการไปท่องเที่ยว"
           value={selectedProvince}
           onChange={setSelectedProvince}
           data={[
@@ -173,6 +178,22 @@ const ChatInterface = () => {
             { value: 'yasothon', label: 'Yasothon' },
           ]}
         />
+
+        <Select
+          label="Duration"
+          placeholder="เลือกระยะเวลาการท่องเที่ยว"
+          value={selectedDuration}
+          onChange={setSelectedDuration}
+          data={[
+            { value: '1-day', label: '1 วัน' },
+            { value: '2-days-1-night', label: '2 วัน 1 คืน' },
+            { value: '3-days-2-nights', label: '3 วัน 2 คืน' },
+            { value: '4-days-3-nights', label: '4 วัน 3 คืน' },
+            { value: '5-days-4-nights', label: '5 วัน 4 คืน' },
+            { value: '6-days-5-nights', label: '6 วัน 5 คืน' },
+            { value: '7-days-6-nights', label: '7 วัน 6 คืน' },
+          ]}
+        />
       </Stack>
       <Box
         style={{
@@ -213,7 +234,7 @@ const ChatInterface = () => {
       </Box>
       <Box style={{ position: 'relative', bottom: 0, left: 0, right: 0 }}>
         <TextInput
-          placeholder="Type your message..."
+          placeholder="พิมข้อความวางแผนการเดินทางของคุณที่นี่.."
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}

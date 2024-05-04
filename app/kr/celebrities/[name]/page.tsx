@@ -63,44 +63,6 @@ const getPlacebyTextSearch = async (places: string[]) => {
   }
 };
 
-const celebrityData = [
-  {
-    name: 'Lee Min-ho',
-    visits: [
-      { lat: 13.7563, lng: 100.5018, place: 'Bangkok' },
-      { lat: 7.9519, lng: 98.3381, place: 'Phuket' },
-    ],
-  },
-  {
-    name: 'Song Hye-kyo',
-    visits: [
-      { lat: 18.7061, lng: 98.9817, place: 'Chiang Mai' },
-      { lat: 12.5683, lng: 99.9576, place: 'Hua Hin' },
-    ],
-  },
-  {
-    name: 'Park Seo-joon',
-    visits: [
-      { lat: 13.7563, lng: 100.5018, place: 'Bangkok' },
-      { lat: 9.1412, lng: 99.9236, place: 'Koh Samui' },
-    ],
-  },
-  {
-    name: 'Kim Go-eun',
-    visits: [
-      { lat: 8.0862, lng: 98.9062, place: 'Krabi' },
-      { lat: 7.74, lng: 98.7739, place: 'Phi Phi Islands' },
-    ],
-  },
-  {
-    name: 'Ji Chang-wook',
-    visits: [
-      { lat: 12.9177, lng: 100.893, place: 'Pattaya' },
-      { lat: 14.3559, lng: 100.5614, place: 'Ayutthaya' },
-    ],
-  },
-];
-
 const searchCelebrity = async (name: string) => {
   const data = await axios.get(`https://api.themoviedb.org/3/search/person?query=${name}`, {
     headers: {
@@ -164,6 +126,8 @@ export default function Page() {
   }, []);
 
   const filter = celebs?.filter((celeb) => celeb.name === decodedName)[0];
+
+  console.log('filter', filter);
 
   const { data: places } = useQuery(['places', filter?.places], () =>
     getPlacebyTextSearch(decodedName === 'Jackson Wang' ? ['หมูกระทะคนรวย'] : filter.places)
@@ -418,12 +382,6 @@ export default function Page() {
                           labelOrigin: new window.google.maps.Point(20, 60),
                         }}
                         title={info?.name}
-                        label={{
-                          text: info?.name,
-                          color: 'black',
-                          fontWeight: 'bold',
-                          fontSize: '16px',
-                        }}
                       />
                       {nearbyPlaces?.map((place: any) => (
                         <Marker
