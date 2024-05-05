@@ -1,14 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Chromium from '@sparticuz/chromium';
 import { NextResponse } from 'next/server';
 import puppeteer from 'puppeteer';
 
 export async function GET(request: Request) {
   const browser = await puppeteer.launch({
-    args: Chromium.args,
-    defaultViewport: Chromium.defaultViewport,
-    executablePath: await Chromium.executablePath(),
-    headless: Chromium.headless,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
   const page = await browser.newPage();
   await page.goto('https://travel.trueid.net/travelguide');

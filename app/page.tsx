@@ -142,6 +142,7 @@ const searchCelebrities = async (nameList: string[]) => {
     );
 
     const responses = await Promise.all(promises);
+
     return responses.map((response) => response.data.results[0] ?? null);
   } catch (error) {
     console.error(error);
@@ -161,6 +162,8 @@ const SuperstarCheckInThailand = () => {
     () => searchCelebrities(CELEB_LISTS.thai),
     { refetchOnWindowFocus: false, initialData: [] }
   );
+
+  console.log(thCelebrities);
 
   const { data: krCelebrities } = useQuery(
     QUERY_KEYS.trendingKoreanCelebrities,
@@ -204,16 +207,14 @@ const SuperstarCheckInThailand = () => {
       cn: cnCelebrities,
     }[region];
 
-    console.log(celebrities);
-
     const validCelebrities = celebrities?.filter(Boolean) ?? [];
     const randomIndex = Math.floor(Math.random() * validCelebrities.length);
     return validCelebrities[randomIndex];
   };
 
-  const imageTH = getRandomCeleb('thai');
-  const imageCN = getRandomCeleb('chinese');
-  const imageKR = getRandomCeleb('korean');
+  const imageTH = getRandomCeleb('th');
+  const imageCN = getRandomCeleb('cn');
+  const imageKR = getRandomCeleb('kr');
 
   if (loadError) return 'Error loading maps';
   if (!isLoaded) return 'Loading Maps';
