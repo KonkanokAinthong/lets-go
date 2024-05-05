@@ -6,8 +6,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
 
-const TMDB_API_TOKEN =
-  'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNDg5YjUyNDg3MTdmZjY2NmY3NzhkNzE3NmVmYjdjZiIsInN1YiI6IjY1NTk5ZTI5ZWE4NGM3MTA5NmRmMjk2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.e0lqhUBzvqt4L-OleXqsj8bx_p6yQK46wPabFdYFO1s';
+const TMDB_API_TOKEN = process.env.NEXT_PUBLIC_TMDB_API_TOKEN;
 
 const searchCelebrity = async (nameList: string[]) => {
   try {
@@ -47,6 +46,8 @@ export default function Page() {
   const { data: celebrities, isLoading } = useQuery('trendingThaiCelebrities', () =>
     searchCelebrity(thaiCelebs)
   );
+
+  console.log(celebrities);
 
   // Sort by popularity in descending order
   const sortedByPopularity = celebrities?.map((f) => {

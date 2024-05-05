@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { NextRequest } from 'next/server';
 
-const TMDB_API_KEY =
-  'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxNDg5YjUyNDg3MTdmZjY2NmY3NzhkNzE3NmVmYjdjZiIsInN1YiI6IjY1NTk5ZTI5ZWE4NGM3MTA5NmRmMjk2ZCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.e0lqhUBzvqt4L-OleXqsj8bx_p6yQK46wPabFdYFO1s';
+const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_TOKEN;
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -18,8 +17,6 @@ export async function GET(req: NextRequest) {
         },
       }
     );
-
-    console.log(response.data.results[0]);
 
     return new Response(
       JSON.stringify(

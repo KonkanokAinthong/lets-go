@@ -235,14 +235,7 @@ export default function Page() {
                           fontWeight: 'bold',
                           fontSize: '16px',
                         }}
-                      >
-                        <InfoWindow>
-                          <div>
-                            <h3>{place?.name}</h3>
-                            <p>{place?.formatted_address}</p>
-                          </div>
-                        </InfoWindow>
-                      </Marker>
+                      />
                     ))}
                   </GoogleMap>
                   <Stack mt="md">
