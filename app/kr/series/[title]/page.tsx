@@ -43,6 +43,7 @@ export default function Page() {
   const { name } = useParams();
   const placeName = 'Temple in Bangkok';
   const { data: places } = useQuery('place', () => getPlacebyTextSearch(placeName as string));
+
   //   const { data: nearbyPlaces } = useQuery('nearbyPlaces', () =>
   //     getNearbyPlaces(placeName as string)
   //   );
@@ -65,18 +66,6 @@ export default function Page() {
             <TabsTab value="visited-places">การท่องเที่ยว</TabsTab>
             <TabsTab value="nearby">สถานที่ท่องเที่ยวใกล้เคียง</TabsTab>
           </TabsList>
-          {/* <TabsPanel value="info">
-            {data?.query?.pages?.[randomKey]?.extract ? (
-              <Text
-                size="xs"
-                dangerouslySetInnerHTML={{
-                  __html: data?.query?.pages?.[randomKey]?.extract,
-                }}
-              />
-            ) : (
-              <Text size="xs">ไม่มีข้อมูล</Text>
-            )}
-          </TabsPanel> */}
           <TabsPanel value="visited-places">
             <Stack justify="center" align="center">
               {places?.map((place: any) => (

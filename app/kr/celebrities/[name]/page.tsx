@@ -28,26 +28,6 @@ import ChatInterface from '@/components/ChatInterface';
 
 const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
 
-function toRad(value) {
-  return (value * Math.PI) / 180;
-}
-
-function getDistance(point1, point2) {
-  const R = 6371; // Earth's radius in kilometers
-  const dLat = toRad(point2.lat - point1.lat);
-  const dLon = toRad(point2.lng - point1.lng);
-  const lat1 = toRad(point1.lat);
-  const lat2 = toRad(point2.lat);
-
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  const distance = R * c;
-
-  return distance;
-}
-
 const getPlacebyTextSearch = async (places: string[]) => {
   try {
     const promises = places?.map(async (place) => {
@@ -94,10 +74,61 @@ async function getTrendingKoreanCelebrities() {
 
 const fetchNearbyPlaces = async (location) => {
   const { lat, lng } = location;
-  const response = await axios.get(
-    `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=1000&type=tourist_attraction&key=${API_KEY}`
+
+  const response = await axios.post(
+    'https://places.googleapis.com/v1/places:searchNearby',
+    {
+      languageCode: 'th',
+      regionCode: 'TH',
+      includedTypes: ['restaurant'],
+      rankPreference: 'DISTANCE',
+      maxResultCount: 10,
+      locationRestriction: {
+        circle: {
+          center: {
+            latitude: lat,
+            longitude: lng,
+          },
+          radius: 1000.0,
+        },
+      },
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': API_KEY,
+        'X-Goog-FieldMask': '*',
+      },
+    }
   );
-  return response.data.results;
+
+  return response.data.places;
+};
+
+const getPlaceDetails = async (places: string[]) => {
+  try {
+    const promises = places.map(async (place) => {
+      let response;
+      if (place === 'สวนลุมพินี') {
+        response = await axios.get(`/api/places?query=${encodeURIComponent(place)}&type=nearby`);
+      } else {
+        response = await axios.get(`/api/places?query=${encodeURIComponent(place)}`);
+      }
+      return response.data.data.results;
+    });
+
+    const results = await Promise.all(promises);
+    const flattenedResults = results.flat();
+
+    // Find the latitude and longitude of สวนลุมพินี
+    const suanLumPhiniLocation = flattenedResults.find((place) => place.name === 'สวนลุมพินี')
+      ?.geometry.location;
+
+    return { places: flattenedResults, suanLumPhiniLocation };
+  } catch (error) {
+    console.error(error);
+    return { places: [], suanLumPhiniLocation: null };
+  }
 };
 
 export default function Page() {
@@ -111,6 +142,8 @@ export default function Page() {
     ['trendingKoreanCelebrities', decodedName],
     getTrendingKoreanCelebrities
   );
+
+  const [suanLumPhiniLocation, setSuanLumPhiniLocation] = useState(null);
 
   const onLoad = useCallback(
     (map) => {
@@ -127,19 +160,35 @@ export default function Page() {
 
   const filter = celebs?.filter((celeb) => celeb.name === decodedName)[0];
 
-  console.log(celebs);
-
-  const { data: places } = useQuery(['places', filter?.places], () =>
-    getPlacebyTextSearch(decodedName === 'Jackson Wang' ? ['หมูกระทะคนรวย'] : filter.places)
+  const { data: places } = useQuery(
+    ['places', filter?.places],
+    () =>
+      getPlaceDetails(
+        decodedName === 'Jackson Wang'
+          ? ['หมูกระทะคนรวย']
+          : decodedName === 'Kim Seon Ho'
+          ? ['สวนลุมพินี']
+          : filter.places
+      ),
+    {
+      onSuccess(data) {
+        setSuanLumPhiniLocation(data.places[0]?.geometry?.location);
+      },
+    }
   );
 
   const { data } = useQuery(['searchCeleb', decodedName], () =>
     searchCelebrity(decodedName as string)
   );
+
   const { data: info } = useQuery(['info', data?.id], () => getCelebrityInfo(data?.id));
 
-  const { data: nearbyPlaces } = useQuery(['nearbyPlaces', currentLocation], () =>
-    fetchNearbyPlaces(currentLocation)
+  const { data: nearbyPlaces } = useQuery(
+    ['nearbyPlaces', suanLumPhiniLocation],
+    () => (suanLumPhiniLocation ? fetchNearbyPlaces(suanLumPhiniLocation) : null),
+    {
+      enabled: !!suanLumPhiniLocation,
+    }
   );
 
   useEffect(() => {
@@ -279,7 +328,7 @@ export default function Page() {
             </TabsPanel>
             <TabsPanel value="visited-places">
               {places ? (
-                places.some((place) => place !== undefined) ? (
+                places.places.some((place) => place !== undefined) ? (
                   <>
                     <GoogleMap
                       mapContainerStyle={containerStyle}
@@ -288,7 +337,7 @@ export default function Page() {
                       onLoad={onLoad}
                       onUnmount={onUnmount}
                     >
-                      {places.map((place: any) => (
+                      {places.places.map((place: any) => (
                         <Marker
                           key={place?.name}
                           position={{
@@ -308,18 +357,11 @@ export default function Page() {
                             fontWeight: 'bold',
                             fontSize: '16px',
                           }}
-                        >
-                          <InfoWindow>
-                            <div>
-                              <h3>{place?.name}</h3>
-                              <p>{place?.formatted_address}</p>
-                            </div>
-                          </InfoWindow>
-                        </Marker>
+                        />
                       ))}
                     </GoogleMap>
                     <Stack mt="md">
-                      {places.map((place: any) => (
+                      {places.places.map((place: any) => (
                         <article key={place?.name}>
                           <Stack>
                             <Image
@@ -364,17 +406,17 @@ export default function Page() {
 
             <TabsPanel value="nearby">
               <div>
-                {isLoaded && currentLocation ? (
+                {isLoaded && (suanLumPhiniLocation || currentLocation) ? (
                   <>
                     <GoogleMap
                       mapContainerStyle={containerStyle}
-                      center={currentLocation}
+                      center={suanLumPhiniLocation || currentLocation}
                       zoom={15}
                       onLoad={onLoad}
                       onUnmount={onUnmount}
                     >
                       <Marker
-                        position={currentLocation}
+                        position={suanLumPhiniLocation || currentLocation}
                         icon={{
                           url: `https://image.tmdb.org/t/p/original/${info?.profile_path}`,
                           scaledSize: new window.google.maps.Size(40, 40),
@@ -385,20 +427,13 @@ export default function Page() {
                       />
                       {nearbyPlaces?.map((place: any) => (
                         <Marker
-                          key={place.place_id}
+                          key={place.id}
                           position={{
-                            lat: place.geometry.location.lat,
-                            lng: place.geometry.location.lng,
+                            lat: place.location.latitude,
+                            lng: place.location.longitude,
                           }}
-                          title={place.name}
-                        >
-                          <InfoWindow>
-                            <div>
-                              <h3>{place.name}</h3>
-                              <p>{place.vicinity}</p>
-                            </div>
-                          </InfoWindow>
-                        </Marker>
+                          title={place.displayName.text}
+                        />
                       ))}
                     </GoogleMap>
                   </>

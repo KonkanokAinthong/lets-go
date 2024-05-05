@@ -197,13 +197,16 @@ const SuperstarCheckInThailand = () => {
   }, []);
 
   const getRandomCeleb = (region: keyof typeof CELEB_LISTS) => {
+    if (!thCelebrities || !krCelebrities || !cnCelebrities) return null;
     const celebrities = {
       th: thCelebrities,
       kr: krCelebrities,
       cn: cnCelebrities,
     }[region];
 
-    const validCelebrities = celebrities.filter(Boolean);
+    console.log(celebrities);
+
+    const validCelebrities = celebrities?.filter(Boolean) ?? [];
     const randomIndex = Math.floor(Math.random() * validCelebrities.length);
     return validCelebrities[randomIndex];
   };
