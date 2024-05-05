@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import puppeteer from 'puppeteer';
 import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
 import celebrities from '../../../celebs.json';
+import Chromium from '@sparticuz/chromium';
 
 function extractName(text: string) {
   const regex = /(?<=\().+?(?=\))/;
@@ -23,9 +24,11 @@ export async function GET(request: Request) {
     /ถนนข้าวสาร|สวนลุมพินี|Dalmantian|ถนนเยาวราช|สนามแพทสเตเดี้ยม|centralwOrld|Parc Paragon/g;
 
   const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: Chromium.args,
+    defaultViewport: Chromium.defaultViewport,
+    executablePath: await Chromium.executablePath(),
+    headless: Chromium.headless,
   });
-
   const page = await browser.newPage();
   await page.setViewport({ width: 1300, height: 1000 });
 

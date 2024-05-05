@@ -208,9 +208,9 @@ const SuperstarCheckInThailand = () => {
     return validCelebrities[randomIndex];
   };
 
-  const imageTH = getRandomCeleb('th');
-  const imageCN = getRandomCeleb('cn');
-  const imageKR = getRandomCeleb('kr');
+  const imageTH = getRandomCeleb('thai');
+  const imageCN = getRandomCeleb('chinese');
+  const imageKR = getRandomCeleb('korean');
 
   if (loadError) return 'Error loading maps';
   if (!isLoaded) return 'Loading Maps';

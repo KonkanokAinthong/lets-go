@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import Chromium from '@sparticuz/chromium';
 import { load } from 'cheerio';
 import { NextResponse } from 'next/server';
 import puppeteer from 'puppeteer';
@@ -7,7 +8,10 @@ import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
 export async function GET(request: Request) {
   const nationalityParam = new URL(request.url).searchParams.get('nationality');
   const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    args: Chromium.args,
+    defaultViewport: Chromium.defaultViewport,
+    executablePath: await Chromium.executablePath(),
+    headless: Chromium.headless,
   });
 
   const page = await browser.newPage();
