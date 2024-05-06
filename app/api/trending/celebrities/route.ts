@@ -1,22 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import Chromium from '@sparticuz/chromium-min';
+import Chromium from '@sparticuz/chromium';
 import { load } from 'cheerio';
 import { NextResponse } from 'next/server';
 
 import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
-import puppeteer from 'puppeteer-core';
+import puppeteer from 'puppeteer';
 
 export async function GET(request: Request) {
   const nationalityParam = new URL(request.url).searchParams.get('nationality');
   const browser = await puppeteer.launch({
-    args: [...Chromium.args, '--hide-scrollbars', '--disable-web-security'],
+    args: Chromium.args,
     defaultViewport: Chromium.defaultViewport,
-    executablePath: await Chromium.executablePath(
-      'https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar'
-    ),
-    headless: Chromium.headless as any,
-    ignoreHTTPSErrors: true,
+    executablePath: await Chromium.executablePath(),
+    headless: Chromium.headless,
   });
 
   const page = await browser.newPage();

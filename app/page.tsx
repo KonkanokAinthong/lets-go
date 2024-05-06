@@ -256,6 +256,8 @@ const Top10Locations = () => {
     }
   );
 
+  console.log('top10Locations', top10Locations);
+
   if (isLoading) {
     return (
       <section>
