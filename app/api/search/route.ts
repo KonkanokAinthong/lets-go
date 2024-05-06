@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
     );
 
     const formattedResults = filteredResults.map((result) => ({
+      ...result,
       id: result.id,
       value: result.id,
       label: result.name,

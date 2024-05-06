@@ -8,57 +8,14 @@ import { useQuery } from 'react-query';
 
 async function getTrendingKoreanCelebrities() {
   try {
-    const response = await axios.get('/api/scrape?nationality=Korean');
+    const response = await axios.get('/api/trending-celebs?nationality=Korean');
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error(error);
     throw new Error('Failed to fetch data');
   }
 }
-
-const kcelebrities = [
-  {
-    name: 'Kim Seon Ho',
-    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/1p7xMHRNsrUJacXqOFs1EZqSIvp.jpg',
-  },
-  {
-    name: 'Jackson Wang',
-    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/yPhD9nXzmOVA4IUyVsqv7ZzvTKX.jpg',
-  },
-  {
-    name: 'Song Jung-gi',
-    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/kgjb5OppOVTh5tz3hhnfDVnTvDv.jpg',
-  },
-  {
-    name: 'Kwan Na Ra',
-    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/4U0cNinwOf7DdsBYA3BFi7arDmz.jpg',
-  },
-  {
-    name: 'Kim Jinyoung',
-    image:
-      'https://s359.kapook.com/r/600/auto/pagebuilder/a6250c2e-d0a4-4db1-a4e2-35354e4a586d.jpg',
-  },
-  {
-    name: 'Bak Ji-hyo',
-    image:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Park_Jihyo_for_Pearly_Gates_Korea_02.jpg/480px-Park_Jihyo_for_Pearly_Gates_Korea_02.jpg',
-  },
-  {
-    name: 'มินนี่',
-    image:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/%28G%29I-DLE%27s_Minnie_on_June_2023.jpg/440px-%28G%29I-DLE%27s_Minnie_on_June_2023.jpg',
-  },
-  {
-    name: 'Song-Ji-hun',
-    image:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/140120_%ED%94%BC_%EB%81%93%EB%8A%94_%EC%B2%AD%EC%B6%98_vip%EC%8B%9C%EC%82%AC%ED%9A%8C-%EB%B9%84.jpg/440px-140120_%ED%94%BC_%EB%81%93%EB%8A%94_%EC%B2%AD%EC%B6%98_vip%EC%8B%9C%EC%82%AC%ED%9A%8C-%EB%B9%84.jpg',
-  },
-  {
-    name: 'Baekho',
-    image:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/180509_%EB%B0%B1%ED%98%B8_01.jpg/440px-180509_%EB%B0%B1%ED%98%B8_01.jpg',
-  },
-];
 
 const kdramaRecommendations = [
   {
@@ -96,13 +53,10 @@ const kdramaRecommendations = [
 export default function Page() {
   const { data: celebs, isLoading: isTrendingLoading } = useQuery(
     'trendingKoreanCelebrities',
-    getTrendingKoreanCelebrities,
-    {
-      cacheTime: 5 * 60 * 1000, // Cache for 5 minutes
-      staleTime: 2 * 60 * 1000, // Consider data stale after 2 minutes
-      refetchOnWindowFocus: false, // Disable refetching on window focus
-    }
+    getTrendingKoreanCelebrities
   );
+
+  console.log(celebs);
 
   if (isTrendingLoading) {
     return (
@@ -137,6 +91,7 @@ export default function Page() {
       </Container>
     );
   }
+
   return (
     <Container size="xl" c="white">
       <Stack justify="center" align="center">
@@ -145,7 +100,7 @@ export default function Page() {
         </Title>
 
         <Grid gutter={64} columns={24} justify="center" align="center">
-          {kcelebrities?.map((celebrity: any) => (
+          {celebs?.map((celebrity: any) => (
             <Grid.Col
               key={celebrity.name}
               span={{
@@ -164,7 +119,7 @@ export default function Page() {
               >
                 <Avatar src={celebrity?.image} alt="test" size="124" />
                 <Title order={6} ta="center">
-                  <Link href={`/kr/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
+                  <Link href={`/kr/celebrities/${celebrity?.id}`}>{celebrity.name}</Link>
                 </Title>
               </div>
             </Grid.Col>

@@ -36,11 +36,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         setLoading(true);
         const response = await fetch(`/api/search?search=${encodeURIComponent(query)}`);
         const data = await response.json();
+
         if (response.ok) {
           const formattedData = data.map((result: any) => ({
+            ...result,
             value: result.id.toString(),
             label: result.label,
-            avatarPath: result.profile_path,
           }));
           setOptions(formattedData);
         } else {
@@ -56,9 +57,29 @@ export function Layout({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const handleItemSubmit = (option: { value: string; label: string; avatarPath: string }) => {
-    // Navigate to the selected item's page
-    navigate.push(`/celebrity/${option.label}`);
+  const getNationalityPrefix = (option: string) => {
+    const selectedOption = options.find((item) => item.value === option);
+    if (selectedOption && selectedOption?.nationality) {
+      const { nationality } = selectedOption;
+      if (nationality.includes('Korean')) {
+        return 'kr';
+      }
+      if (nationality.includes('Chinese')) {
+        return 'cn';
+      }
+      if (nationality.includes('Thai')) {
+        return 'th';
+      }
+    }
+    return ''; // Default to an empty prefix if nationality is not found
+  };
+
+  const handleItemSubmit = (option: string) => {
+    // Get the nationality prefix based on the selected option's label
+    const nationalityPrefix = getNationalityPrefix(option);
+
+    // Navigate to the selected item's page with the nationality prefix
+    navigate.push(`${nationalityPrefix}/celebrities/${option}`);
   };
 
   const renderAutocompleteOption: AutocompleteProps['renderOption'] = ({ option }) => (

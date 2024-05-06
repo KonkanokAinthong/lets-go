@@ -28,6 +28,16 @@ import ChatInterface from '@/components/ChatInterface';
 
 const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
 
+const getCelebrityById = async (celebId: string) => {
+  try {
+    const response = await axios.get(`/api/celebrities?id=${celebId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error retrieving celebrity:', error);
+    throw error;
+  }
+};
+
 const getPlacebyTextSearch = async (places: string[]) => {
   try {
     const promises = places?.map(async (place) => {
@@ -135,11 +145,11 @@ export default function Page() {
   const [map, setMap] = useState(null);
   const navigate = useRouter();
 
-  const { name } = useParams();
-  const decodedName = decodeURIComponent(name as string);
+  const { celebId } = useParams();
   const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
+
   const { data: celebs, isLoading: isTrendingLoading } = useQuery(
-    ['trendingKoreanCelebrities', decodedName],
+    ['trendingKoreanCelebrities', celebId],
     getTrendingKoreanCelebrities
   );
 
@@ -158,17 +168,13 @@ export default function Page() {
     setMap(null);
   }, []);
 
-  const filter = celebs?.filter((celeb) => celeb.name === decodedName)[0];
+  const filter = celebs?.filter((celeb) => celeb.id === celebId)[0];
 
   const { data: places } = useQuery(
     ['places', filter?.places],
     () =>
       getPlaceDetails(
-        decodedName === 'Jackson Wang'
-          ? ['หมูกระทะคนรวย']
-          : decodedName === 'Kim Seon Ho'
-          ? ['สวนลุมพินี']
-          : filter.places
+        celebId === '12' ? ['หมูกระทะคนรวย'] : celebId === '11' ? ['สวนลุมพินี'] : filter.places
       ),
     {
       onSuccess(data) {
@@ -177,11 +183,25 @@ export default function Page() {
     }
   );
 
-  const { data } = useQuery(['searchCeleb', decodedName], () =>
-    searchCelebrity(decodedName as string)
+  const { data: celebrity, isLoading: isCelebrityLoading } = useQuery(
+    ['celebrity', celebId],
+    () => getCelebrityById(celebId as string),
+    {
+      enabled: !!celebId,
+    }
   );
 
-  const { data: info } = useQuery(['info', data?.id], () => getCelebrityInfo(data?.id));
+  const { data: celebInfo } = useQuery(
+    ['searchCelebrity', celebrity?.name],
+    () => searchCelebrity(celebrity?.name),
+    {
+      enabled: !!celebrity?.name,
+    }
+  );
+
+  const { data: info } = useQuery(['info', celebInfo?.id], () => getCelebrityInfo(celebInfo?.id), {
+    enabled: !!celebInfo?.id,
+  });
 
   const { data: nearbyPlaces } = useQuery(
     ['nearbyPlaces', suanLumPhiniLocation],
@@ -224,6 +244,10 @@ export default function Page() {
     return <div>Loading...</div>;
   }
 
+  if (isCelebrityLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Container c="white">
       <Stack>
@@ -246,14 +270,13 @@ export default function Page() {
                 <Avatar
                   size={200}
                   src={`https://image.tmdb.org/t/p/original/${info?.profile_path}`}
-                  alt={decodeURIComponent(name as string)}
                 />
               ) : (
                 <Skeleton height={200} circle />
               )}
             </Center>
             <Title order={1} ta="center">
-              {decodeURIComponent(name as string)}
+              {celebrity?.name}
             </Title>
           </section>
 
@@ -282,9 +305,9 @@ export default function Page() {
                 <section>
                   <Stack>
                     <Title order={3}>Known For</Title>
-                    {data ? (
+                    {celebInfo ? (
                       <Grid>
-                        {data.known_for?.map((item) => (
+                        {celebInfo.known_for?.map((item) => (
                           <Grid.Col
                             span={{
                               xs: 12,
