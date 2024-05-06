@@ -30,42 +30,42 @@
   {
     "id": 5,
     "name": "Gong Jun",
-    "placeVisited": [],
+    "placeVisited": ["ทะเลสมุย"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/rtjBdEF61NySmDDnoDgAtuclAJJ.jpg"
   },
   {
     "id": 6,
     "name": "Cheng Xiao",
-    "placeVisited": [],
+    "placeVisited": ["Old Phuket Town", "เกาะยาวน้อย"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/yb8sSkTFZVUjCLPlfSPiAoEE68v.jpg"
   },
   {
     "id": 7,
     "name": "Eleanor Lee",
-    "placeVisited": [],
+    "placeVisited": ["ตลาดนัดจตุจักร", "ตลาดน้ำอัมพวา", "หาดเขาตะเกียบ"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/kiWfDjqHY8bCavX2N8nA0dOIg2E.jpg"
   },
   {
     "id": 8,
     "name": "Yang Yang",
-    "placeVisited": [],
+    "placeVisited": ["หาดกะรน"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/ygck6qi2U8eoazOZilOaomqflBL.jpg"
   },
   {
     "id": 9,
     "name": "Ju Jingyi",
-    "placeVisited": [],
+    "placeVisited": ["สกายวอล์ก", "ประตูน้ำ"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/kKYlPzXucTQ4GGC6Iac5Hw2p4cI.jpg"
   },
   {
     "id": 10,
     "name": "Nine Kornchid Boonsathitpakdee",
-    "placeVisited": [],
+    "placeVisited": ["สนามบินสุวรรณภูมิ"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/mYS8XqCMKOcJfUPQpvsmZIducw4.jpg"
   },
