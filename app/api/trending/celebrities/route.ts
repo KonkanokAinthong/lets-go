@@ -2,23 +2,13 @@
 
 import { load } from 'cheerio';
 import { NextResponse } from 'next/server';
+import puppeteer from 'puppeteer';
 
 import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
 
-const puppeteer = require('puppeteer-core');
-const chromium = require('@sparticuz/chromium-min');
-
 export async function GET(request: Request) {
   const nationalityParam = new URL(request.url).searchParams.get('nationality');
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath(
-      'https://github.com/Sparticuz/chromium/releases/download/v110.0.1/chromium-v110.0.1-pack.tar'
-    ),
-    headless: chromium.headless,
-    ignoreHTTPSErrors: true,
-  });
+  const browser = await puppeteer.launch();
 
   const page = await browser.newPage();
   await page.setViewport({ width: 1300, height: 1000 });

@@ -2,19 +2,10 @@
 
 import { NextResponse } from 'next/server';
 
-const puppeteer = require('puppeteer-core');
-const chromium = require('@sparticuz/chromium-min');
+import puppeteer from 'puppeteer';
 
 export async function GET(request: Request) {
-  const browser = await puppeteer.launch({
-    args: chromium.args,
-    defaultViewport: chromium.defaultViewport,
-    executablePath: await chromium.executablePath(
-      'https://github.com/Sparticuz/chromium/releases/download/v110.0.1/chromium-v110.0.1-pack.tar'
-    ),
-    headless: chromium.headless,
-    ignoreHTTPSErrors: true,
-  });
+  const browser = await puppeteer.launch();
 
   const page = await browser.newPage();
   await page.goto('https://travel.trueid.net/travelguide');
