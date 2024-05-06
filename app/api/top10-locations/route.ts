@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import Chromium from '@sparticuz/chromium';
+
 import { NextResponse } from 'next/server';
 
+const chromium = require('@sparticuz/chromium-min');
 const puppeteer = require('puppeteer-core');
 
 export async function GET(request: Request) {
   const browser = await puppeteer.launch({
-    args: [...Chromium.args, '--hide-scrollbars', '--disable-web-security'],
-    defaultViewport: Chromium.defaultViewport,
-    executablePath: await Chromium.executablePath(
+    args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath(
       'https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar'
     ),
-    headless: Chromium.headless as boolean,
+    headless: chromium.headless,
     ignoreHTTPSErrors: true,
   });
 
