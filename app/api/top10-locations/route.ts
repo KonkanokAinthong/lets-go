@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     args: [...Chromium.args, '--hide-scrollbars', '--disable-web-security'],
     defaultViewport: Chromium.defaultViewport,
     executablePath: await Chromium.executablePath(
-      `https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar`
+      'https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar'
     ),
     headless: Chromium.headless as boolean,
     ignoreHTTPSErrors: true,
