@@ -102,7 +102,7 @@ export default function Page() {
         <Grid gutter={64} columns={24} justify="center" align="center">
           {celebs?.map((celebrity: any) => (
             <Grid.Col
-              key={celebrity.name}
+              key={celebrity?.name}
               span={{
                 xs: 12,
                 md: 8,
@@ -119,7 +119,7 @@ export default function Page() {
               >
                 <Avatar src={celebrity?.image} alt="test" size="124" />
                 <Title order={6} ta="center">
-                  <Link href={`/kr/celebrities/${celebrity?.id}`}>{celebrity.name}</Link>
+                  <Link href={`/kr/celebrities/${celebrity?.id}`}>{celebrity?.name}</Link>
                 </Title>
               </div>
             </Grid.Col>
