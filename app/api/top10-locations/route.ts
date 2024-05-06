@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Chromium from '@sparticuz/chromium';
 import { NextResponse } from 'next/server';
-import puppeteer from 'puppeteer-core';
+
+const puppeteer = require('puppeteer-core');
 
 export async function GET(request: Request) {
   const browser = await puppeteer.launch({
