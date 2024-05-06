@@ -228,7 +228,7 @@ const SuperstarCheckInThailand = () => {
       <Grid justify="center" align="center" gutter="xl" p="lg">
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            {currentLocation && (
+            {isLoaded && currentLocation ? (
               <GoogleMap
                 mapContainerStyle={{ width: '100%', height: '400px' }}
                 center={currentLocation}
@@ -238,6 +238,8 @@ const SuperstarCheckInThailand = () => {
               >
                 <Marker position={currentLocation} />
               </GoogleMap>
+            ) : (
+              <Skeleton height={400} width="100%" />
             )}
             <Button size="lg" component={Link} href="/kr" variant="default">
               Superstar nearby me
