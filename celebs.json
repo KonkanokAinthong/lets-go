@@ -142,28 +142,28 @@
   {
     "id": 21,
     "name": "Jumpol Adulkittiporn",
-    "placeVisited": [],
+    "placeVisited": ["หัวหิน"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/alCgpzXB50QWfck3KFlfzkRnXSW.jpg"
   },
   {
     "id": 22,
     "name": "Atthaphan Phunsawat",
-    "placeVisited": [],
+    "placeVisited": ["หัวหิน"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/uJ1THfL7y8tuWpCNpow6eoPIr27.jpg"
   },
   {
     "id": 23,
     "name": "Tawan Vihokratana",
-    "placeVisited": [],
+    "placeVisited": ["หัวหิน"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/3UvwJGTDRXVYjUfaiLQuk7vKqHR.jpg"
   },
   {
     "id": 24,
     "name": "Thitipoom Techa-apaikhun",
-    "placeVisited": [],
+    "placeVisited": ["หัวหิน"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/wlbfFnZg5TfNJHiBr6nkJvtpHm6.jpg"
   },
@@ -183,21 +183,21 @@
   {
     "id": 26,
     "name": "Nadech Kugimiya",
-    "placeVisited": [],
+    "placeVisited": ["อนันตรา ลายัน ภูเก็ต รีสอร์ท"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/w58HrktpHZ7UVGY5SKoJxFkitCy.jpg"
   },
   {
     "id": 27,
     "name": "Urassaya Sperbund",
-    "placeVisited": [],
+    "placeVisited": ["Memories Beach Bar"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/ui6VKMPZpAPzc6f7dl9YdQVi7Tj.jpg"
   },
   {
     "id": 28,
     "name": "Prin Suparat",
-    "placeVisited": ["แม่น้ำแควน้อย"],
+    "placeVisited": ["แม่น้ำแควน้อย", "โรสวูด ภูเก็ต"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/lo6zChxhJrIGYaSZV46IG1K98Rw.jpg"
   },
@@ -219,7 +219,7 @@
   {
     "id": 30,
     "name": "Kimberly Ann Voltemas",
-    "placeVisited": [],
+    "placeVisited": ["โรสวูด ภูเก็ต"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/zgo2a0h3N3oDhsteZzl6f0HEeAE.jpg"
   }

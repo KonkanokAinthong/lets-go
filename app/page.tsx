@@ -21,6 +21,7 @@ import Autoplay from 'embla-carousel-autoplay';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
+import CELEB_LISTS from '../celebs.json';
 
 const API_ENDPOINTS = {
   celebsNews: '/api/celebs-news',
@@ -34,42 +35,6 @@ const QUERY_KEYS = {
   trendingThaiCelebrities: 'trendingThaiCelebrities',
   trendingKoreanCelebrities: 'trendingKoreanCelebrities',
   trendingChineseCelebrities: 'trendingChineseCelebrities',
-};
-
-const CELEB_LISTS = {
-  thai: [
-    'Jumpol Adulkittiporn',
-    'Atthaphan Phunsawat',
-    'Tawan Vihokratana',
-    'Thitipoom Techaapaikhun',
-    'Ranee Campen',
-    'Nadech Kugimiya',
-    'Urassaya Sperbund',
-    'Prin Suparat',
-    'Davika Hoorne',
-    'Kimberly Ann Voltemas',
-  ],
-  korean: [
-    'Kim Seon Ho',
-    'Jackson Wang',
-    'Song Jung-gi',
-    'Kwan Na Ra',
-    'Kim Jinyoung',
-    'Bak Ji-hyo',
-    'Minnie',
-    'Song-Ji-hun',
-    'Baekho',
-    'Kunpimook Bhuwakul',
-  ],
-  chinese: [
-    'Ju Jingyi',
-    'Cheng Xiao',
-    'Li Kaixin',
-    'Yang Yang',
-    'Gong Jun',
-    'Yang Yang',
-    'Pornnappan Pornpenpipat',
-  ],
 };
 
 const CelebsNewsCarousel = () => {
@@ -131,10 +96,10 @@ const CelebsNewsCarousel = () => {
   );
 };
 
-const searchCelebrities = async (nameList: string[]) => {
+const searchCelebrities = async (celebList: typeof CELEB_LISTS) => {
   try {
-    const promises = nameList.map((name) =>
-      axios.get(API_ENDPOINTS.searchCelebrity(name), {
+    const promises = celebList.map((celeb) =>
+      axios.get(API_ENDPOINTS.searchCelebrity(celeb.name), {
         headers: {
           Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_TOKEN}`,
         },
@@ -159,22 +124,20 @@ const SuperstarCheckInThailand = () => {
 
   const { data: thCelebrities } = useQuery(
     QUERY_KEYS.trendingThaiCelebrities,
-    () => searchCelebrities(CELEB_LISTS.thai),
-    { refetchOnWindowFocus: false, initialData: [] }
+    () => searchCelebrities(CELEB_LISTS),
+    { refetchOnWindowFocus: false, initialData: [], select: (data) => data.slice(20, 30) }
   );
-
-  console.log(thCelebrities);
 
   const { data: krCelebrities } = useQuery(
     QUERY_KEYS.trendingKoreanCelebrities,
-    () => searchCelebrities(CELEB_LISTS.korean),
-    { refetchOnWindowFocus: false, initialData: [] }
+    () => searchCelebrities(CELEB_LISTS),
+    { refetchOnWindowFocus: false, initialData: [], select: (data) => data.slice(10, 20) }
   );
 
   const { data: cnCelebrities } = useQuery(
     QUERY_KEYS.trendingChineseCelebrities,
-    () => searchCelebrities(CELEB_LISTS.chinese),
-    { refetchOnWindowFocus: false, initialData: [] }
+    () => searchCelebrities(CELEB_LISTS),
+    { refetchOnWindowFocus: false, initialData: [], select: (data) => data.slice(0, 10) }
   );
 
   const onLoad = useCallback((map) => {
@@ -228,7 +191,7 @@ const SuperstarCheckInThailand = () => {
               <GoogleMap
                 mapContainerStyle={{ width: '100%', height: '400px' }}
                 center={currentLocation}
-                zoom={10}
+                zoom={50}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
               >
