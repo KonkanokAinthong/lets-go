@@ -34,7 +34,7 @@
     "openai": "^4.29.2",
     "puppeteer": "^22.6.0",
     "puppeteer-autoscroll-down": "^2.0.0",
-    "puppeteer-core": "^22.8.0",
+    "puppeteer-core": "^10.4.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-query": "^3.39.3"
