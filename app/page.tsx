@@ -205,7 +205,7 @@ const SuperstarCheckInThailand = () => {
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            <Box href={`kr/celebrities/${imageKR?.name}`} component={Link}>
+            <Box href={`kr/celebrities/${imageKR?.id}`} component={Link}>
               <Image src={`https://image.tmdb.org/t/p/w400${imageKR?.profile_path}`} height={400} />
             </Box>
             <Button size="lg" component={Link} href="/kr" variant="default">
@@ -215,7 +215,7 @@ const SuperstarCheckInThailand = () => {
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            <Box href={`cn/${imageCN?.name}`} component={Link}>
+            <Box href={`cn/celebrities/${imageCN?.id}`} component={Link}>
               <Image src={`https://image.tmdb.org/t/p/w400${imageCN?.profile_path}`} height={400} />
             </Box>
             <Button size="lg" component={Link} href="/cn" variant="default">
@@ -225,7 +225,7 @@ const SuperstarCheckInThailand = () => {
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            <Box href={`th/${imageTH?.name}`} component={Link}>
+            <Box href={`th/celebrities/${imageTH?.id}`} component={Link}>
               <Image
                 src={`https://image.tmdb.org/t/p/w400${imageTH?.profile_path}`}
                 alt="Thai Celebrity"
