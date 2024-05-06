@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { load } from 'cheerio';
 import { NextResponse } from 'next/server';
-import puppeteer from 'puppeteer';
+
 import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
 import celebrities from '../../../celebs.json';
-import Chromium from '@sparticuz/chromium';
+
+const chromium = require('@sparticuz/chromium-min');
+const puppeteer = require('puppeteer-core');
 
 function extractName(text: string) {
   const regex = /(?<=\().+?(?=\))/;
@@ -24,10 +26,13 @@ export async function GET(request: Request) {
     /ถนนข้าวสาร|สวนลุมพินี|Dalmantian|ถนนเยาวราช|สนามแพทสเตเดี้ยม|centralwOrld|Parc Paragon/g;
 
   const browser = await puppeteer.launch({
-    args: Chromium.args,
-    defaultViewport: Chromium.defaultViewport,
-    executablePath: await Chromium.executablePath(),
-    headless: Chromium.headless,
+    args: [...chromium.args, '--hide-scrollbars', '--disable-web-security'],
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath(
+      'https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar'
+    ),
+    headless: chromium.headless,
+    ignoreHTTPSErrors: true,
   });
   const page = await browser.newPage();
   await page.setViewport({ width: 1300, height: 1000 });
