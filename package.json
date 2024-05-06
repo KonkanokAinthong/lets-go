@@ -23,19 +23,18 @@
     "@mantine/hooks": "^7.6.2",
     "@next/bundle-analyzer": "^14.0.1",
     "@react-google-maps/api": "^2.19.3",
-    "@sparticuz/chromium": "^123.0.1",
     "@sparticuz/chromium-min": "^123.0.1",
     "@tabler/icons-react": "^2.40.0",
     "axios": "^1.6.2",
     "bufferutil": "^4.0.8",
     "cheerio": "^1.0.0-rc.12",
-    "chrome-aws-lambda": "^10.1.0",
     "embla-carousel-autoplay": "^7.1.0",
     "embla-carousel-react": "^7.1.0",
     "next": "^13.5.6",
     "openai": "^4.29.2",
     "puppeteer-autoscroll-down": "^2.0.0",
-    "puppeteer-core": "^10.4.0",
+    "@sparticuz/chromium": "^119.0.2",
+    "puppeteer-core": "^21.5.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-query": "^3.39.3",
@@ -81,5 +80,8 @@
     "ts-jest": "^29.1.1",
     "typescript": "5.2.2"
   },
-  "packageManager": "yarn@4.0.1"
+  "packageManager": "yarn@4.0.1",
+  "engines": {
+    "node": "18"
+  }
 }
