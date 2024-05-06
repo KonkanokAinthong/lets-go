@@ -8,7 +8,9 @@ import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
 
 export async function GET(request: Request) {
   const nationalityParam = new URL(request.url).searchParams.get('nationality');
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
 
   const page = await browser.newPage();
   await page.setViewport({ width: 1300, height: 1000 });
