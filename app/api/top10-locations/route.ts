@@ -8,7 +8,9 @@ export async function GET(request: Request) {
   const browser = await puppeteer.launch({
     args: [...Chromium.args, '--hide-scrollbars', '--disable-web-security'],
     defaultViewport: Chromium.defaultViewport,
-    executablePath: await Chromium.executablePath(),
+    executablePath: await Chromium.executablePath(
+      'https://github.com/Sparticuz/chromium/releases/download/119.0.2/chromium-v119.0.2-pack.tar'
+    ),
     headless: Chromium.headless as any,
     ignoreHTTPSErrors: true,
   });
