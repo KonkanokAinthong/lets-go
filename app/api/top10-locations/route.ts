@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import Chromium from '@sparticuz/chromium';
+import Chromium from '@sparticuz/chromium-min';
 import { NextResponse } from 'next/server';
 import puppeteer from 'puppeteer-core';
 

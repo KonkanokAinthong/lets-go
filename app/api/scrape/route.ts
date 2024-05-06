@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
 import puppeteer from 'puppeteer-core';
-import Chromium from '@sparticuz/chromium';
+import Chromium from '@sparticuz/chromium-min';
 import celebrities from '../../../celebs.json';
 
 function extractName(text: string) {

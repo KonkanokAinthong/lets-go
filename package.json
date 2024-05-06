@@ -24,6 +24,7 @@
     "@next/bundle-analyzer": "^14.0.1",
     "@react-google-maps/api": "^2.19.3",
     "@sparticuz/chromium": "^116.0.0",
+    "@sparticuz/chromium-min": "^116.0.0",
     "@tabler/icons-react": "^2.40.0",
     "axios": "^1.6.2",
     "bufferutil": "^4.0.8",

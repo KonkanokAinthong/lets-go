@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import Chromium from '@sparticuz/chromium';
+import Chromium from '@sparticuz/chromium-min';
 import { load } from 'cheerio';
 import { NextResponse } from 'next/server';
 
