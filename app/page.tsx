@@ -199,7 +199,7 @@ const SuperstarCheckInThailand = () => {
     }
   }, []);
 
-  const getRandomCeleb = (region: keyof typeof CELEB_LISTS) => {
+  const getRandomCeleb = (region: 'th' | 'cn' | 'kr') => {
     if (!thCelebrities || !krCelebrities || !cnCelebrities) return null;
     const celebrities = {
       th: thCelebrities,

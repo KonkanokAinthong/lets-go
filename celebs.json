@@ -1,125 +1,174 @@
 [
   {
+    "id": 1,
     "name": "เนเน่ พรนับพัน",
     "placeVisited": ["สนามบินสุวรรณภูมิ"],
+    "nationality": "Chinese",
     "image": ""
   },
   {
+    "id": 2,
     "name": "ซันนี่ เกวลิน",
     "placeVisited": ["ธันเดอร์โดม เมืองทองธานี"],
+    "nationality": "Chinese",
     "image": ""
   },
   {
+    "id": 3,
     "name": "มีมี่ พร้อมวิไล",
     "placeVisited": ["Old Phuket Town"],
+    "nationality": "Chinese",
     "image": ""
   },
   {
+    "id": 4,
     "name": "แพทริค ณัฐวรรธ์",
     "placeVisited": ["แม่น้ำเจ้าพระยา"],
+    "nationality": "Chinese",
     "image": ""
   },
   {
+    "id": 5,
     "name": "กงจวิ้น",
-    "placeVisited": "",
+    "placeVisited": [],
+    "nationality": "Chinese",
     "image": ""
   },
   {
+    "id": 6,
     "name": "เฉิงเซียว",
-    "placeVisited": "",
+    "placeVisited": [],
+    "nationality": "Chinese",
     "image": ""
   },
   {
+    "id": 7,
     "name": "หลี่ข่ายซิน",
-    "placeVisited": "",
+    "placeVisited": [],
+    "nationality": "Chinese",
     "image": ""
   },
   {
+    "id": 8,
     "name": "หยางหยาง",
-    "placeVisited": "",
+    "placeVisited": [],
+    "nationality": "Chinese",
     "image": ""
   },
   {
+    "id": 9,
     "name": "จวีจิ้งอี",
-    "placeVisited": "",
+    "placeVisited": [],
+    "nationality": "Chinese",
     "image": ""
   },
   {
+    "id": 10,
     "name": "นาย กรชิต หรือ นาย INTO1",
-    "placeVisited": "",
+    "placeVisited": [],
+    "nationality": "Chinese",
     "image": ""
   },
   {
+    "id": 11,
     "name": "Kim Seon Ho",
     "placeVisited": ["สวนลุมพินี"],
+    "nationality": "Korean",
     "image": ""
   },
   {
+    "id": 12,
     "name": "Jackson Wang",
     "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "nationality": "Korean",
     "image": ""
   },
   {
+    "id": 13,
     "name": "Song Jung-gi",
     "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "nationality": "Korean",
     "image": ""
   },
   {
+    "id": 14,
     "name": "Kwan Na Ra",
     "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "nationality": "Korean",
     "image": ""
   },
   {
+    "id": 15,
     "name": "Kim Jinyoung",
     "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "nationality": "Korean",
     "image": ""
   },
   {
+    "id": 16,
     "name": "Bak Ji-hyo",
     "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "nationality": "Korean",
     "image": ""
   },
   {
+    "id": 17,
     "name": "ณิชา ยนตรรักษ์",
     "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "nationality": "Thai",
     "image": ""
   },
   {
+    "id": 18,
     "name": "Song-Ji-hun",
     "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "nationality": "Korean",
     "image": ""
   },
   {
+    "id": 19,
     "name": "แบมแบม กันต์พิมุกต์",
     "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "nationality": "Korean",
     "image": ""
   },
   {
+    "id": 20,
     "name": "Baekho",
     "placeVisited": ["Savoey Seafood CO. Sukhumvit26"],
+    "nationality": "Korean",
     "image": ""
   },
   {
+    "id": 21,
     "name": "Jumpol Adulkittiporn",
-    "placeVisited": [""],
+    "placeVisited": [],
+    "nationality": "Thai",
     "image": ""
   },
   {
+    "id": 22,
     "name": "Atthaphan Phunsawat",
-    "placeVisited": [""],
+    "placeVisited": [],
+    "nationality": "Thai",
     "image": ""
   },
   {
+    "id": 23,
     "name": "Tawan Vihokratana",
-    "placeVisited": [""],
+    "placeVisited": [],
+    "nationality": "Thai",
     "image": ""
   },
   {
+    "id": 24,
     "name": "Thitipoom Techa-apaikhun",
-    "placeVisited": [""],
+    "placeVisited": [],
+    "nationality": "Thai",
     "image": ""
   },
   {
+    "id": 25,
     "name": "Ranee Campen",
     "placeVisited": [
       "วัดปากน้ำแขมหนู",
@@ -128,24 +177,32 @@
       "สะพานเฉลิมพระเกียรติฯ 80 พรรษา จังหวัดพัทลุง",
       "ภูชี้ดาว จังหวัดเชียงราย"
     ],
+    "nationality": "Thai",
     "image": ""
   },
   {
+    "id": 26,
     "name": "Nadech Kugimiya",
-    "placeVisited": [""],
+    "placeVisited": [],
+    "nationality": "Thai",
     "image": ""
   },
   {
+    "id": 27,
     "name": "Urassaya Sperbund",
-    "placeVisited": [""],
+    "placeVisited": [],
+    "nationality": "Thai",
     "image": ""
   },
   {
+    "id": 28,
     "name": "Prin Suparat",
     "placeVisited": ["แม่น้ำแควน้อย"],
+    "nationality": "Thai",
     "image": ""
   },
   {
+    "id": 29,
     "name": "Davika Hoorne",
     "placeVisited": [
       "เขาหลัก จังหวัดพังงา",
@@ -156,11 +213,14 @@
       "โมริ เนเชอรัล ฟาร์ม (Mori Natural Farm) จังหวัดเชียงใหม่",
       "Vala Hua Hin จังหวัดเพชรบุรี"
     ],
+    "nationality": "Thai",
     "image": ""
   },
   {
+    "id": 30,
     "name": "Kimberly Ann Voltemas",
-    "placeVisited": [""],
+    "placeVisited": [],
+    "nationality": "Thai",
     "image": ""
   }
 ]

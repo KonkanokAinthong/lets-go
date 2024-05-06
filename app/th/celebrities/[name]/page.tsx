@@ -76,14 +76,19 @@ export default function Page() {
   const [map, setMap] = useState(null);
   const { name } = useParams();
   const placeName = 'หัวหิน';
-  const { data: celebrity, isLoading: isCelebrityLoading } = useQuery('celebrity', () =>
-    searchCelebrity(name as string)
+  const { data: celebrity, isLoading: isCelebrityLoading } = useQuery(
+    'celebrity',
+    () => searchCelebrity(name as string),
+    {
+      refetchOnWindowFocus: false,
+    }
   );
   const { data: celebrityInfo, isLoading: isCelebbrityInfoLoading } = useQuery(
     'celebrityInfo',
     () => getCelebrityInfo(celebrity?.id),
     {
       enabled: !!celebrity?.id,
+      refetchOnWindowFocus: false,
     }
   );
 
@@ -99,8 +104,12 @@ export default function Page() {
   const onUnmount = useCallback((map) => {
     setMap(null);
   }, []);
-  const { data: places, isLoading: isPlacesLoading } = useQuery('place', () =>
-    getPlacebyTextSearch(placeName as string)
+  const { data: places, isLoading: isPlacesLoading } = useQuery(
+    'place',
+    () => getPlacebyTextSearch(placeName as string),
+    {
+      refetchOnWindowFocus: false,
+    }
   );
   // const { data: nearbyPlaces } = useQuery('nearbyPlaces', () =>
   //   getNearbyPlaces(placeName as string)
@@ -108,6 +117,7 @@ export default function Page() {
 
   const { data: info } = useQuery('info', () => getCelebrityInfo(celebrity?.id), {
     enabled: !!celebrity?.id,
+    refetchOnWindowFocus: false,
   });
 
   const containerStyle = {
