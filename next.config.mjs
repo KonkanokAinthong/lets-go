@@ -9,7 +9,6 @@ export default withBundleAnalyzer({
   eslint: {
     ignoreDuringBuilds: true,
   },
-  staticPageGenerationTimeout: 1000,
   typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if
