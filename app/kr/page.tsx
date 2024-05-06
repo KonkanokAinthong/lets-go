@@ -9,7 +9,7 @@ import { useQuery } from 'react-query';
 async function getTrendingKoreanCelebrities() {
   try {
     const response = await axios.get('/api/trending-celebs?nationality=Korean');
-    console.log(response);
+
     return response.data;
   } catch (error) {
     console.error(error);

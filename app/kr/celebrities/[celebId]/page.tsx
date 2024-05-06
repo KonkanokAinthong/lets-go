@@ -38,21 +38,6 @@ const getCelebrityById = async (celebId: string) => {
   }
 };
 
-const getPlacebyTextSearch = async (places: string[]) => {
-  try {
-    const promises = places?.map(async (place) => {
-      const response = await axios.get(`/api/places?place=${place}`);
-      return response.data.data.results[0];
-    });
-
-    const results = await Promise.all(promises);
-    return results;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-};
-
 const searchCelebrity = async (name: string) => {
   const data = await axios.get(`https://api.themoviedb.org/3/search/person?query=${name}`, {
     headers: {
@@ -71,16 +56,6 @@ const getCelebrityInfo = async (person_id: string) => {
 
   return data.data;
 };
-
-async function getTrendingKoreanCelebrities() {
-  try {
-    const response = await axios.get('/api/scrape?nationality=Korean');
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    throw new Error('Failed to fetch data');
-  }
-}
 
 const fetchNearbyPlaces = async (location) => {
   const { lat, lng } = location;
@@ -146,14 +121,8 @@ export default function Page() {
   const navigate = useRouter();
 
   const { celebId } = useParams();
+
   const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
-
-  const { data: celebs, isLoading: isTrendingLoading } = useQuery(
-    ['trendingKoreanCelebrities', celebId],
-    getTrendingKoreanCelebrities
-  );
-
-  const [suanLumPhiniLocation, setSuanLumPhiniLocation] = useState(null);
 
   const onLoad = useCallback(
     (map) => {
@@ -167,21 +136,6 @@ export default function Page() {
   const onUnmount = useCallback((map) => {
     setMap(null);
   }, []);
-
-  const filter = celebs?.filter((celeb) => celeb.id === celebId)[0];
-
-  const { data: places } = useQuery(
-    ['places', filter?.places],
-    () =>
-      getPlaceDetails(
-        celebId === '12' ? ['หมูกระทะคนรวย'] : celebId === '11' ? ['สวนลุมพินี'] : filter.places
-      ),
-    {
-      onSuccess(data) {
-        setSuanLumPhiniLocation(data.places[0]?.geometry?.location);
-      },
-    }
-  );
 
   const { data: celebrity, isLoading: isCelebrityLoading } = useQuery(
     ['celebrity', celebId],
@@ -203,11 +157,15 @@ export default function Page() {
     enabled: !!celebInfo?.id,
   });
 
+  const { data: places } = useQuery(['places', celebrity?.placeVisited], () =>
+    getPlaceDetails(celebrity?.placeVisited)
+  );
+
   const { data: nearbyPlaces } = useQuery(
-    ['nearbyPlaces', suanLumPhiniLocation],
-    () => (suanLumPhiniLocation ? fetchNearbyPlaces(suanLumPhiniLocation) : null),
+    ['nearbyPlaces', places?.places],
+    () => fetchNearbyPlaces(places?.places[0].geometry.location),
     {
-      enabled: !!suanLumPhiniLocation,
+      enabled: !!places,
     }
   );
 
@@ -429,17 +387,20 @@ export default function Page() {
 
             <TabsPanel value="nearby">
               <div>
-                {isLoaded && (suanLumPhiniLocation || currentLocation) ? (
+                {isLoaded && places?.places[0] ? (
                   <>
                     <GoogleMap
                       mapContainerStyle={containerStyle}
-                      center={suanLumPhiniLocation || currentLocation}
+                      center={places?.places?.[0]?.geometry?.location}
                       zoom={15}
                       onLoad={onLoad}
                       onUnmount={onUnmount}
                     >
                       <Marker
-                        position={suanLumPhiniLocation || currentLocation}
+                        position={{
+                          lat: places.places[0].geometry.location.lat,
+                          lng: places.places[0].geometry.location.lng,
+                        }}
                         icon={{
                           url: `https://image.tmdb.org/t/p/original/${info?.profile_path}`,
                           scaledSize: new window.google.maps.Size(40, 40),

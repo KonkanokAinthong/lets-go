@@ -86,49 +86,49 @@
   {
     "id": 13,
     "name": "Song Jung-gi",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": ["เยาวราช"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/kgjb5OppOVTh5tz3hhnfDVnTvDv.jpg"
   },
   {
     "id": 14,
     "name": "Kwon Na-ra",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": ["PAT Stadium"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/4U0cNinwOf7DdsBYA3BFi7arDmz.jpg"
   },
   {
     "id": 15,
-    "name": "Kim Jinyoung",
+    "name": "Dex",
     "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
     "nationality": "Korean",
-    "image": "https://image.tmdb.org/t/p/original/1p7xMHRNsrUJacXqOFs1EZqSIvp.jpg"
+    "image": "https://image.tmdb.org/t/p/original/b9CCj9gtvgA2DQkuzcrPPwC6eok.jpg"
   },
   {
     "id": 16,
     "name": "Park Ji-hyo",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": ["วัดพระศรีรัตนศาสดาราม", "ร้านเจ๊ไฝ"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/5OEh0OgobdiTGTYRqGvH6TbjfgV.jpg"
   },
   {
     "id": 17,
     "name": "ณิชา ยนตรรักษ์",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": ["ทิพย์สมัย ผัดไทยประตูผี"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/2XaVaqaYXIKw1CBMyjEfcCAyVNF.jpg"
   },
   {
     "id": 18,
     "name": "Rain",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": ["เซ็นทรัลเวิลด์"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/aXOjIBUxu7fmBOxTJcgYmtTKD1D.jpg"
   },
   {
     "id": 19,
     "name": "แบมแบม กันต์พิมุกต์",
-    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "placeVisited": ["Rajamangala National Stadium"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/dlXYHMiz1eyN5QrdA6Gh6wmwRVm.jpg"
   },
