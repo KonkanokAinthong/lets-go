@@ -1,5 +1,8 @@
+/* eslint-disable react/no-unescaped-entities */
+
 'use client';
 
+import ChatInterface from '@/components/ChatInterface';
 import {
   Avatar,
   Breadcrumbs,
@@ -9,6 +12,7 @@ import {
   Divider,
   Grid,
   Image,
+  Loader,
   Skeleton,
   Stack,
   Tabs,
@@ -18,13 +22,13 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { IconArrowLeft } from '@tabler/icons-react';
 import axios from 'axios';
+import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
-import { IconArrowLeft } from '@tabler/icons-react';
-import ChatInterface from '@/components/ChatInterface';
 
 const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
 
@@ -198,6 +202,10 @@ export default function Page() {
     return <div>Loading...</div>;
   }
 
+  if (isCelebrityLoading) {
+    return <Loader />;
+  }
+
   return (
     <Container c="white">
       <Stack>
@@ -213,93 +221,63 @@ export default function Page() {
             </Button>
           </Breadcrumbs>
         </header>
-        <main>
-          <section>
-            <Center>
-              {info ? (
-                <Avatar
-                  size={200}
-                  src={`https://image.tmdb.org/t/p/original/${info?.profile_path}`}
-                />
-              ) : (
-                <Skeleton height={200} circle />
-              )}
-            </Center>
-            <Title order={1} ta="center">
-              {celebrity?.name}
-            </Title>
-          </section>
+        <Center>
+          <Avatar
+            size={200}
+            src={`https://image.tmdb.org/t/p/original/${info?.profile_path}`}
+            alt="test"
+          />
+        </Center>
+        <Title order={1} ta="center">
+          {celebrity?.name}
+        </Title>
 
-          <Tabs defaultValue="info">
-            <nav>
-              <TabsList mb="xl" grow>
-                <TabsTab value="info">ประวัติ</TabsTab>
-                <TabsTab value="visited-places">การท่องเที่ยว</TabsTab>
-                <TabsTab value="nearby">สถานที่ท่องเที่ยวใกล้เคียง</TabsTab>
-                <TabsTab value="chatgpt-planner">Trip Planner</TabsTab>
-              </TabsList>
-            </nav>
-            <TabsPanel value="info">
-              <Stack>
-                <section>
-                  {info ? (
-                    info.biography ? (
-                      <Text size="md">{info.biography}</Text>
-                    ) : (
-                      <Text size="md">ไม่มีข้อมูล</Text>
-                    )
-                  ) : (
-                    <Skeleton height={100} />
-                  )}
-                </section>
-                <section>
-                  <Stack>
-                    <Title order={3}>Known For</Title>
-                    {celebInfo ? (
-                      <Grid>
-                        {celebInfo.known_for?.map((item) => (
-                          <Grid.Col
-                            span={{
-                              xs: 12,
-                              md: 4,
-                            }}
-                            key={item.id}
-                          >
-                            <Stack>
-                              <Image
-                                src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
-                                alt={item.name ?? item.title}
-                              />
-                              <Text ta="center">{item.name ?? item.title}</Text>
-                            </Stack>
-                          </Grid.Col>
-                        ))}
-                      </Grid>
-                    ) : (
-                      <Grid>
-                        {Array(3)
-                          .fill(0)
-                          .map((_, index) => (
-                            <Grid.Col
-                              span={{
-                                xs: 12,
-                                md: 4,
-                              }}
-                              key={index}
-                            >
-                              <Stack>
-                                <Skeleton height={200} />
-                                <Skeleton height={20} width="50%" mx="auto" />
-                              </Stack>
-                            </Grid.Col>
-                          ))}
-                      </Grid>
-                    )}
-                  </Stack>
-                </section>
-              </Stack>
-            </TabsPanel>
-            <TabsPanel value="visited-places">
+        <Tabs defaultValue="info">
+          <TabsList mb="xl" grow>
+            <TabsTab value="info">ประวัติ</TabsTab>
+            <TabsTab value="visited-places">การท่องเที่ยว</TabsTab>
+            <TabsTab value="nearby">สถานที่ท่องเที่ยวใกล้เคียง</TabsTab>
+            <TabsTab value="chatgpt-planner">Trip Planner</TabsTab>
+          </TabsList>
+          <TabsPanel value="info">
+            <Stack>
+              <div>
+                {info?.biography ? (
+                  <Text size="md">{info?.biography}</Text>
+                ) : (
+                  <Text size="md">ไม่มีข้อมูล</Text>
+                )}
+              </div>
+              <div>
+                <Stack>
+                  <Title order={3}>Known For</Title>
+                  <Grid>
+                    {celebInfo?.known_for?.map((item) => (
+                      <Grid.Col
+                        span={{
+                          xs: 12,
+                          md: 4,
+                        }}
+                        key={item.id}
+                      >
+                        <Stack>
+                          <Image
+                            src={`https://image.tmdb.org/t/p/original/${item.poster_path}`}
+                            alt={item.name ?? item.title}
+                          />
+                          <Text component={Link} href="" ta="center">
+                            {item.name ?? item.title}
+                          </Text>
+                        </Stack>
+                      </Grid.Col>
+                    ))}
+                  </Grid>
+                </Stack>
+              </div>
+            </Stack>
+          </TabsPanel>
+          <TabsPanel value="visited-places">
+            <Stack justify="center" align="center">
               {places ? (
                 places.places.some((place) => place !== undefined) ? (
                   <>
@@ -375,54 +353,53 @@ export default function Page() {
                     ))}
                 </Stack>
               )}
-            </TabsPanel>
-
-            <TabsPanel value="nearby">
-              <div>
-                {isLoaded && places?.places[0] ? (
-                  <>
-                    <GoogleMap
-                      mapContainerStyle={containerStyle}
-                      center={places?.places?.[0]?.geometry?.location}
-                      zoom={15}
-                      onLoad={onLoad}
-                      onUnmount={onUnmount}
-                    >
+            </Stack>
+          </TabsPanel>
+          <TabsPanel value="nearby">
+            <div>
+              {isLoaded && places?.places[0] ? (
+                <>
+                  <GoogleMap
+                    mapContainerStyle={containerStyle}
+                    center={places?.places?.[0]?.geometry?.location}
+                    zoom={15}
+                    onLoad={onLoad}
+                    onUnmount={onUnmount}
+                  >
+                    <Marker
+                      position={{
+                        lat: places.places[0].geometry.location.lat,
+                        lng: places.places[0].geometry.location.lng,
+                      }}
+                      icon={{
+                        url: `https://image.tmdb.org/t/p/original/${info?.profile_path}`,
+                        scaledSize: new window.google.maps.Size(40, 40),
+                        anchor: new window.google.maps.Point(20, 20),
+                        labelOrigin: new window.google.maps.Point(20, 60),
+                      }}
+                      title={info?.name}
+                    />
+                    {nearbyPlaces?.map((place: any) => (
                       <Marker
+                        key={place.id}
                         position={{
-                          lat: places.places[0].geometry.location.lat,
-                          lng: places.places[0].geometry.location.lng,
+                          lat: place.location.latitude,
+                          lng: place.location.longitude,
                         }}
-                        icon={{
-                          url: `https://image.tmdb.org/t/p/original/${info?.profile_path}`,
-                          scaledSize: new window.google.maps.Size(40, 40),
-                          anchor: new window.google.maps.Point(20, 20),
-                          labelOrigin: new window.google.maps.Point(20, 60),
-                        }}
-                        title={info?.name}
+                        title={place.displayName.text}
                       />
-                      {nearbyPlaces?.map((place: any) => (
-                        <Marker
-                          key={place.id}
-                          position={{
-                            lat: place.location.latitude,
-                            lng: place.location.longitude,
-                          }}
-                          title={place.displayName.text}
-                        />
-                      ))}
-                    </GoogleMap>
-                  </>
-                ) : (
-                  <Skeleton height={600} />
-                )}
-              </div>
-            </TabsPanel>
-            <TabsPanel value="chatgpt-planner">
-              <ChatInterface />
-            </TabsPanel>
-          </Tabs>
-        </main>
+                    ))}
+                  </GoogleMap>
+                </>
+              ) : (
+                <Skeleton height={600} />
+              )}
+            </div>
+          </TabsPanel>
+          <TabsPanel value="chatgpt-planner">
+            <ChatInterface />
+          </TabsPanel>
+        </Tabs>
       </Stack>
     </Container>
   );
