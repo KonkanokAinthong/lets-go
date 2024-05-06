@@ -18,5 +18,6 @@ export default withBundleAnalyzer({
   },
   experimental: {
     optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
+    serverComponentsExternalPackages: ['puppeteer-core'],
   },
 });
