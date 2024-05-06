@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import Chromium from '@sparticuz/chromium-min';
+import Chromium from '@sparticuz/chromium';
 import { load } from 'cheerio';
 import { NextResponse } from 'next/server';
 
@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     args: [...Chromium.args, '--hide-scrollbars', '--disable-web-security'],
     defaultViewport: Chromium.defaultViewport,
     executablePath: await Chromium.executablePath(
-      'https://github.com/Sparticuz/chromium/releases/download/119.0.2/chromium-v119.0.2-pack.tar'
+      'https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar'
     ),
     headless: Chromium.headless as any,
     ignoreHTTPSErrors: true,

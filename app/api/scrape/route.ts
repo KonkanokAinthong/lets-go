@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
 import puppeteer from 'puppeteer-core';
-import Chromium from '@sparticuz/chromium-min';
+import Chromium from '@sparticuz/chromium';
 import celebrities from '../../../celebs.json';
 
 function extractName(text: string) {
@@ -28,7 +28,7 @@ export async function GET(request: Request) {
     args: [...Chromium.args, '--hide-scrollbars', '--disable-web-security'],
     defaultViewport: Chromium.defaultViewport,
     executablePath: await Chromium.executablePath(
-      'https://github.com/Sparticuz/chromium/releases/download/119.0.2/chromium-v119.0.2-pack.tar'
+      'https://github.com/Sparticuz/chromium/releases/download/v116.0.0/chromium-v116.0.0-pack.tar'
     ),
     headless: Chromium.headless as any,
     ignoreHTTPSErrors: true,
