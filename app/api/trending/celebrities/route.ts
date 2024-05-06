@@ -1,19 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import Chromium from '@sparticuz/chromium';
 import { load } from 'cheerio';
 import { NextResponse } from 'next/server';
 
 import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
-import puppeteer from 'puppeteer';
+
+const puppeteer = require('puppeteer-core');
+const chromium = require('@sparticuz/chromium-min');
 
 export async function GET(request: Request) {
   const nationalityParam = new URL(request.url).searchParams.get('nationality');
   const browser = await puppeteer.launch({
-    args: Chromium.args,
-    defaultViewport: Chromium.defaultViewport,
-    executablePath: await Chromium.executablePath(),
-    headless: Chromium.headless,
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath(
+      'https://github.com/Sparticuz/chromium/releases/download/v110.0.1/chromium-v110.0.1-pack.tar'
+    ),
+    headless: chromium.headless,
+    ignoreHTTPSErrors: true,
   });
 
   const page = await browser.newPage();

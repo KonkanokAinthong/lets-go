@@ -3,9 +3,11 @@ import { load } from 'cheerio';
 import { NextResponse } from 'next/server';
 
 import { scrollPageToBottom } from 'puppeteer-autoscroll-down';
-import puppeteer from 'puppeteer';
-import Chromium from '@sparticuz/chromium';
+
 import celebrities from '../../../celebs.json';
+
+const puppeteer = require('puppeteer-core');
+const chromium = require('@sparticuz/chromium-min');
 
 function extractName(text: string) {
   const regex = /(?<=\().+?(?=\))/;
@@ -25,10 +27,13 @@ export async function GET(request: Request) {
     /ถนนข้าวสาร|สวนลุมพินี|Dalmantian|ถนนเยาวราช|สนามแพทสเตเดี้ยม|centralwOrld|Parc Paragon/g;
 
   const browser = await puppeteer.launch({
-    args: Chromium.args,
-    defaultViewport: Chromium.defaultViewport,
-    executablePath: await Chromium.executablePath(),
-    headless: Chromium.headless,
+    args: chromium.args,
+    defaultViewport: chromium.defaultViewport,
+    executablePath: await chromium.executablePath(
+      'https://github.com/Sparticuz/chromium/releases/download/v110.0.1/chromium-v110.0.1-pack.tar'
+    ),
+    headless: chromium.headless,
+    ignoreHTTPSErrors: true,
   });
   const page = await browser.newPage();
   await page.setViewport({ width: 1300, height: 1000 });
