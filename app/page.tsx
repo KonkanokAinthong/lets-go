@@ -19,7 +19,7 @@ import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import axios from 'axios';
 import Autoplay from 'embla-carousel-autoplay';
 import Link from 'next/link';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import CELEB_LISTS from '../celebs.json';
 
@@ -117,24 +117,24 @@ const searchCelebrities = async (celebList: typeof CELEB_LISTS) => {
 
 const SuperstarCheckInThailand = () => {
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU',
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
   });
   const [map, setMap] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
 
-  const { data: thCelebrities } = useQuery(
+  const { data: thCelebrities, isLoading: isLoading_thCelebrities } = useQuery(
     QUERY_KEYS.trendingThaiCelebrities,
     () => searchCelebrities(CELEB_LISTS),
     { refetchOnWindowFocus: false, initialData: [], select: (data) => data.slice(20, 30) }
   );
 
-  const { data: krCelebrities } = useQuery(
+  const { data: krCelebrities, isLoading: isLoading_krCelebrities } = useQuery(
     QUERY_KEYS.trendingKoreanCelebrities,
     () => searchCelebrities(CELEB_LISTS),
     { refetchOnWindowFocus: false, initialData: [], select: (data) => data.slice(10, 20) }
   );
 
-  const { data: cnCelebrities } = useQuery(
+  const { data: cnCelebrities, isLoading: isLoading_cnCelebrities } = useQuery(
     QUERY_KEYS.trendingChineseCelebrities,
     () => searchCelebrities(CELEB_LISTS),
     { refetchOnWindowFocus: false, initialData: [], select: (data) => data.slice(0, 10) }
@@ -179,8 +179,49 @@ const SuperstarCheckInThailand = () => {
   const imageCN = getRandomCeleb('cn');
   const imageKR = getRandomCeleb('kr');
 
+  console.log('imageTH', imageTH);
+  console.log('imageCN', imageCN);
+  console.log('imageKR', imageKR);
+
   if (loadError) return 'Error loading maps';
   if (!isLoaded) return 'Loading Maps';
+
+  if (
+    !imageTH ||
+    !imageCN ||
+    !imageKR ||
+    isLoading_thCelebrities ||
+    isLoading_krCelebrities ||
+    isLoading_cnCelebrities
+  ) {
+    return (
+      <section>
+        <Grid justify="center" align="center" gutter="xl" p="lg">
+          <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
+            <Card shadow="sm" radius="lg" p="xl">
+              <Skeleton height={400} width="100%" />
+              <Skeleton height={20} width="70%" mt="md" />
+              <Skeleton height={20} width="50%" mt="sm" />
+            </Card>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
+            <Card shadow="sm" radius="lg" p="xl">
+              <Skeleton height={400} width="100%" />
+              <Skeleton height={20} width="70%" mt="md" />
+              <Skeleton height={20} width="50%" mt="sm" />
+            </Card>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
+            <Card shadow="sm" radius="lg" p="xl">
+              <Skeleton height={400} width="100%" />
+              <Skeleton height={20} width="70%" mt="md" />
+              <Skeleton height={20} width="50%" mt="sm" />
+            </Card>
+          </Grid.Col>
+        </Grid>
+      </section>
+    );
+  }
 
   return (
     <section>
@@ -205,9 +246,16 @@ const SuperstarCheckInThailand = () => {
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            <Box href={`kr/celebrities/${imageKR?.id}`} component={Link}>
-              <Image src={`https://image.tmdb.org/t/p/w400${imageKR?.profile_path}`} height={400} />
-            </Box>
+            {imageKR ? (
+              <Box href={`kr/celebrities/${imageKR.id}`} component={Link}>
+                <Image
+                  src={`https://image.tmdb.org/t/p/w400${imageKR.profile_path}`}
+                  height={400}
+                />
+              </Box>
+            ) : (
+              <Skeleton height={400} width="100%" />
+            )}
             <Button size="lg" component={Link} href="/kr" variant="default">
               South Korea
             </Button>
@@ -215,9 +263,16 @@ const SuperstarCheckInThailand = () => {
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            <Box href={`cn/celebrities/${imageCN?.id}`} component={Link}>
-              <Image src={`https://image.tmdb.org/t/p/w400${imageCN?.profile_path}`} height={400} />
-            </Box>
+            {imageCN ? (
+              <Box href={`cn/celebrities/${imageCN.id}`} component={Link}>
+                <Image
+                  src={`https://image.tmdb.org/t/p/w400${imageCN.profile_path}`}
+                  height={400}
+                />
+              </Box>
+            ) : (
+              <Skeleton height={400} width="100%" />
+            )}
             <Button size="lg" component={Link} href="/cn" variant="default">
               China
             </Button>
@@ -225,13 +280,17 @@ const SuperstarCheckInThailand = () => {
         </Grid.Col>
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            <Box href={`th/celebrities/${imageTH?.id}`} component={Link}>
-              <Image
-                src={`https://image.tmdb.org/t/p/w400${imageTH?.profile_path}`}
-                alt="Thai Celebrity"
-                height={400}
-              />
-            </Box>
+            {imageTH ? (
+              <Box href={`th/celebrities/${imageTH.id}`} component={Link}>
+                <Image
+                  src={`https://image.tmdb.org/t/p/w400${imageTH.profile_path}`}
+                  alt="Thai Celebrity"
+                  height={400}
+                />
+              </Box>
+            ) : (
+              <Skeleton height={400} width="100%" />
+            )}
             <Button size="lg" component={Link} href="/th" variant="default">
               Thailand
             </Button>
@@ -256,7 +315,7 @@ const Top10Locations = () => {
     }
   );
 
-  console.log('top10Locations', top10Locations);
+  const memoizedLocations = useMemo(() => top10Locations, [top10Locations]);
 
   if (isLoading) {
     return (
@@ -279,7 +338,7 @@ const Top10Locations = () => {
   return (
     <section>
       <Grid columns={12} align="stretch">
-        {top10Locations?.map((location, index) => (
+        {memoizedLocations?.map((location, index) => (
           <GridCol key={location.title} span={{ xs: 12, sm: 6, md: 12 / 5 }}>
             <Card
               shadow="sm"
