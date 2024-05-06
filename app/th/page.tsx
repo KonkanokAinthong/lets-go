@@ -6,63 +6,37 @@ import axios from 'axios';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
 
-const TMDB_API_TOKEN = process.env.NEXT_PUBLIC_TMDB_API_TOKEN;
-
-const searchCelebrity = async (nameList: string[]) => {
+async function getTrendingThaiCelebrities() {
   try {
-    const promises = nameList.map(async (name) => {
-      const response = await axios.get(`https://api.themoviedb.org/3/search/person?query=${name}`, {
-        headers: {
-          Authorization: `Bearer ${TMDB_API_TOKEN}`,
-        },
-      });
-      return response.data.results[0];
-    });
+    const response = await axios.get('/api/trending-celebs?nationality=Thai');
 
-    const results = await Promise.all(promises);
-    return results;
+    return response.data;
   } catch (error) {
-    // Handle error appropriately
     console.error(error);
-    return [];
+    throw new Error('Failed to fetch data');
   }
-};
+}
 
 export default function Page() {
-  // Thai Celebrities visited places in Thailand
-  const thaiCelebs = [
-    'Jumpol Adulkittiporn',
-    'Atthaphan Phunsawat',
-    'Tawan Vihokratana',
-    'Thitipoom Techaapaikhun',
-    'Ranee Campen',
-    'Nadech Kugimiya',
-    'Urassaya Sperbund',
-    'Prin Suparat',
-    'Davika Hoorne',
-    'Kimberly Ann Voltemas',
-  ];
-
-  const { data: celebrities, isLoading } = useQuery('trendingThaiCelebrities', () =>
-    searchCelebrity(thaiCelebs)
+  const { data: celebs, isLoading: isTrendingLoading } = useQuery(
+    'trendingKoreanCelebrities',
+    getTrendingThaiCelebrities
   );
 
-  console.log(celebrities);
+  // // Sort by popularity in descending order
+  // const sortedByPopularity = celebs?.map((f) => {
+  //   const tvShows = f.known_for.filter((media) => media.media_type === 'tv');
+  //   tvShows.sort((a, b) => b.popularity - a.popularity); // Sort by popularity descending
+  //   return { ...f, known_for: tvShows };
+  // });
 
-  // Sort by popularity in descending order
-  const sortedByPopularity = celebrities?.map((f) => {
-    const tvShows = f.known_for.filter((media) => media.media_type === 'tv');
-    tvShows.sort((a, b) => b.popularity - a.popularity); // Sort by popularity descending
-    return { ...f, known_for: tvShows };
-  });
+  // const trendingSeries = sortedByPopularity?.map((f) => f?.known_for.map((item) => item)).flat();
 
-  const trendingSeries = sortedByPopularity?.map((f) => f?.known_for.map((item) => item)).flat();
+  // const uniqueNames = Array.from(new Set(trendingSeries?.map((obj) => obj?.name)));
 
-  const uniqueNames = Array.from(new Set(trendingSeries?.map((obj) => obj?.name)));
+  // const uniqueSeries = trendingSeries?.filter((obj) => uniqueNames?.includes(obj?.name));
 
-  const uniqueSeries = trendingSeries?.filter((obj) => uniqueNames?.includes(obj?.name));
-
-  if (isLoading) {
+  if (isTrendingLoading) {
     return (
       <Container size="xl">
         <Stack>
@@ -105,7 +79,7 @@ export default function Page() {
               Top Trending Thai Celebrities
             </Title>
             <Grid gutter={64} columns={24} justify="center" align="center">
-              {celebrities?.map((celebrity: any) => (
+              {celebs?.map((celebrity: any) => (
                 <Grid.Col
                   key={celebrity.name}
                   span={{
@@ -124,11 +98,11 @@ export default function Page() {
                   >
                     <Avatar
                       size={124}
-                      src={`https://image.tmdb.org/t/p/original/${celebrity.profile_path}`}
+                      src={`https://image.tmdb.org/t/p/original/${celebrity.image}`}
                       alt={celebrity.name}
                     />
                     <Title order={6} ta="center">
-                      <Link href={`/th/celebrities/${celebrity.name}`}>{celebrity.name}</Link>
+                      <Link href={`/th/celebrities/${celebrity.id}`}>{celebrity.name}</Link>
                     </Title>
                   </div>
                 </Grid.Col>
@@ -148,7 +122,7 @@ export default function Page() {
               align="center"
               slidesToScroll="auto"
             >
-              {uniqueSeries?.map((serie: any) => (
+              {/* {uniqueSeries?.map((serie: any) => (
                 <Carousel.Slide key={serie.name}>
                   <Stack>
                     <Image
@@ -160,7 +134,7 @@ export default function Page() {
                     </Title>
                   </Stack>
                 </Carousel.Slide>
-              ))}
+              ))} */}
             </Carousel>
           </Stack>
         </section>

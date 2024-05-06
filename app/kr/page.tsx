@@ -56,8 +56,6 @@ export default function Page() {
     getTrendingKoreanCelebrities
   );
 
-  console.log(celebs);
-
   if (isTrendingLoading) {
     return (
       <Container size="xl" c="white">
