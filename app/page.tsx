@@ -292,7 +292,7 @@ const Top10Locations = () => {
   const { data: top10Locations, isLoading } = useQuery(
     QUERY_KEYS.top10Locations,
     async () => {
-      const response = await fetch('/api/locations');
+      const response = await fetch('/api/top10-locations');
       const data = await response.json();
       return data.locations ?? [];
     },
