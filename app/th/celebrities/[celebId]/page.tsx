@@ -39,6 +39,19 @@ const getCelebrityById = async (celebId: string) => {
   }
 };
 
+const getWikipediaBiography = async (name: string) => {
+  try {
+    const response = await fetch(
+      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`
+    );
+    const data = await response.json();
+    return data.extract;
+  } catch (error) {
+    console.error('Error fetching Wikipedia biography:', error);
+    return null;
+  }
+};
+
 const searchCelebrity = async (name: string) => {
   const data = await axios.get(`https://api.themoviedb.org/3/search/person?query=${name}`, {
     headers: {
@@ -162,6 +175,22 @@ export default function Page() {
     }
   );
 
+  const [biography, setBiography] = useState('');
+  const [isFetching, setIsFetching] = useState(false);
+
+  useEffect(() => {
+    const fetchBiography = async () => {
+      if (!info?.biography && celebrity?.name) {
+        setIsFetching(true);
+        const wikipediaBiography = await getWikipediaBiography(celebrity.name);
+        setBiography(wikipediaBiography || 'No biography available');
+        setIsFetching(false);
+      }
+    };
+
+    fetchBiography();
+  }, [info?.biography, celebrity?.name]);
+
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -247,7 +276,7 @@ export default function Page() {
                     info.biography ? (
                       <Text size="md">{info.biography}</Text>
                     ) : (
-                      <Text size="md">ไม่มีข้อมูล</Text>
+                      <Text size="md">{biography}</Text>
                     )
                   ) : (
                     <Skeleton height={100} />

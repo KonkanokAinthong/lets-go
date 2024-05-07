@@ -223,15 +223,23 @@ const SuperstarCheckInThailand = () => {
   }, [currentLocation]);
 
   const getRandomCeleb = (region: 'th' | 'cn' | 'kr') => {
+    // ตรวจสอบว่ามีข้อมูลเซเลบริตี้จากทั้ง 3 ภูมิภาคหรือไม่ หากไม่มีจะส่งค่ากลับเป็น null
     if (!thCelebrities || !krCelebrities || !cnCelebrities) return null;
+
+    // สร้างออบเจกต์ที่มีคีย์เป็นภูมิภาค และมีค่าเป็นอาร์เรย์ของเซเลบริตี้จากภูมิภาคนั้น
     const celebrities = {
       th: thCelebrities,
       kr: krCelebrities,
       cn: cnCelebrities,
     }[region];
 
+    // กรองเซเลบริตี้ที่มีค่าเป็น falsy ออกจากอาร์เรย์
     const validCelebrities = celebrities?.filter(Boolean) ?? [];
+
+    // สุ่มเลขจำนวนเต็มแบบสุ่มในช่วงระหว่าง 0 ถึง (ความยาวของอาร์เรย์ validCelebrities - 1)
     const randomIndex = Math.floor(Math.random() * validCelebrities.length);
+
+    // ส่งค่ากลับเป็นเซเลบริตี้ที่อยู่ในอาร์เรย์ตำแหน่งที่สุ่มได้
     return validCelebrities[randomIndex];
   };
 

@@ -2,7 +2,6 @@
 
 'use client';
 
-import ChatInterface from '@/components/ChatInterface';
 import {
   Avatar,
   Breadcrumbs,
@@ -29,8 +28,22 @@ import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import ChatInterface from '@/components/ChatInterface';
 
 const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
+
+const getWikipediaBiography = async (name: string) => {
+  try {
+    const response = await fetch(
+      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`
+    );
+    const data = await response.json();
+    return data.extract;
+  } catch (error) {
+    console.error('Error fetching Wikipedia biography:', error);
+    return null;
+  }
+};
 
 const getCelebrityById = async (celebId: string) => {
   try {
@@ -165,6 +178,22 @@ export default function Page() {
     }
   );
 
+  const [biography, setBiography] = useState('');
+  const [isFetching, setIsFetching] = useState(false);
+
+  useEffect(() => {
+    const fetchBiography = async () => {
+      if (!info?.biography && celebrity?.name) {
+        setIsFetching(true);
+        const wikipediaBiography = await getWikipediaBiography(celebrity.name);
+        setBiography(wikipediaBiography || 'No biography available');
+        setIsFetching(false);
+      }
+    };
+
+    fetchBiography();
+  }, [info?.biography, celebrity?.name]);
+
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -185,6 +214,8 @@ export default function Page() {
     width: '100%',
     height: '600px',
   };
+
+  console.log(biography);
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
@@ -245,7 +276,7 @@ export default function Page() {
                 {info?.biography ? (
                   <Text size="md">{info?.biography}</Text>
                 ) : (
-                  <Text size="md">ไม่มีข้อมูล</Text>
+                  <Text size="md">{biography}</Text>
                 )}
               </div>
               <div>
