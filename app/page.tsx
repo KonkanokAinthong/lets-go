@@ -22,14 +22,27 @@ import Autoplay from 'embla-carousel-autoplay';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
-import CELEB_LISTS from '../celebs.json';
 import axios from 'axios';
+import CELEB_LISTS from '../celebs.json';
 
 const API_ENDPOINTS = {
   celebsNews: '/api/celebs-news',
   top10Locations: '/api/top10-locations',
   searchCelebrity: (name: string) => `https://api.themoviedb.org/3/search/person?query=${name}`,
 };
+
+function formatNationality(nationality: string): string {
+  switch (nationality?.toLowerCase()) {
+    case 'chinese':
+      return 'cn';
+    case 'thai':
+      return 'th';
+    case 'korean':
+      return 'kr';
+    default:
+      return '';
+  }
+}
 
 const QUERY_KEYS = {
   celebsNews: 'getCelebsNews',
@@ -152,6 +165,17 @@ const SuperstarCheckInThailand = () => {
   });
   const [map, setMap] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
+  const [nearestCeleb, setNearestCeleb] = useState(null);
+
+  const fetchNearestCeleb = async () => {
+    if (currentLocation) {
+      const { lat, lng } = currentLocation;
+      const response = await axios.get(`/api/nearest-celeb?lat=${lat}&lng=${lng}`);
+      setNearestCeleb(response.data.celeb);
+    }
+  };
+
+  console.log(nearestCeleb);
 
   const { data: thCelebrities, isLoading: isLoading_thCelebrities } = useQuery(
     QUERY_KEYS.trendingThaiCelebrities,
@@ -193,6 +217,10 @@ const SuperstarCheckInThailand = () => {
     }
   }, []);
 
+  useEffect(() => {
+    fetchNearestCeleb();
+  }, [currentLocation]);
+
   const getRandomCeleb = (region: 'th' | 'cn' | 'kr') => {
     if (!thCelebrities || !krCelebrities || !cnCelebrities) return null;
     const celebrities = {
@@ -214,8 +242,6 @@ const SuperstarCheckInThailand = () => {
     },
     { enabled: !!CELEB_LISTS, initialData: { places: [] } }
   );
-
-  console.log(placeDetails);
 
   const bangkokLocation = { lat: 13.7563, lng: 100.5018 };
 
@@ -257,7 +283,14 @@ const SuperstarCheckInThailand = () => {
             ) : (
               <Skeleton height={400} width="100%" />
             )}
-            <Button size="lg" component={Link} href="/kr" variant="default">
+            <Button
+              size="lg"
+              component={Link}
+              href={`${formatNationality(
+                nearestCeleb?.nationality
+              )}/celebrities/${nearestCeleb?.id}`}
+              variant="default"
+            >
               Superstar nearby me
             </Button>
           </Stack>

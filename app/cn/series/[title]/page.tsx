@@ -46,8 +46,6 @@ export default function Page() {
   //   const { data: nearbyPlaces } = useQuery('nearbyPlaces', () =>
   //     getNearbyPlaces(placeName as string)
   //   );
-  console.log(places);
-  //   console.log(nearbyPlaces);
 
   return (
     <Container c="white">
