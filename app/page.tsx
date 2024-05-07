@@ -175,8 +175,6 @@ const SuperstarCheckInThailand = () => {
     }
   };
 
-  console.log(nearestCeleb);
-
   const { data: thCelebrities, isLoading: isLoading_thCelebrities } = useQuery(
     QUERY_KEYS.trendingThaiCelebrities,
     () => searchCelebrities(CELEB_LISTS),
@@ -240,10 +238,12 @@ const SuperstarCheckInThailand = () => {
       const allPlaces = CELEB_LISTS?.flatMap((celeb) => celeb.placeVisited) || [];
       return getPlaceDetails(allPlaces);
     },
-    { enabled: !!CELEB_LISTS, initialData: { places: [] } }
+    { enabled: !!CELEB_LISTS, initialData: { places: [] }, refetchOnWindowFocus: false }
   );
 
   const bangkokLocation = { lat: 13.7563, lng: 100.5018 };
+
+  console.log(placeDetails);
 
   const imageTH = getRandomCeleb('th');
   const imageCN = getRandomCeleb('cn');

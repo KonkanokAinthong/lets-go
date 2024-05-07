@@ -129,10 +129,13 @@ const getPlaceDetails = async (places: string[]) => {
 };
 
 export default function Page() {
+  const [selectedPlace, setSelectedPlace] = useState(null);
   const [map, setMap] = useState(null);
   const navigate = useRouter();
 
   const { celebId } = useParams();
+
+  console.log(selectedPlace);
 
   const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
 
@@ -154,6 +157,7 @@ export default function Page() {
     () => getCelebrityById(celebId as string),
     {
       enabled: !!celebId,
+      refetchOnWindowFocus: false,
     }
   );
 
@@ -162,15 +166,21 @@ export default function Page() {
     () => searchCelebrity(celebrity?.name),
     {
       enabled: !!celebrity?.name,
+      refetchOnWindowFocus: false,
     }
   );
 
   const { data: info } = useQuery(['info', celebInfo?.id], () => getCelebrityInfo(celebInfo?.id), {
     enabled: !!celebInfo?.id,
+    refetchOnWindowFocus: false,
   });
 
-  const { data: places } = useQuery(['places', celebrity?.placeVisited], () =>
-    getPlaceDetails(celebrity?.placeVisited)
+  const { data: places } = useQuery(
+    ['places', celebrity?.placeVisited],
+    () => getPlaceDetails(celebrity?.placeVisited),
+    {
+      refetchOnWindowFocus: false,
+    }
   );
 
   const { data: nearbyPlaces } = useQuery(
@@ -178,6 +188,7 @@ export default function Page() {
     () => fetchNearbyPlaces(places?.places[0].geometry.location),
     {
       enabled: !!places,
+      refetchOnWindowFocus: false,
     }
   );
 
@@ -403,8 +414,11 @@ export default function Page() {
                   <>
                     <GoogleMap
                       mapContainerStyle={containerStyle}
-                      center={places?.places?.[0]?.geometry?.location}
-                      zoom={15}
+                      center={{
+                        lat: places.places[0].geometry.location.lat,
+                        lng: places.places[0].geometry.location.lng,
+                      }}
+                      zoom={100}
                       onLoad={onLoad}
                       onUnmount={onUnmount}
                     >
@@ -428,9 +442,28 @@ export default function Page() {
                             lat: place.location.latitude,
                             lng: place.location.longitude,
                           }}
+                          onClick={() => setSelectedPlace(place)}
                           title={place.displayName.text}
                         />
                       ))}
+                      {selectedPlace && (
+                        <InfoWindow
+                          position={{
+                            lat: selectedPlace.location.latitude,
+                            lng: selectedPlace.location.longitude,
+                          }}
+                          onCloseClick={() => setSelectedPlace(null)}
+                        >
+                          <div
+                            style={{
+                              color: 'black',
+                            }}
+                          >
+                            <h2>{selectedPlace.displayName.text}</h2>
+                            <p>{selectedPlace.formattedAddress}</p>
+                          </div>
+                        </InfoWindow>
+                      )}
                     </GoogleMap>
                   </>
                 ) : (

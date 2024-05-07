@@ -316,7 +316,7 @@ export default function Page() {
                         <article key={place?.name}>
                           <Stack>
                             <Image
-                              src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place?.photos[0].photo_reference}&key=${API_KEY}`}
+                              src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place?.photos?.[0].photo_reference}&key=${API_KEY}`}
                               alt={place?.name}
                             />
                             <Stack>
