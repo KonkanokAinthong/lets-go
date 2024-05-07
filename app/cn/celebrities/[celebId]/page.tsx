@@ -34,8 +34,22 @@ const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
 
 const getWikipediaBiography = async (name: string) => {
   try {
+    let formattedName = name;
+
+    // Check if the name needs to be replaced
+    switch (name.toLowerCase()) {
+      case 'li zi ting':
+        formattedName = 'Mimi lee';
+        break;
+      case 'yang yang':
+        formattedName = 'Yang Yang (actor)';
+        break;
+      default:
+        break;
+    }
+
     const response = await fetch(
-      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`
+      `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(formattedName)}`
     );
     const data = await response.json();
     return data.extract;
