@@ -39,7 +39,7 @@ const getWikipediaBiography = async (name: string) => {
     // Check if the name needs to be replaced
     switch (name.toLowerCase()) {
       case 'li zi ting':
-        formattedName = 'Mimi lee';
+        formattedName = 'Mimi Lee';
         break;
       case 'yang yang':
         formattedName = 'Yang Yang (actor)';
