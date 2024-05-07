@@ -5,7 +5,6 @@ import { IconSend } from '@tabler/icons-react';
 const ChatInterface = () => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  const [budget, setBudget] = useState('');
   const chatContainerRef = useRef(null);
   const [selectedBudget, setSelectedBudget] = useState('');
   const [selectedProvince, setSelectedProvince] = useState('');
