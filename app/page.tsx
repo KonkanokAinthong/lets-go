@@ -23,6 +23,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import CELEB_LISTS from '../celebs.json';
+import axios from 'axios';
 
 const API_ENDPOINTS = {
   celebsNews: '/api/celebs-news',
@@ -36,6 +37,21 @@ const QUERY_KEYS = {
   trendingThaiCelebrities: 'trendingThaiCelebrities',
   trendingKoreanCelebrities: 'trendingKoreanCelebrities',
   trendingChineseCelebrities: 'trendingChineseCelebrities',
+};
+
+const getPlaceDetails = async (places: string[]) => {
+  try {
+    const promises = places.map(async (place) => {
+      const response = await axios.get(`/api/places?query=${encodeURIComponent(place)}`);
+      return response.data.data.results;
+    });
+    const results = await Promise.all(promises);
+    const flattenedResults = results.flat();
+    return { places: flattenedResults };
+  } catch (error) {
+    console.error(error);
+    return { places: [] };
+  }
 };
 
 const CelebsNewsCarousel = () => {
@@ -190,6 +206,19 @@ const SuperstarCheckInThailand = () => {
     return validCelebrities[randomIndex];
   };
 
+  const { data: placeDetails } = useQuery(
+    ['placeDetails', CELEB_LISTS],
+    () => {
+      const allPlaces = CELEB_LISTS?.flatMap((celeb) => celeb.placeVisited) || [];
+      return getPlaceDetails(allPlaces);
+    },
+    { enabled: !!CELEB_LISTS, initialData: { places: [] } }
+  );
+
+  console.log(placeDetails);
+
+  const bangkokLocation = { lat: 13.7563, lng: 100.5018 };
+
   const imageTH = getRandomCeleb('th');
   const imageCN = getRandomCeleb('cn');
   const imageKR = getRandomCeleb('kr');
@@ -213,15 +242,17 @@ const SuperstarCheckInThailand = () => {
       <Grid justify="center" align="center" gutter="xl" p="lg">
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            {isLoaded && currentLocation ? (
+            {isLoaded && bangkokLocation ? (
               <GoogleMap
                 mapContainerStyle={{ width: '100%', height: '400px' }}
-                center={currentLocation}
-                zoom={50}
+                center={bangkokLocation}
+                zoom={10}
                 onLoad={onLoad}
                 onUnmount={onUnmount}
               >
-                <Marker position={currentLocation} />
+                {placeDetails.places.map((place, index) => (
+                  <Marker key={index} position={place?.geometry?.location} />
+                ))}
               </GoogleMap>
             ) : (
               <Skeleton height={400} width="100%" />
