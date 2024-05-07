@@ -171,9 +171,12 @@ const SuperstarCheckInThailand = () => {
     if (currentLocation) {
       const { lat, lng } = currentLocation;
       const response = await axios.get(`/api/nearest-celeb?lat=${lat}&lng=${lng}`);
-      setNearestCeleb(response.data.celeb);
+
+      setNearestCeleb(response.data.celebs);
     }
   };
+
+  console.log(nearestCeleb);
 
   const { data: thCelebrities, isLoading: isLoading_thCelebrities } = useQuery(
     QUERY_KEYS.trendingThaiCelebrities,
@@ -243,7 +246,7 @@ const SuperstarCheckInThailand = () => {
 
   const bangkokLocation = { lat: 13.7563, lng: 100.5018 };
 
-  console.log(placeDetails);
+  console.log(nearestCeleb);
 
   const imageTH = getRandomCeleb('th');
   const imageCN = getRandomCeleb('cn');
@@ -277,7 +280,16 @@ const SuperstarCheckInThailand = () => {
                 onUnmount={onUnmount}
               >
                 {placeDetails.places.map((place, index) => (
-                  <Marker key={index} position={place?.geometry?.location} />
+                  <Marker
+                    key={index}
+                    position={place?.geometry?.location}
+                    icon={{
+                      url: `${nearestCeleb?.[index]?.image}`,
+                      scaledSize: new window.google.maps.Size(40, 40),
+                      origin: new window.google.maps.Point(0, 0),
+                      anchor: new window.google.maps.Point(0, 0),
+                    }}
+                  />
                 ))}
               </GoogleMap>
             ) : (

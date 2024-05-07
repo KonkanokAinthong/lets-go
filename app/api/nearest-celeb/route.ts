@@ -11,41 +11,27 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Missing latitude or longitude' }, { status: 400 });
   }
 
-  const currentLocation = {
-    latitude: parseFloat(lat),
-    longitude: parseFloat(lng),
-  };
+  const currentLocation = { latitude: parseFloat(lat), longitude: parseFloat(lng) };
 
-  // Find the nearest celebrity based on their visited places
-  const nearestCeleb = CELEB_LISTS.reduce(
-    (nearest, celeb) => {
-      const celebPlaces = celeb.placeVisited.map((place) => ({
-        latitude: place.geometry?.location?.lat || 0,
-        longitude: place.geometry?.location?.lng || 0,
-      }));
+  // Calculate the distance from the current location to each celebrity's visited places
+  const celebDistances = CELEB_LISTS.map((celeb) => {
+    const celebPlaces = celeb.placeVisited.map((place) => ({
+      latitude: place.geometry?.location?.lat || 0,
+      longitude: place.geometry?.location?.lng || 0,
+    }));
 
-      const minDistance = Math.min(
-        ...celebPlaces.map((place) => getDistance(currentLocation, place))
-      );
+    const minDistance = Math.min(
+      ...celebPlaces.map((place) => getDistance(currentLocation, place))
+    );
 
-      if (minDistance < nearest.distance) {
-        return {
-          celeb,
-          distance: minDistance,
-        };
-      }
+    return {
+      celeb,
+      distance: minDistance,
+    };
+  });
 
-      return nearest;
-    },
-    {
-      celeb: null,
-      distance: Infinity,
-    }
-  );
+  // Sort the celebrities by distance in ascending order
+  const sortedCelebs = celebDistances.sort((a, b) => a.distance - b.distance);
 
-  if (nearestCeleb.celeb) {
-    return NextResponse.json({ celeb: nearestCeleb.celeb });
-  }
-
-  return NextResponse.json({ error: 'No nearby celebrity found' }, { status: 404 });
+  return NextResponse.json({ celebs: sortedCelebs.map((item) => item.celeb) });
 }
