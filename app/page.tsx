@@ -10,13 +10,14 @@ import {
   Grid,
   GridCol,
   Image,
+  Loader,
   Skeleton,
   Stack,
   Text,
   Title,
 } from '@mantine/core';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
-import axios from 'axios';
+
 import Autoplay from 'embla-carousel-autoplay';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -42,12 +43,11 @@ const CelebsNewsCarousel = () => {
   const { data: celebsNews } = useQuery(
     QUERY_KEYS.celebsNews,
     async () => {
-      const response = await axios.get(API_ENDPOINTS.celebsNews);
-      return response?.data.news ?? [];
+      const response = await fetch(API_ENDPOINTS.celebsNews);
+      const data = await response.json();
+      return data.news ?? [];
     },
     {
-      cacheTime: 5 * 60 * 1000,
-      staleTime: 2 * 60 * 1000,
       refetchOnWindowFocus: false,
     }
   );
@@ -98,19 +98,34 @@ const CelebsNewsCarousel = () => {
 
 const searchCelebrities = async (celebList: typeof CELEB_LISTS) => {
   try {
-    const promises = celebList.map((celeb) =>
-      axios.get(API_ENDPOINTS.searchCelebrity(celeb.name), {
-        headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_TOKEN}`,
-        },
-      })
-    );
+    const promises = celebList.map(async (celeb) => {
+      try {
+        const response = await fetch(API_ENDPOINTS.searchCelebrity(celeb.name), {
+          headers: {
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_TOKEN}`,
+          },
+        });
+        const data = await response.json();
+        const tmdbCeleb = data.results[0];
 
-    const responses = await Promise.all(promises);
+        if (tmdbCeleb) {
+          return {
+            id: celeb.id, // Override the id with the value from celebs.json
+            name: tmdbCeleb.name,
+            profile_path: tmdbCeleb.profile_path,
+          };
+        }
+        return null;
+      } catch (error) {
+        console.error(`Error fetching celebrity data for ${celeb.name}:`, error);
+        return null;
+      }
+    });
 
-    return responses.map((response) => response.data.results[0] ?? null);
+    const results = await Promise.all(promises);
+    return results.filter((result) => result !== null);
   } catch (error) {
-    console.error(error);
+    console.error('Error searching celebrities:', error);
     return [];
   }
 };
@@ -179,10 +194,6 @@ const SuperstarCheckInThailand = () => {
   const imageCN = getRandomCeleb('cn');
   const imageKR = getRandomCeleb('kr');
 
-  console.log('imageTH', imageTH);
-  console.log('imageCN', imageCN);
-  console.log('imageKR', imageKR);
-
   if (loadError) return 'Error loading maps';
   if (!isLoaded) return 'Loading Maps';
 
@@ -194,33 +205,7 @@ const SuperstarCheckInThailand = () => {
     isLoading_krCelebrities ||
     isLoading_cnCelebrities
   ) {
-    return (
-      <section>
-        <Grid justify="center" align="center" gutter="xl" p="lg">
-          <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
-            <Card shadow="sm" radius="lg" p="xl">
-              <Skeleton height={400} width="100%" />
-              <Skeleton height={20} width="70%" mt="md" />
-              <Skeleton height={20} width="50%" mt="sm" />
-            </Card>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
-            <Card shadow="sm" radius="lg" p="xl">
-              <Skeleton height={400} width="100%" />
-              <Skeleton height={20} width="70%" mt="md" />
-              <Skeleton height={20} width="50%" mt="sm" />
-            </Card>
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
-            <Card shadow="sm" radius="lg" p="xl">
-              <Skeleton height={400} width="100%" />
-              <Skeleton height={20} width="70%" mt="md" />
-              <Skeleton height={20} width="50%" mt="sm" />
-            </Card>
-          </Grid.Col>
-        </Grid>
-      </section>
-    );
+    return <Loader />;
   }
 
   return (
@@ -307,12 +292,11 @@ const Top10Locations = () => {
   const { data: top10Locations, isLoading } = useQuery(
     QUERY_KEYS.top10Locations,
     async () => {
-      const response = await axios.get(API_ENDPOINTS.top10Locations);
-      return response?.data.locations ?? [];
+      const response = await fetch('/api/locations');
+      const data = await response.json();
+      return data.locations ?? [];
     },
     {
-      cacheTime: 10 * 60 * 1000,
-      staleTime: 5 * 60 * 1000,
       refetchOnWindowFocus: false,
     }
   );

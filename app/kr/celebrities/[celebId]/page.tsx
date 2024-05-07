@@ -28,6 +28,12 @@ import ChatInterface from '@/components/ChatInterface';
 
 const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
 
+/**
+ * Retrieves celebrity data by ID from the API.
+ * @param celebId - The ID of the celebrity to retrieve.
+ * @returns The celebrity data.
+ * @throws An error if there was a problem retrieving the celebrity data.
+ */
 const getCelebrityById = async (celebId: string) => {
   try {
     const response = await axios.get(`/api/celebrities?id=${celebId}`);
@@ -38,6 +44,11 @@ const getCelebrityById = async (celebId: string) => {
   }
 };
 
+/**
+ * Searches for a celebrity by name using The Movie Database (TMDb) API.
+ * @param name - The name of the celebrity to search for.
+ * @returns The first search result from the TMDb API.
+ */
 const searchCelebrity = async (name: string) => {
   const data = await axios.get(`https://api.themoviedb.org/3/search/person?query=${name}`, {
     headers: {
@@ -47,19 +58,27 @@ const searchCelebrity = async (name: string) => {
   return data.data.results[0];
 };
 
+/**
+ * Retrieves detailed information about a celebrity using the TMDb API.
+ * @param person_id - The ID of the celebrity to retrieve information for.
+ * @returns The detailed celebrity information from the TMDb API.
+ */
 const getCelebrityInfo = async (person_id: string) => {
   const data = await axios.get(`https://api.themoviedb.org/3/person/${person_id}`, {
     headers: {
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_TOKEN}`,
     },
   });
-
   return data.data;
 };
 
+/**
+ * Fetches nearby places based on a given location using the Google Places API.
+ * @param location - The location to search for nearby places.
+ * @returns An array of nearby places.
+ */
 const fetchNearbyPlaces = async (location) => {
   const { lat, lng } = location;
-
   const response = await axios.post(
     'https://places.googleapis.com/v1/places:searchNearby',
     {
@@ -86,21 +105,22 @@ const fetchNearbyPlaces = async (location) => {
       },
     }
   );
-
   return response.data.places;
 };
 
+/**
+ * Retrieves details for a list of places.
+ * @param places - An array of place names to retrieve details for.
+ * @returns An object containing the detailed place information.
+ */
 const getPlaceDetails = async (places: string[]) => {
   try {
     const promises = places.map(async (place) => {
       const response = await axios.get(`/api/places?query=${encodeURIComponent(place)}`);
-
       return response.data.data.results;
     });
-
     const results = await Promise.all(promises);
     const flattenedResults = results.flat();
-
     return { places: flattenedResults };
   } catch (error) {
     console.error(error);
