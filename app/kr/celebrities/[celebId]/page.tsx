@@ -159,8 +159,6 @@ export default function Page() {
 
   const { celebId } = useParams();
 
-  console.log(selectedPlace);
-
   const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
 
   const onLoad = useCallback(

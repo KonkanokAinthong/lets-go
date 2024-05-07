@@ -176,8 +176,6 @@ const SuperstarCheckInThailand = () => {
     }
   };
 
-  console.log(nearestCeleb);
-
   const { data: thCelebrities, isLoading: isLoading_thCelebrities } = useQuery(
     QUERY_KEYS.trendingThaiCelebrities,
     () => searchCelebrities(CELEB_LISTS),
@@ -253,8 +251,6 @@ const SuperstarCheckInThailand = () => {
   );
 
   const bangkokLocation = { lat: 13.7563, lng: 100.5018 };
-
-  console.log(nearestCeleb);
 
   const imageTH = getRandomCeleb('th');
   const imageCN = getRandomCeleb('cn');
