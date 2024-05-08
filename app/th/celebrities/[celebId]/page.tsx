@@ -27,7 +27,7 @@ import { useQuery } from 'react-query';
 import { IconArrowLeft } from '@tabler/icons-react';
 import ChatInterface from '@/components/ChatInterface';
 
-const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
+const API_KEY = 'AIzaSyBKRFuroEmi6ocPRQzuBuX4ULAFiYTvTGo';
 
 const getCelebrityById = async (celebId: string) => {
   try {

@@ -26,7 +26,7 @@ import { useQuery } from 'react-query';
 import { IconArrowLeft } from '@tabler/icons-react';
 import ChatInterface from '@/components/ChatInterface';
 
-const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
+const API_KEY = 'AIzaSyBKRFuroEmi6ocPRQzuBuX4ULAFiYTvTGo';
 
 /**
  * Retrieves celebrity data by ID from the API.
@@ -214,6 +214,8 @@ export default function Page() {
     }
   );
 
+  console.log(places);
+
   const [biography, setBiography] = useState('');
   const [isFetching, setIsFetching] = useState(false);
 
@@ -252,7 +254,7 @@ export default function Page() {
   };
 
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: 'AIzaSyBKRFuroEmi6ocPRQzuBuX4ULAFiYTvTGo',
   });
 
   if (loadError) {

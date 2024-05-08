@@ -17,7 +17,7 @@ import axios from 'axios';
 import { useParams } from 'next/navigation';
 import { useQuery } from 'react-query';
 
-const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
+const API_KEY = 'AIzaSyBKRFuroEmi6ocPRQzuBuX4ULAFiYTvTGo';
 
 const getPlacebyTextSearch = async (place: string) => {
   try {

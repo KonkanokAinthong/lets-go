@@ -30,7 +30,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import ChatInterface from '@/components/ChatInterface';
 
-const API_KEY = 'AIzaSyABkNqq2Rnxn7v-unsUUtVfNaPFcufrlbU';
+const API_KEY = 'AIzaSyBKRFuroEmi6ocPRQzuBuX4ULAFiYTvTGo';
 
 const getWikipediaBiography = async (name: string) => {
   try {

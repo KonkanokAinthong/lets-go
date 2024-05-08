@@ -56,9 +56,11 @@ const getPlaceDetails = async (places: string[]) => {
   try {
     const promises = places.map(async (place) => {
       const response = await axios.get(`/api/places?query=${encodeURIComponent(place)}`);
+
       return response.data.data.results;
     });
     const results = await Promise.all(promises);
+    console.log(results);
     const flattenedResults = results.flat();
     return { places: flattenedResults };
   } catch (error) {
@@ -161,11 +163,13 @@ const searchCelebrities = async (celebList: typeof CELEB_LISTS) => {
 
 const SuperstarCheckInThailand = () => {
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
+    googleMapsApiKey: 'AIzaSyBKRFuroEmi6ocPRQzuBuX4ULAFiYTvTGo',
   });
   const [map, setMap] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [nearestCeleb, setNearestCeleb] = useState(null);
+
+  console.log(nearestCeleb);
 
   const fetchNearestCeleb = async () => {
     if (currentLocation) {
@@ -249,6 +253,8 @@ const SuperstarCheckInThailand = () => {
     },
     { enabled: !!CELEB_LISTS, initialData: { places: [] }, refetchOnWindowFocus: false }
   );
+
+  console.log(placeDetails.places);
 
   const bangkokLocation = { lat: 13.7563, lng: 100.5018 };
 
