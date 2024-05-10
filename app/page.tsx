@@ -60,7 +60,7 @@ const getPlaceDetails = async (places: string[]) => {
       return response.data.data.results;
     });
     const results = await Promise.all(promises);
-    console.log(results);
+
     const flattenedResults = results.flat();
     return { places: flattenedResults };
   } catch (error) {
@@ -168,8 +168,6 @@ const SuperstarCheckInThailand = () => {
   const [map, setMap] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [nearestCeleb, setNearestCeleb] = useState(null);
-
-  console.log(nearestCeleb);
 
   const fetchNearestCeleb = async () => {
     if (currentLocation) {
@@ -301,6 +299,7 @@ const SuperstarCheckInThailand = () => {
                     }}
                   />
                 ))}
+                <Marker position={currentLocation} />
               </GoogleMap>
             ) : (
               <Skeleton height={400} width="100%" />
