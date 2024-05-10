@@ -2,14 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import { TextInput, Paper, Text, Box, Title, Avatar, Select, Stack } from '@mantine/core';
 import { IconSend } from '@tabler/icons-react';
 
-const ChatInterface = ({ places = [] }) => {
+const ChatInterface = () => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const chatContainerRef = useRef(null);
   const [selectedBudget, setSelectedBudget] = useState('');
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedDuration, setSelectedDuration] = useState('');
-  const [selectedCelebPlace, setSelectedCelebPlace] = useState('');
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -38,7 +37,6 @@ const ChatInterface = ({ places = [] }) => {
               - Budget: ${selectedBudget} THB
               - Province: ${selectedProvince}
               - Duration: ${selectedDuration}
-              - Celebrity Visited Place: ${selectedCelebPlace} 
               If the user's input is in Thai, respond in Thai. If the user's input is in English, respond in English. Provide your response in bullet points for easy readability, rather than in paragraphs.`,
           }),
         });
@@ -75,24 +73,12 @@ const ChatInterface = ({ places = [] }) => {
     }
   };
 
-  console.log('places', places);
-
   return (
     <Paper shadow="sm" p="md" style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Title order={3} mb="md">
         Thailand Trip Planner
       </Title>
       <Stack>
-        <Select
-          label="Celebrity Visited Places"
-          placeholder="เลือกสถานที่ที่คนดังเคยไปเที่ยว"
-          value={selectedCelebPlace}
-          onChange={setSelectedCelebPlace}
-          data={places?.map((place) => {
-            return { value: place.name, label: place.name };
-          })}
-        />
-
         <Select
           label="Budget (THB)"
           placeholder="เลือกงบประมาณ"
