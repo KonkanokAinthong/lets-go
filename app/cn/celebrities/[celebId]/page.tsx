@@ -180,8 +180,13 @@ export default function Page() {
     enabled: !!celebInfo?.id,
   });
 
-  const { data: places } = useQuery(['places', celebrity?.placeVisited], () =>
-    getPlaceDetails(celebrity?.placeVisited)
+  const { data: places } = useQuery(
+    ['places', celebrity?.placeVisited],
+    () => getPlaceDetails(celebrity?.placeVisited),
+    {
+      initialData: { places: [] },
+      enabled: !!celebrity?.placeVisited,
+    }
   );
 
   const { data: nearbyPlaces } = useQuery(

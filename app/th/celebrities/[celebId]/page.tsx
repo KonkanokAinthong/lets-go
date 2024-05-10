@@ -163,9 +163,16 @@ export default function Page() {
     enabled: !!celebInfo?.id,
   });
 
-  const { data: places } = useQuery(['places', celebrity?.placeVisited], () =>
-    getPlaceDetails(celebrity?.placeVisited)
+  const { data: places } = useQuery(
+    ['places', celebrity?.placeVisited],
+    () => getPlaceDetails(celebrity?.placeVisited),
+    {
+      initialData: { places: [] },
+      enabled: !!celebrity?.placeVisited,
+    }
   );
+
+  console.log(places);
 
   const { data: nearbyPlaces } = useQuery(
     ['nearbyPlaces', places?.places],
@@ -449,7 +456,7 @@ export default function Page() {
               </div>
             </TabsPanel>
             <TabsPanel value="chatgpt-planner">
-              <ChatInterface places={places} />
+              <ChatInterface places={places?.places} />
             </TabsPanel>
           </Tabs>
         </main>
