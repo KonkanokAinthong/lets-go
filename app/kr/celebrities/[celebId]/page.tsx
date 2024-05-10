@@ -2,6 +2,7 @@
 
 import {
   Avatar,
+  Box,
   Breadcrumbs,
   Button,
   Center,
@@ -9,6 +10,7 @@ import {
   Divider,
   Grid,
   Image,
+  Rating,
   Skeleton,
   Stack,
   Tabs,
@@ -404,19 +406,51 @@ export default function Page() {
                         />
                       ))}
                     </GoogleMap>
+
                     <Stack mt="md">
                       {places.places.map((place: any) => (
                         <article key={place?.name}>
-                          <Stack>
+                          <Stack spacing="md">
                             <Image
                               src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place?.photos[0].photo_reference}&key=${API_KEY}`}
                               alt={place?.name}
                             />
-                            <Stack>
+                            <Stack spacing="sm">
                               <Title order={3} ta="center">
                                 {place?.name}
                               </Title>
-                              <Text size="xs">{place?.formatted_address}</Text>
+                              <Text size="sm">{place?.formatted_address}</Text>
+                              <Stack dir="row" justify="space-between" align="center">
+                                <Stack ta="center" justify="center">
+                                  <Rating value={place?.rating} fractions={2} />
+                                  <Text size="xs">{`User Ratings: ${place?.user_ratings_total}`}</Text>
+                                </Stack>
+                                <Box ta="center">
+                                  {place?.opening_hours?.open_now ? (
+                                    <Title c="green" size="xs" w={500}>
+                                      Open Now
+                                    </Title>
+                                  ) : (
+                                    <Title c="red" size="xs" w={500}>
+                                      Closed Now
+                                    </Title>
+                                  )}
+                                </Box>
+                              </Stack>
+                              <Stack spacing="sm">
+                                <Text size="xs" w={500}>{`Phone: ${
+                                  place?.phone_number || 'Not available'
+                                }`}</Text>
+                                <Text size="xs" w={500}>{`Website: ${
+                                  place?.website || 'Not available'
+                                }`}</Text>
+                                <Text size="xs" w={500}>{`Price Level: ${
+                                  place?.price_level || 'Not available'
+                                }`}</Text>
+                                <Text size="xs" w={500}>{`Types: ${
+                                  place?.types?.join(', ') || 'Not available'
+                                }`}</Text>
+                              </Stack>
                             </Stack>
                             <Divider size="md" w="100%" />
                           </Stack>
