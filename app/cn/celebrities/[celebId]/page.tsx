@@ -440,7 +440,7 @@ export default function Page() {
             </div>
           </TabsPanel>
           <TabsPanel value="chatgpt-planner">
-            <ChatInterface />
+            <ChatInterface places={places.places} />
           </TabsPanel>
         </Tabs>
       </Stack>

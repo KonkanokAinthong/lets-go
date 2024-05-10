@@ -204,6 +204,7 @@ export default function Page() {
     () => getPlaceDetails(celebrity?.placeVisited),
     {
       refetchOnWindowFocus: false,
+      initialData: { places: [] },
     }
   );
 
@@ -546,7 +547,7 @@ export default function Page() {
               </div>
             </TabsPanel>
             <TabsPanel value="chatgpt-planner">
-              <ChatInterface />
+              <ChatInterface places={places.places} />
             </TabsPanel>
           </Tabs>
         </main>
