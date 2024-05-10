@@ -29,6 +29,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     { value: string; label: string; visitedPlaces: string[] }[]
   >([]);
   const [loading, setLoading] = useState(false);
+  console.log('options', options);
 
   const handleSearch = async (query: string) => {
     if (query.trim().length >= 3) {
@@ -43,7 +44,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
             value: result.id.toString(),
             label: result.label,
           }));
-          setOptions(formattedData);
+          if (formattedData.length > 0) {
+            setOptions(formattedData);
+          } else {
+            setOptions([{ value: 'no-results', label: 'No results found' }]);
+          }
         } else {
           console.error('Error:', data.error);
         }
@@ -82,14 +87,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
     navigate.push(`${nationalityPrefix}/celebrities/${option}`);
   };
 
-  const renderAutocompleteOption: AutocompleteProps['renderOption'] = ({ option }) => (
-    <Group gap="sm">
-      <Avatar src={option.avatarPath} size={36} radius="xl" />
-      <div>
-        <Text size="sm">{option.label}</Text>
-      </div>
-    </Group>
-  );
+  const renderAutocompleteOption: AutocompleteProps['renderOption'] = ({ option }) => {
+    if (!option) {
+      return <Text size="sm">No results found</Text>;
+    }
+
+    return (
+      <Group gap="sm">
+        <Avatar src={option.avatarPath} size={36} radius="xl" />
+        <div>
+          <Text size="sm">{option.label}</Text>
+        </div>
+      </Group>
+    );
+  };
 
   return (
     <AppShell
@@ -133,18 +144,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </Group>
       </AppShell.Header>
       <AppShell.Navbar py="md" px={4}>
-        <Box>
-          <NavLink
-            leftSection={<Image src="/logo.png" width={40} height={40} alt="logo" />}
-            label={
-              <Title order={3} c="#ff6a1a">
-                {' '}
-                Let's go{' '}
-              </Title>
-            }
-            href="/"
+        <Group>
+          <Autocomplete
+            style={{ width: '100%' }}
+            placeholder="Type to search"
+            data={options}
+            onChange={handleSearch}
+            minLength={3}
+            rightSection={loading ? <Loader size={16} /> : null}
+            leftSection={<IconSearch style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
+            renderOption={renderAutocompleteOption}
+            onOptionSubmit={handleItemSubmit}
           />
-        </Box>
+        </Group>
       </AppShell.Navbar>
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
