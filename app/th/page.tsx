@@ -100,6 +100,8 @@ export default function Page() {
                       size={124}
                       src={`https://image.tmdb.org/t/p/original/${celebrity.image}`}
                       alt={celebrity.name}
+                      component={Link}
+                      href={`/th/celebrities/${celebrity?.id}`}
                     />
                     <Title order={6} ta="center">
                       <Link href={`/th/celebrities/${celebrity.id}`}>{celebrity.name}</Link>

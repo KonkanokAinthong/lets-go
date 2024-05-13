@@ -96,7 +96,13 @@ export default function Page() {
                   gap: 16,
                 }}
               >
-                <Avatar src={celebrity?.image} alt="test" size="124" />
+                <Avatar
+                  src={celebrity?.image}
+                  alt="test"
+                  size="124"
+                  component={Link}
+                  href={`/cn/celebrities/${celebrity?.id}`}
+                />
                 <Title order={6} ta="center">
                   <Link href={`/cn/celebrities/${celebrity?.id}`}>{celebrity?.name}</Link>
                 </Title>
