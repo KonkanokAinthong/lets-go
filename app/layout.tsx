@@ -5,14 +5,29 @@ import '@mantine/carousel/styles.css';
 import React from 'react';
 import { MantineProvider, ColorSchemeScript, Container } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { IntlProvider } from 'react-intl';
 import { theme } from '../theme';
 
 import { Layout } from '@/components/Layout';
 
+import en from '../lang/en.json';
+import th from '../lang/th.json';
+
+const messages = {
+  en,
+  th,
+};
+
 export default function RootLayout({ children }: { children: any }) {
   const queryClient = new QueryClient();
+  const [locale, setLocale] = React.useState('en');
+
+  const handleLocaleChange = (newLocale: string) => {
+    setLocale(newLocale);
+  };
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <head>
         <ColorSchemeScript />
         <link rel="shortcut icon" href="/favicon.svg" />
@@ -30,13 +45,15 @@ export default function RootLayout({ children }: { children: any }) {
         }}
       >
         <QueryClientProvider client={queryClient}>
-          <MantineProvider theme={theme}>
-            <Layout>
-              <Container size="xl" mb="xl">
-                {children}
-              </Container>
-            </Layout>
-          </MantineProvider>
+          <IntlProvider locale={locale} messages={messages[locale]}>
+            <MantineProvider theme={theme}>
+              <Layout locale={locale} onLocaleChange={handleLocaleChange}>
+                <Container size="xl" mb="xl">
+                  {children}
+                </Container>
+              </Layout>
+            </MantineProvider>
+          </IntlProvider>
         </QueryClientProvider>
       </body>
     </html>

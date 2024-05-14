@@ -4,6 +4,7 @@
 
 import { useDisclosure } from '@mantine/hooks';
 import {
+  ActionIcon,
   AppShell,
   Autocomplete,
   AutocompleteProps,
@@ -13,23 +14,33 @@ import {
   Group,
   Image,
   Loader,
+  Menu,
   NavLink,
   Text,
   Title,
   rem,
 } from '@mantine/core';
-import { IconSearch } from '@tabler/icons-react';
+import { IconLanguage, IconSearch } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export function Layout({ children }: { children: React.ReactNode }) {
+interface LayoutProps {
+  locale: string;
+  onLocaleChange: (newLocale: string) => void;
+  children: React.ReactNode;
+}
+
+export function Layout({ children, locale, onLocaleChange }: LayoutProps) {
   const navigate = useRouter();
   const [opened, { toggle }] = useDisclosure();
   const [options, setOptions] = useState<
     { value: string; label: string; visitedPlaces: string[] }[]
   >([]);
   const [loading, setLoading] = useState(false);
-  console.log('options', options);
+
+  const handleLocaleChange = (newLocale: string) => {
+    onLocaleChange(newLocale);
+  };
 
   const handleSearch = async (query: string) => {
     if (query.trim().length >= 3) {
@@ -126,6 +137,27 @@ export function Layout({ children }: { children: React.ReactNode }) {
             </Box>
 
             <Group>
+              <Menu withArrow position="bottom-end" transitionProps={{ transition: 'pop' }}>
+                <Menu.Target>
+                  <ActionIcon variant="default" size={30}>
+                    <IconLanguage size="1rem" />
+                  </ActionIcon>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item
+                    leftSection={<Image src="/path/to/en/flag.png" width={18} height={18} />}
+                    onClick={() => handleLocaleChange('en')}
+                  >
+                    English
+                  </Menu.Item>
+                  <Menu.Item
+                    leftSection={<Image src="/path/to/th/flag.png" width={18} height={18} />}
+                    onClick={() => handleLocaleChange('th')}
+                  >
+                    ภาษาไทย
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
               <Autocomplete
                 placeholder="Type to search"
                 data={options}
@@ -156,6 +188,27 @@ export function Layout({ children }: { children: React.ReactNode }) {
             renderOption={renderAutocompleteOption}
             onOptionSubmit={handleItemSubmit}
           />
+          <Menu withArrow position="bottom-end" transitionProps={{ transition: 'pop' }}>
+            <Menu.Target>
+              <ActionIcon variant="default" size={30}>
+                <IconLanguage size="1rem" />
+              </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item
+                left={<Image src="/path/to/en/flag.png" width={18} height={18} />}
+                onClick={() => handleLocaleChange('en')}
+              >
+                English
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<Image src="/path/to/th/flag.png" width={18} height={18} />}
+                onClick={() => handleLocaleChange('th')}
+              >
+                ภาษาไทย
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
         </Group>
       </AppShell.Navbar>
       <AppShell.Main>{children}</AppShell.Main>

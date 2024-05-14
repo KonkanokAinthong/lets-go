@@ -23,6 +23,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
+import { FormattedMessage } from 'react-intl';
 import CELEB_LISTS from '../celebs.json';
 
 const API_ENDPOINTS = {
@@ -260,8 +261,8 @@ const SuperstarCheckInThailand = () => {
   const imageCN = getRandomCeleb('cn');
   const imageKR = getRandomCeleb('kr');
 
-  if (loadError) return 'Error loading maps';
-  if (!isLoaded) return 'Loading Maps';
+  if (loadError) return <FormattedMessage id="errorLoadingMaps" />;
+  if (!isLoaded) return <FormattedMessage id="loading" />;
 
   if (
     !imageTH ||
@@ -271,7 +272,13 @@ const SuperstarCheckInThailand = () => {
     isLoading_krCelebrities ||
     isLoading_cnCelebrities
   ) {
-    return <Loader />;
+    return (
+      <div
+        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}
+      >
+        <FormattedMessage id="loading" />
+      </div>
+    );
   }
 
   return (
@@ -312,7 +319,7 @@ const SuperstarCheckInThailand = () => {
               )}/celebrities/${nearestCeleb?.id}`}
               variant="default"
             >
-              Superstar nearby me
+              <FormattedMessage id="nearbySuperstars" />
             </Button>
           </Stack>
         </Grid.Col>
@@ -329,7 +336,7 @@ const SuperstarCheckInThailand = () => {
               <Skeleton height={400} width="100%" />
             )}
             <Button size="lg" component={Link} href="/kr" variant="default">
-              South Korea
+              <FormattedMessage id="southKorea" />
             </Button>
           </Stack>
         </Grid.Col>
@@ -346,7 +353,7 @@ const SuperstarCheckInThailand = () => {
               <Skeleton height={400} width="100%" />
             )}
             <Button size="lg" component={Link} href="/cn" variant="default">
-              China
+              <FormattedMessage id="china" />
             </Button>
           </Stack>
         </Grid.Col>
@@ -364,7 +371,7 @@ const SuperstarCheckInThailand = () => {
               <Skeleton height={400} width="100%" />
             )}
             <Button size="lg" component={Link} href="/th" variant="default">
-              Thailand
+              <FormattedMessage id="thailand" />
             </Button>
           </Stack>
         </Grid.Col>
@@ -434,7 +441,12 @@ const Top10Locations = () => {
                   backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 }}
               >
-                อันดับ {index + 1}
+                <FormattedMessage
+                  id="rank"
+                  values={{
+                    rank: index + 1,
+                  }}
+                />
               </Title>
               <Text size="md" c="black" lineClamp={3}>
                 {location.title}
@@ -453,13 +465,13 @@ export default function Page() {
       <Stack gap="xl">
         <CelebsNewsCarousel />
         <Title order={1} ta="start" c="white">
-          Superstar Check in Thailand
+          <FormattedMessage id="superstarCheckInThailand" />
         </Title>
         <SuperstarCheckInThailand />
         <Divider />
         <Box>
           <Title order={1} ta="left" c="white">
-            Top 10 tourist destinations
+            <FormattedMessage id="top10Destinations" />
           </Title>
         </Box>
         <Divider />
