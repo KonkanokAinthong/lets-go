@@ -15,5 +15,9 @@
   "emptyList": "No items found.",
   "rank": "Rank {rank}",
   "topTrendingKoreanCelebrities": "Top Trending Korean Celebrities",
-  "recommendedKoreanSeries": "Recommended Korean Series"
+  "recommendedKoreanSeries": "Recommended Korean Series",
+  "topTrendingChineseCelebrities": "Top Trending Chinese Celebrities",
+  "recommendedChineseSeries": "Recommended Chinese Series",
+  "topTrendingThaiCelebrities": "Top Trending Thai Celebrities",
+  "recommendedThaiSeries": "Recommended Thai Series"
 }

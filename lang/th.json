@@ -15,5 +15,9 @@
   "emptyList": "ไม่พบรายการ",
   "rank": "อันดับ {rank}",
   "topTrendingKoreanCelebrities": "นักแสดงเกาหลีที่กำลังเป็นที่นิยม",
-  "recommendedKoreanSeries": "ซีรีส์เกาหลีแนะนำ"
+  "recommendedKoreanSeries": "ซีรีส์เกาหลีแนะนำ",
+  "topTrendingChineseCelebrities": "นักแสดงจีนที่กำลังเป็นที่นิยม",
+  "recommendedChineseSeries": "ซีรีส์จีนแนะนำ",
+  "topTrendingThaiCelebrities": "นักแสดงไทยที่กำลังเป็นที่นิยม",
+  "recommendedThaiSeries": "ซีรีส์ไทยแนะนำ"
 }
