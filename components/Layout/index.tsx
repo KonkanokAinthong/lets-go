@@ -23,6 +23,7 @@ import {
 import { IconLanguage, IconSearch } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface LayoutProps {
   locale: string;
@@ -137,6 +138,12 @@ export function Layout({ children, locale, onLocaleChange }: LayoutProps) {
             </Box>
 
             <Group>
+              <Link href="/about">
+                <NavLink label="About" />
+              </Link>
+              <Link href="/contact">
+                <NavLink label="Contact" />
+              </Link>
               <Menu withArrow position="bottom-end" transitionProps={{ transition: 'pop' }}>
                 <Menu.Target>
                   <ActionIcon variant="default" size={30}>
@@ -177,6 +184,34 @@ export function Layout({ children, locale, onLocaleChange }: LayoutProps) {
       </AppShell.Header>
       <AppShell.Navbar py="md" px={4}>
         <Group>
+          <NavLink
+            label="About"
+            component={Link}
+            href="/about"
+            mt="xl"
+            styles={(theme) => ({
+              root: {
+                color: theme.colors.gray[6],
+                '&:hover': {
+                  backgroundColor: theme.colors.gray[1],
+                },
+              },
+            })}
+          />
+          <NavLink
+            label="Contact"
+            component={Link}
+            href="/contact"
+            mt="xs"
+            styles={(theme) => ({
+              root: {
+                color: theme.colors.gray[6],
+                '&:hover': {
+                  backgroundColor: theme.colors.gray[1],
+                },
+              },
+            })}
+          />
           <Autocomplete
             style={{ width: '100%' }}
             placeholder="Type to search"
@@ -196,7 +231,7 @@ export function Layout({ children, locale, onLocaleChange }: LayoutProps) {
             </Menu.Target>
             <Menu.Dropdown>
               <Menu.Item
-                left={<Image src="/path/to/en/flag.png" width={18} height={18} />}
+                leftSection={<Image src="/path/to/en/flag.png" width={18} height={18} />}
                 onClick={() => handleLocaleChange('en')}
               >
                 English
