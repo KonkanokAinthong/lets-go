@@ -5,6 +5,7 @@
 import { useDisclosure } from '@mantine/hooks';
 import {
   ActionIcon,
+  Anchor,
   AppShell,
   Autocomplete,
   AutocompleteProps,
@@ -24,6 +25,7 @@ import { IconLanguage, IconSearch } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { FormattedMessage } from 'react-intl';
 
 interface LayoutProps {
   locale: string;
@@ -138,12 +140,36 @@ export function Layout({ children, locale, onLocaleChange }: LayoutProps) {
             </Box>
 
             <Group>
-              <Link href="/about">
-                <NavLink label="About" />
-              </Link>
-              <Link href="/contact">
-                <NavLink label="Contact" />
-              </Link>
+              <Anchor
+                component={Link}
+                href="/about"
+                styles={(theme) => ({
+                  root: {
+                    color: theme.colors.gray[6],
+                    '&:hover': {
+                      backgroundColor: theme.colors.gray[1],
+                    },
+                  },
+                })}
+              >
+                <FormattedMessage id="about" defaultMessage="About" />
+              </Anchor>
+
+              <Anchor
+                component={Link}
+                href="/contact"
+                styles={(theme) => ({
+                  root: {
+                    color: theme.colors.gray[6],
+                    '&:hover': {
+                      backgroundColor: theme.colors.gray[1],
+                    },
+                  },
+                })}
+              >
+                <FormattedMessage id="contact" defaultMessage="Contact" />
+              </Anchor>
+
               <Menu withArrow position="bottom-end" transitionProps={{ transition: 'pop' }}>
                 <Menu.Target>
                   <ActionIcon variant="default" size={30}>
