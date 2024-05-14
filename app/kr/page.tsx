@@ -4,6 +4,7 @@ import { Carousel } from '@mantine/carousel';
 import { Avatar, Container, Grid, Image, Skeleton, Stack, Title } from '@mantine/core';
 import axios from 'axios';
 import Link from 'next/link';
+import { FormattedMessage } from 'react-intl';
 import { useQuery } from 'react-query';
 
 async function getTrendingKoreanCelebrities() {
@@ -94,7 +95,7 @@ export default function Page() {
     <Container size="xl" c="white">
       <Stack justify="center" align="center">
         <Title order={1} mb={48} ta="center" c="white">
-          Top Trending Korean Celebrities
+          <FormattedMessage id="topTrendingKoreanCelebrities" />
         </Title>
 
         <Grid gutter={64} columns={24} justify="center" align="center">
@@ -133,7 +134,7 @@ export default function Page() {
         <section>
           <Stack my="xl">
             <Title order={1} mb="xl" ta="center" c="white">
-              Recommended Korean Series
+              <FormattedMessage id="recommendedKoreanSeries" />
             </Title>
             <Carousel
               slideSize={{ base: '100%', sm: '50%', md: '25%' }}

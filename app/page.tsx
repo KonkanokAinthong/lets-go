@@ -81,6 +81,8 @@ const CelebsNewsCarousel = () => {
     },
     {
       refetchOnWindowFocus: false,
+      staleTime: Infinity, // Data will be considered fresh as long as it exists
+      cacheTime: 24 * 60 * 60 * 1000, // Cache data for 24 hours (in milliseconds)
     }
   );
 
@@ -181,20 +183,20 @@ const SuperstarCheckInThailand = () => {
 
   const { data: thCelebrities, isLoading: isLoading_thCelebrities } = useQuery(
     QUERY_KEYS.trendingThaiCelebrities,
-    () => searchCelebrities(CELEB_LISTS),
-    { refetchOnWindowFocus: false, initialData: [], select: (data) => data.slice(20, 30) }
+    () => searchCelebrities(CELEB_LISTS.filter((celeb) => celeb.nationality === 'Thai')),
+    { refetchOnWindowFocus: false, staleTime: Infinity, cacheTime: 24 * 60 * 60 * 1000 }
   );
 
   const { data: krCelebrities, isLoading: isLoading_krCelebrities } = useQuery(
     QUERY_KEYS.trendingKoreanCelebrities,
-    () => searchCelebrities(CELEB_LISTS),
-    { refetchOnWindowFocus: false, initialData: [], select: (data) => data.slice(10, 20) }
+    () => searchCelebrities(CELEB_LISTS.filter((celeb) => celeb.nationality === 'Korean')),
+    { refetchOnWindowFocus: false, staleTime: Infinity, cacheTime: 24 * 60 * 60 * 1000 }
   );
 
   const { data: cnCelebrities, isLoading: isLoading_cnCelebrities } = useQuery(
     QUERY_KEYS.trendingChineseCelebrities,
-    () => searchCelebrities(CELEB_LISTS),
-    { refetchOnWindowFocus: false, initialData: [], select: (data) => data.slice(0, 10) }
+    () => searchCelebrities(CELEB_LISTS.filter((celeb) => celeb.nationality === 'Chinese')),
+    { refetchOnWindowFocus: false, staleTime: Infinity, cacheTime: 24 * 60 * 60 * 1000 }
   );
 
   const onLoad = useCallback((map) => {
@@ -224,24 +226,16 @@ const SuperstarCheckInThailand = () => {
   }, [currentLocation]);
 
   const getRandomCeleb = (region: 'th' | 'cn' | 'kr') => {
-    // ตรวจสอบว่ามีข้อมูลเซเลบริตี้จากทั้ง 3 ภูมิภาคหรือไม่ หากไม่มีจะส่งค่ากลับเป็น null
-    if (!thCelebrities || !krCelebrities || !cnCelebrities) return null;
-
-    // สร้างออบเจกต์ที่มีคีย์เป็นภูมิภาค และมีค่าเป็นอาร์เรย์ของเซเลบริตี้จากภูมิภาคนั้น
     const celebrities = {
       th: thCelebrities,
       kr: krCelebrities,
       cn: cnCelebrities,
     }[region];
 
-    // กรองเซเลบริตี้ที่มีค่าเป็น falsy ออกจากอาร์เรย์
-    const validCelebrities = celebrities?.filter(Boolean) ?? [];
+    if (!celebrities || celebrities.length === 0) return null;
 
-    // สุ่มเลขจำนวนเต็มแบบสุ่มในช่วงระหว่าง 0 ถึง (ความยาวของอาร์เรย์ validCelebrities - 1)
-    const randomIndex = Math.floor(Math.random() * validCelebrities.length);
-
-    // ส่งค่ากลับเป็นเซเลบริตี้ที่อยู่ในอาร์เรย์ตำแหน่งที่สุ่มได้
-    return validCelebrities[randomIndex];
+    const randomIndex = Math.floor(Math.random() * celebrities.length);
+    return celebrities[randomIndex];
   };
 
   const { data: placeDetails } = useQuery(
@@ -250,10 +244,13 @@ const SuperstarCheckInThailand = () => {
       const allPlaces = CELEB_LISTS?.flatMap((celeb) => celeb.placeVisited) || [];
       return getPlaceDetails(allPlaces);
     },
-    { enabled: !!CELEB_LISTS, initialData: { places: [] }, refetchOnWindowFocus: false }
+    {
+      enabled: !!CELEB_LISTS,
+      initialData: { places: [] },
+      staleTime: Infinity,
+      cacheTime: 24 * 60 * 60 * 1000,
+    }
   );
-
-  console.log(placeDetails.places);
 
   const bangkokLocation = { lat: 13.7563, lng: 100.5018 };
 
@@ -264,14 +261,7 @@ const SuperstarCheckInThailand = () => {
   if (loadError) return <FormattedMessage id="errorLoadingMaps" />;
   if (!isLoaded) return <FormattedMessage id="loading" />;
 
-  if (
-    !imageTH ||
-    !imageCN ||
-    !imageKR ||
-    isLoading_thCelebrities ||
-    isLoading_krCelebrities ||
-    isLoading_cnCelebrities
-  ) {
+  if (isLoading_thCelebrities || isLoading_krCelebrities || isLoading_cnCelebrities) {
     return (
       <div
         style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}
@@ -390,6 +380,8 @@ const Top10Locations = () => {
     },
     {
       refetchOnWindowFocus: false,
+      staleTime: Infinity,
+      cacheTime: 24 * 60 * 60 * 1000,
     }
   );
 
