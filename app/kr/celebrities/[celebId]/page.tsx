@@ -419,6 +419,7 @@ export default function Page() {
                             <Stack spacing="sm">
                               <Title order={3} ta="center">
                                 {place?.name}
+                                {console.log(place)}
                               </Title>
                               <Text size="sm">{place?.formatted_address}</Text>
                               <Stack dir="row" justify="space-between" align="center">
@@ -439,18 +440,18 @@ export default function Page() {
                                 </Box>
                               </Stack>
                               <Stack spacing="sm">
-                                <Text size="xs" w={500}>{`Phone: ${
-                                  place?.phone_number || 'Not available'
-                                }`}</Text>
-                                <Text size="xs" w={500}>{`Website: ${
-                                  place?.website || 'Not available'
-                                }`}</Text>
-                                <Text size="xs" w={500}>{`Price Level: ${
-                                  place?.price_level || 'Not available'
-                                }`}</Text>
-                                <Text size="xs" w={500}>{`Types: ${
-                                  place?.types?.join(', ') || 'Not available'
-                                }`}</Text>
+                                <Text size="xs" w={500}>
+                                  {`Phone: ${place?.phone_number || 'Not available'}`}
+                                </Text>
+                                <Text size="xs" w={500}>
+                                  {`Website: ${place?.website || 'Not available'}`}
+                                </Text>
+                                <Text size="xs" w={500}>
+                                  {`Price Level: ${place?.price_level || 'Not available'}`}
+                                </Text>
+                                <Text size="xs" w={500}>
+                                  {`Types: ${place?.types?.join(', ') || 'Not available'}`}
+                                </Text>
                               </Stack>
                             </Stack>
                             <Divider size="md" w="100%" />
