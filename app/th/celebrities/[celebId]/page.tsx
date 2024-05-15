@@ -172,8 +172,6 @@ export default function Page() {
     }
   );
 
-  console.log(places);
-
   const { data: nearbyPlaces } = useQuery(
     ['nearbyPlaces', places?.places],
     () => fetchNearbyPlaces(places?.places[0].geometry.location),
@@ -456,7 +454,7 @@ export default function Page() {
               </div>
             </TabsPanel>
             <TabsPanel value="chatgpt-planner">
-              <ChatInterface places={places?.places} />
+              <ChatInterface />
             </TabsPanel>
           </Tabs>
         </main>

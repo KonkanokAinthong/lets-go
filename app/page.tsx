@@ -23,6 +23,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
+import { FormattedMessage } from 'react-intl';
 import CELEB_LISTS from '../celebs.json';
 
 const API_ENDPOINTS = {
@@ -80,6 +81,8 @@ const CelebsNewsCarousel = () => {
     },
     {
       refetchOnWindowFocus: false,
+      staleTime: Infinity, // Data will be considered fresh as long as it exists
+      cacheTime: 24 * 60 * 60 * 1000, // Cache data for 24 hours (in milliseconds)
     }
   );
 
@@ -180,20 +183,20 @@ const SuperstarCheckInThailand = () => {
 
   const { data: thCelebrities, isLoading: isLoading_thCelebrities } = useQuery(
     QUERY_KEYS.trendingThaiCelebrities,
-    () => searchCelebrities(CELEB_LISTS),
-    { refetchOnWindowFocus: false, initialData: [], select: (data) => data.slice(20, 30) }
+    () => searchCelebrities(CELEB_LISTS.filter((celeb) => celeb.nationality === 'Thai')),
+    { refetchOnWindowFocus: false, staleTime: Infinity, cacheTime: 24 * 60 * 60 * 1000 }
   );
 
   const { data: krCelebrities, isLoading: isLoading_krCelebrities } = useQuery(
     QUERY_KEYS.trendingKoreanCelebrities,
-    () => searchCelebrities(CELEB_LISTS),
-    { refetchOnWindowFocus: false, initialData: [], select: (data) => data.slice(10, 20) }
+    () => searchCelebrities(CELEB_LISTS.filter((celeb) => celeb.nationality === 'Korean')),
+    { refetchOnWindowFocus: false, staleTime: Infinity, cacheTime: 24 * 60 * 60 * 1000 }
   );
 
   const { data: cnCelebrities, isLoading: isLoading_cnCelebrities } = useQuery(
     QUERY_KEYS.trendingChineseCelebrities,
-    () => searchCelebrities(CELEB_LISTS),
-    { refetchOnWindowFocus: false, initialData: [], select: (data) => data.slice(0, 10) }
+    () => searchCelebrities(CELEB_LISTS.filter((celeb) => celeb.nationality === 'Chinese')),
+    { refetchOnWindowFocus: false, staleTime: Infinity, cacheTime: 24 * 60 * 60 * 1000 }
   );
 
   const onLoad = useCallback((map) => {
@@ -223,24 +226,16 @@ const SuperstarCheckInThailand = () => {
   }, [currentLocation]);
 
   const getRandomCeleb = (region: 'th' | 'cn' | 'kr') => {
-    // ตรวจสอบว่ามีข้อมูลเซเลบริตี้จากทั้ง 3 ภูมิภาคหรือไม่ หากไม่มีจะส่งค่ากลับเป็น null
-    if (!thCelebrities || !krCelebrities || !cnCelebrities) return null;
-
-    // สร้างออบเจกต์ที่มีคีย์เป็นภูมิภาค และมีค่าเป็นอาร์เรย์ของเซเลบริตี้จากภูมิภาคนั้น
     const celebrities = {
       th: thCelebrities,
       kr: krCelebrities,
       cn: cnCelebrities,
     }[region];
 
-    // กรองเซเลบริตี้ที่มีค่าเป็น falsy ออกจากอาร์เรย์
-    const validCelebrities = celebrities?.filter(Boolean) ?? [];
+    if (!celebrities || celebrities.length === 0) return null;
 
-    // สุ่มเลขจำนวนเต็มแบบสุ่มในช่วงระหว่าง 0 ถึง (ความยาวของอาร์เรย์ validCelebrities - 1)
-    const randomIndex = Math.floor(Math.random() * validCelebrities.length);
-
-    // ส่งค่ากลับเป็นเซเลบริตี้ที่อยู่ในอาร์เรย์ตำแหน่งที่สุ่มได้
-    return validCelebrities[randomIndex];
+    const randomIndex = Math.floor(Math.random() * celebrities.length);
+    return celebrities[randomIndex];
   };
 
   const { data: placeDetails } = useQuery(
@@ -249,10 +244,13 @@ const SuperstarCheckInThailand = () => {
       const allPlaces = CELEB_LISTS?.flatMap((celeb) => celeb.placeVisited) || [];
       return getPlaceDetails(allPlaces);
     },
-    { enabled: !!CELEB_LISTS, initialData: { places: [] }, refetchOnWindowFocus: false }
+    {
+      enabled: !!CELEB_LISTS,
+      initialData: { places: [] },
+      staleTime: Infinity,
+      cacheTime: 24 * 60 * 60 * 1000,
+    }
   );
-
-  console.log(placeDetails.places);
 
   const bangkokLocation = { lat: 13.7563, lng: 100.5018 };
 
@@ -260,18 +258,17 @@ const SuperstarCheckInThailand = () => {
   const imageCN = getRandomCeleb('cn');
   const imageKR = getRandomCeleb('kr');
 
-  if (loadError) return 'Error loading maps';
-  if (!isLoaded) return 'Loading Maps';
+  if (loadError) return <FormattedMessage id="errorLoadingMaps" />;
+  if (!isLoaded) return <FormattedMessage id="loading" />;
 
-  if (
-    !imageTH ||
-    !imageCN ||
-    !imageKR ||
-    isLoading_thCelebrities ||
-    isLoading_krCelebrities ||
-    isLoading_cnCelebrities
-  ) {
-    return <Loader />;
+  if (isLoading_thCelebrities || isLoading_krCelebrities || isLoading_cnCelebrities) {
+    return (
+      <div
+        style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}
+      >
+        <FormattedMessage id="loading" />
+      </div>
+    );
   }
 
   return (
@@ -281,7 +278,7 @@ const SuperstarCheckInThailand = () => {
           <Stack justify="center" align="center">
             {isLoaded && bangkokLocation ? (
               <GoogleMap
-                mapContainerStyle={{ width: '100%', height: '400px' }}
+                mapContainerStyle={{ width: '100%', height: '400px', borderRadius: 8 }}
                 center={bangkokLocation}
                 zoom={10}
                 onLoad={onLoad}
@@ -312,7 +309,7 @@ const SuperstarCheckInThailand = () => {
               )}/celebrities/${nearestCeleb?.id}`}
               variant="default"
             >
-              Superstar nearby me
+              <FormattedMessage id="nearbySuperstars" />
             </Button>
           </Stack>
         </Grid.Col>
@@ -323,13 +320,16 @@ const SuperstarCheckInThailand = () => {
                 <Image
                   src={`https://image.tmdb.org/t/p/w400${imageKR.profile_path}`}
                   height={400}
+                  style={{
+                    borderRadius: 8,
+                  }}
                 />
               </Box>
             ) : (
               <Skeleton height={400} width="100%" />
             )}
             <Button size="lg" component={Link} href="/kr" variant="default">
-              South Korea
+              <FormattedMessage id="southKorea" />
             </Button>
           </Stack>
         </Grid.Col>
@@ -340,13 +340,16 @@ const SuperstarCheckInThailand = () => {
                 <Image
                   src={`https://image.tmdb.org/t/p/w400${imageCN.profile_path}`}
                   height={400}
+                  style={{
+                    borderRadius: 8,
+                  }}
                 />
               </Box>
             ) : (
               <Skeleton height={400} width="100%" />
             )}
             <Button size="lg" component={Link} href="/cn" variant="default">
-              China
+              <FormattedMessage id="china" />
             </Button>
           </Stack>
         </Grid.Col>
@@ -358,13 +361,16 @@ const SuperstarCheckInThailand = () => {
                   src={`https://image.tmdb.org/t/p/w400${imageTH.profile_path}`}
                   alt="Thai Celebrity"
                   height={400}
+                  style={{
+                    borderRadius: 8,
+                  }}
                 />
               </Box>
             ) : (
               <Skeleton height={400} width="100%" />
             )}
             <Button size="lg" component={Link} href="/th" variant="default">
-              Thailand
+              <FormattedMessage id="thailand" />
             </Button>
           </Stack>
         </Grid.Col>
@@ -383,6 +389,8 @@ const Top10Locations = () => {
     },
     {
       refetchOnWindowFocus: false,
+      staleTime: Infinity,
+      cacheTime: 24 * 60 * 60 * 1000,
     }
   );
 
@@ -434,7 +442,12 @@ const Top10Locations = () => {
                   backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 }}
               >
-                อันดับ {index + 1}
+                <FormattedMessage
+                  id="rank"
+                  values={{
+                    rank: index + 1,
+                  }}
+                />
               </Title>
               <Text size="md" c="black" lineClamp={3}>
                 {location.title}
@@ -453,13 +466,13 @@ export default function Page() {
       <Stack gap="xl">
         <CelebsNewsCarousel />
         <Title order={1} ta="start" c="white">
-          Superstar Check in Thailand
+          <FormattedMessage id="superstarCheckInThailand" />
         </Title>
         <SuperstarCheckInThailand />
         <Divider />
         <Box>
           <Title order={1} ta="left" c="white">
-            Top 10 tourist destinations
+            <FormattedMessage id="top10Destinations" />
           </Title>
         </Box>
         <Divider />

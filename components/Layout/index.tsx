@@ -4,6 +4,8 @@
 
 import { useDisclosure } from '@mantine/hooks';
 import {
+  ActionIcon,
+  Anchor,
   AppShell,
   Autocomplete,
   AutocompleteProps,
@@ -13,23 +15,35 @@ import {
   Group,
   Image,
   Loader,
+  Menu,
   NavLink,
   Text,
   Title,
   rem,
 } from '@mantine/core';
-import { IconSearch } from '@tabler/icons-react';
+import { IconLanguage, IconSearch } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { FormattedMessage } from 'react-intl';
 
-export function Layout({ children }: { children: React.ReactNode }) {
+interface LayoutProps {
+  locale: string;
+  onLocaleChange: (newLocale: string) => void;
+  children: React.ReactNode;
+}
+
+export function Layout({ children, locale, onLocaleChange }: LayoutProps) {
   const navigate = useRouter();
   const [opened, { toggle }] = useDisclosure();
   const [options, setOptions] = useState<
     { value: string; label: string; visitedPlaces: string[] }[]
   >([]);
   const [loading, setLoading] = useState(false);
-  console.log('options', options);
+
+  const handleLocaleChange = (newLocale: string) => {
+    onLocaleChange(newLocale);
+  };
 
   const handleSearch = async (query: string) => {
     if (query.trim().length >= 3) {
@@ -126,6 +140,57 @@ export function Layout({ children }: { children: React.ReactNode }) {
             </Box>
 
             <Group>
+              <Anchor
+                component={Link}
+                href="/about"
+                styles={(theme) => ({
+                  root: {
+                    color: theme.colors.gray[6],
+                    '&:hover': {
+                      backgroundColor: theme.colors.gray[1],
+                    },
+                  },
+                })}
+              >
+                <FormattedMessage id="about" defaultMessage="About" />
+              </Anchor>
+
+              <Anchor
+                component={Link}
+                href="/contact"
+                styles={(theme) => ({
+                  root: {
+                    color: theme.colors.gray[6],
+                    '&:hover': {
+                      backgroundColor: theme.colors.gray[1],
+                    },
+                  },
+                })}
+              >
+                <FormattedMessage id="contact" defaultMessage="Contact" />
+              </Anchor>
+
+              <Menu withArrow position="bottom-end" transitionProps={{ transition: 'pop' }}>
+                <Menu.Target>
+                  <ActionIcon variant="default" size={30}>
+                    <IconLanguage size="1rem" />
+                  </ActionIcon>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item
+                    leftSection={<Image src="/path/to/en/flag.png" width={18} height={18} />}
+                    onClick={() => handleLocaleChange('en')}
+                  >
+                    English
+                  </Menu.Item>
+                  <Menu.Item
+                    leftSection={<Image src="/path/to/th/flag.png" width={18} height={18} />}
+                    onClick={() => handleLocaleChange('th')}
+                  >
+                    ภาษาไทย
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
               <Autocomplete
                 placeholder="Type to search"
                 data={options}
@@ -145,6 +210,34 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </AppShell.Header>
       <AppShell.Navbar py="md" px={4}>
         <Group>
+          <NavLink
+            label="About"
+            component={Link}
+            href="/about"
+            mt="xl"
+            styles={(theme) => ({
+              root: {
+                color: theme.colors.gray[6],
+                '&:hover': {
+                  backgroundColor: theme.colors.gray[1],
+                },
+              },
+            })}
+          />
+          <NavLink
+            label="Contact"
+            component={Link}
+            href="/contact"
+            mt="xs"
+            styles={(theme) => ({
+              root: {
+                color: theme.colors.gray[6],
+                '&:hover': {
+                  backgroundColor: theme.colors.gray[1],
+                },
+              },
+            })}
+          />
           <Autocomplete
             style={{ width: '100%' }}
             placeholder="Type to search"
@@ -156,6 +249,27 @@ export function Layout({ children }: { children: React.ReactNode }) {
             renderOption={renderAutocompleteOption}
             onOptionSubmit={handleItemSubmit}
           />
+          <Menu withArrow position="bottom-end" transitionProps={{ transition: 'pop' }}>
+            <Menu.Target>
+              <ActionIcon variant="default" size={30}>
+                <IconLanguage size="1rem" />
+              </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item
+                leftSection={<Image src="/path/to/en/flag.png" width={18} height={18} />}
+                onClick={() => handleLocaleChange('en')}
+              >
+                English
+              </Menu.Item>
+              <Menu.Item
+                leftSection={<Image src="/path/to/th/flag.png" width={18} height={18} />}
+                onClick={() => handleLocaleChange('th')}
+              >
+                ภาษาไทย
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
         </Group>
       </AppShell.Navbar>
       <AppShell.Main>{children}</AppShell.Main>

@@ -1,15 +1,27 @@
 import { useState, useEffect, useRef } from 'react';
-import { TextInput, Paper, Text, Box, Title, Avatar, Select, Stack } from '@mantine/core';
+import {
+  TextInput,
+  Paper,
+  Text,
+  Box,
+  Title,
+  Avatar,
+  Select,
+  Stack,
+  Modal,
+  Button,
+} from '@mantine/core';
 import { IconSend } from '@tabler/icons-react';
+import ReactMarkdown from 'react-markdown';
 
-const ChatInterface = ({ places = [] }) => {
+const ChatInterface = () => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const chatContainerRef = useRef(null);
   const [selectedBudget, setSelectedBudget] = useState('');
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedDuration, setSelectedDuration] = useState('');
-  const [selectedCelebPlace, setSelectedCelebPlace] = useState('');
+  const [showInstructions, setShowInstructions] = useState(false);
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -38,7 +50,6 @@ const ChatInterface = ({ places = [] }) => {
               - Budget: ${selectedBudget} THB
               - Province: ${selectedProvince}
               - Duration: ${selectedDuration}
-              - Celebrity Visited Place: ${selectedCelebPlace} 
               If the user's input is in Thai, respond in Thai. If the user's input is in English, respond in English. Provide your response in bullet points for easy readability, rather than in paragraphs.`,
           }),
         });
@@ -75,24 +86,39 @@ const ChatInterface = ({ places = [] }) => {
     }
   };
 
-  console.log('places', places);
-
   return (
     <Paper shadow="sm" p="md" style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Title order={3} mb="md">
         Thailand Trip Planner
       </Title>
+      <Modal
+        opened={showInstructions}
+        onClose={() => setShowInstructions(false)}
+        title="How to Use"
+        centered
+      >
+        <Text size="sm">
+          1. Select your budget, desired province, and duration for the trip using the dropdown
+          menus.
+        </Text>
+        <Text size="sm" mt="sm">
+          2. Type your message or query related to trip planning in the input field at the bottom.
+        </Text>
+        <Text size="sm" mt="sm">
+          3. Press Enter or click the send icon to submit your message.
+        </Text>
+        <Text size="sm" mt="sm">
+          4. The assistant will provide a response with trip suggestions based on your inputs.
+        </Text>
+        <Text size="sm" mt="sm">
+          5. You can continue the conversation by typing additional messages or modifying your
+          selections.
+        </Text>
+      </Modal>
       <Stack>
-        <Select
-          label="Celebrity Visited Places"
-          placeholder="เลือกสถานที่ที่คนดังเคยไปเที่ยว"
-          value={selectedCelebPlace}
-          onChange={setSelectedCelebPlace}
-          data={places?.map((place) => {
-            return { value: place.name, label: place.name };
-          })}
-        />
-
+        <Button variant="outline" onClick={() => setShowInstructions(true)}>
+          Show Instructions
+        </Button>
         <Select
           label="Budget (THB)"
           placeholder="เลือกงบประมาณ"
@@ -240,11 +266,12 @@ const ChatInterface = ({ places = [] }) => {
                 maxWidth: '70%',
               }}
             >
-              <Text>{message.text}</Text>
+              <ReactMarkdown>{message.text}</ReactMarkdown>
             </Paper>
           </Box>
         ))}
       </Box>
+
       <Box style={{ position: 'relative', bottom: 0, left: 0, right: 0 }}>
         <TextInput
           placeholder="พิมข้อความวางแผนการเดินทางของคุณที่นี่.."

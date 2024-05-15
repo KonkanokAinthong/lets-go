@@ -4,6 +4,7 @@ import { Carousel } from '@mantine/carousel';
 import { Avatar, Container, Grid, Image, Skeleton, Stack, Title } from '@mantine/core';
 import axios from 'axios';
 import Link from 'next/link';
+import { FormattedMessage } from 'react-intl';
 import { useQuery } from 'react-query';
 
 async function getTrendingChineseCelebrities() {
@@ -76,7 +77,7 @@ export default function Page() {
     <Container size="xl" c="white">
       <Stack>
         <Title order={1} ta="center" c="white">
-          Top Trending Chinese Celebrities
+          <FormattedMessage id="topTrendingChineseCelebrities" />
         </Title>
         <Grid gutter={64} columns={24} align="center" justify="center">
           {celebrities?.map((celebrity: any) => (
@@ -96,7 +97,13 @@ export default function Page() {
                   gap: 16,
                 }}
               >
-                <Avatar src={celebrity?.image} alt="test" size="124" />
+                <Avatar
+                  src={celebrity?.image}
+                  alt="test"
+                  size="124"
+                  component={Link}
+                  href={`/cn/celebrities/${celebrity?.id}`}
+                />
                 <Title order={6} ta="center">
                   <Link href={`/cn/celebrities/${celebrity?.id}`}>{celebrity?.name}</Link>
                 </Title>
@@ -108,7 +115,7 @@ export default function Page() {
         <section>
           <Stack my="xl">
             <Title order={1} mb="xl" ta="center" c="white">
-              Recommended Chinese Series
+              <FormattedMessage id="recommendedChineseSeries" />
             </Title>
             <Carousel
               slideSize={{ base: '100%', sm: '50%', md: '25%' }}
