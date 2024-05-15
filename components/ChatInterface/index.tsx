@@ -12,6 +12,7 @@ import {
   Button,
 } from '@mantine/core';
 import { IconSend } from '@tabler/icons-react';
+import ReactMarkdown from 'react-markdown';
 
 const ChatInterface = () => {
   const [messages, setMessages] = useState([]);
@@ -265,7 +266,7 @@ const ChatInterface = () => {
                 maxWidth: '70%',
               }}
             >
-              <Text>{message.text}</Text>
+              <ReactMarkdown>{message.text}</ReactMarkdown>
             </Paper>
           </Box>
         ))}
