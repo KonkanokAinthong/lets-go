@@ -27,6 +27,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { IconArrowLeft } from '@tabler/icons-react';
 import ChatInterface from '@/components/ChatInterface';
+import { useSearchPlaces } from '@/hooks/useSearchPlaces';
+import { useAttractionDetails } from '@/hooks/useAttractionDetails';
 
 const API_KEY = 'AIzaSyBKRFuroEmi6ocPRQzuBuX4ULAFiYTvTGo';
 
@@ -217,6 +219,17 @@ export default function Page() {
     }
   );
 
+  const { data: searchPlaces } = useSearchPlaces({
+    keyword: celebrity?.placeVisited,
+    geolocation: `${currentLocation.lat},${currentLocation.lng}`,
+  });
+
+  const { data: attractionsDetails } = useAttractionDetails(searchPlaces?.[0]?.place_id);
+
+  console.log(attractionsDetails);
+
+  console.log(searchPlaces);
+
   console.log(places);
 
   const [biography, setBiography] = useState('');
@@ -257,7 +270,7 @@ export default function Page() {
   };
 
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyBKRFuroEmi6ocPRQzuBuX4ULAFiYTvTGo',
+    googleMapsApiKey: '',
   });
 
   if (loadError) {

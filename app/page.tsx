@@ -166,7 +166,7 @@ const searchCelebrities = async (celebList: typeof CELEB_LISTS) => {
 
 const SuperstarCheckInThailand = () => {
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyBKRFuroEmi6ocPRQzuBuX4ULAFiYTvTGo',
+    googleMapsApiKey: '',
   });
   const [map, setMap] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
