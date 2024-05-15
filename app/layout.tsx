@@ -1,3 +1,4 @@
+/* eslint-disable react/self-closing-comp */
 'use client';
 
 import '@mantine/core/styles.css';
@@ -29,6 +30,8 @@ export default function RootLayout({ children }: { children: any }) {
   return (
     <html lang={locale}>
       <head>
+        <script defer data-domain="letsgo-th.com" src="https://plausible.io/js/script.js"></script>
+
         <ColorSchemeScript />
         <link rel="shortcut icon" href="/favicon.svg" />
         <meta

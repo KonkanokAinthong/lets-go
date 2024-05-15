@@ -278,7 +278,7 @@ const SuperstarCheckInThailand = () => {
           <Stack justify="center" align="center">
             {isLoaded && bangkokLocation ? (
               <GoogleMap
-                mapContainerStyle={{ width: '100%', height: '400px' }}
+                mapContainerStyle={{ width: '100%', height: '400px', borderRadius: 8 }}
                 center={bangkokLocation}
                 zoom={10}
                 onLoad={onLoad}
@@ -320,6 +320,9 @@ const SuperstarCheckInThailand = () => {
                 <Image
                   src={`https://image.tmdb.org/t/p/w400${imageKR.profile_path}`}
                   height={400}
+                  style={{
+                    borderRadius: 8,
+                  }}
                 />
               </Box>
             ) : (
@@ -337,6 +340,9 @@ const SuperstarCheckInThailand = () => {
                 <Image
                   src={`https://image.tmdb.org/t/p/w400${imageCN.profile_path}`}
                   height={400}
+                  style={{
+                    borderRadius: 8,
+                  }}
                 />
               </Box>
             ) : (
@@ -355,6 +361,9 @@ const SuperstarCheckInThailand = () => {
                   src={`https://image.tmdb.org/t/p/w400${imageTH.profile_path}`}
                   alt="Thai Celebrity"
                   height={400}
+                  style={{
+                    borderRadius: 8,
+                  }}
                 />
               </Box>
             ) : (
