@@ -372,7 +372,25 @@ export default function Page() {
               </div>
             </TabsPanel>
 
-            <TabsPanel value="nearby"></TabsPanel>
+            <TabsPanel value="nearby">
+              <div
+                style={{
+                  width: '100%',
+                  height: '400px',
+                }}
+              >
+                <Map
+                  style={{ width: '100%', height: '400px' }}
+                  initialViewState={{
+                    latitude: currentLocation.lat,
+                    longitude: currentLocation.lng,
+                    zoom: 14,
+                  }}
+                  mapStyle="mapbox://styles/mapbox/streets-v9"
+                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
+                />
+              </div>
+            </TabsPanel>
             <TabsPanel value="chatgpt-planner">
               <ChatInterface />
             </TabsPanel>
