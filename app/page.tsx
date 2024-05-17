@@ -304,8 +304,9 @@ const SuperstarCheckInThailand = () => {
             <Button
               size="lg"
               component={Link}
-              href={`${formatNationality(nearestCeleb?.nationality)}/celebrities/${nearestCeleb?.[0]
-                .id}`}
+              href={`${formatNationality(
+                nearestCeleb?.[0]?.nationality
+              )}/celebrities/${nearestCeleb?.[0].id}`}
               variant="default"
             >
               <FormattedMessage id="nearbySuperstars" />
