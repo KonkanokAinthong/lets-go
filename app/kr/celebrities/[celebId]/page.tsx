@@ -353,16 +353,23 @@ export default function Page() {
               </Stack>
             </TabsPanel>
             <TabsPanel value="visited-places">
-              <Map
-                style={{ width: '100%', height: '400px' }}
-                initialViewState={{
-                  latitude: currentLocation.lat,
-                  longitude: currentLocation.lng,
-                  zoom: 14,
+              <div
+                style={{
+                  width: '100%',
+                  height: '400px',
                 }}
-                mapStyle="mapbox://styles/mapbox/streets-v9"
-                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-              />
+              >
+                <Map
+                  style={{ width: '100%', height: '400px' }}
+                  initialViewState={{
+                    latitude: currentLocation.lat,
+                    longitude: currentLocation.lng,
+                    zoom: 14,
+                  }}
+                  mapStyle="mapbox://styles/mapbox/streets-v9"
+                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
+                />
+              </div>
             </TabsPanel>
 
             <TabsPanel value="nearby"></TabsPanel>
