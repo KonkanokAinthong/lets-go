@@ -16,7 +16,6 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 
 import Autoplay from 'embla-carousel-autoplay';
 import Link from 'next/link';
@@ -24,7 +23,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import { FormattedMessage } from 'react-intl';
+import { Map, Marker } from 'react-map-gl';
 import CELEB_LISTS from '../celebs.json';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 const API_ENDPOINTS = {
   celebsNews: '/api/celebs-news',
@@ -165,9 +166,6 @@ const searchCelebrities = async (celebList: typeof CELEB_LISTS) => {
 };
 
 const SuperstarCheckInThailand = () => {
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: '',
-  });
   const [map, setMap] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [nearestCeleb, setNearestCeleb] = useState(null);
@@ -198,14 +196,6 @@ const SuperstarCheckInThailand = () => {
     () => searchCelebrities(CELEB_LISTS.filter((celeb) => celeb.nationality === 'Chinese')),
     { refetchOnWindowFocus: false, staleTime: Infinity, cacheTime: 24 * 60 * 60 * 1000 }
   );
-
-  const onLoad = useCallback((map) => {
-    setMap(map);
-  }, []);
-
-  const onUnmount = useCallback((map) => {
-    setMap(null);
-  }, []);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -258,9 +248,6 @@ const SuperstarCheckInThailand = () => {
   const imageCN = getRandomCeleb('cn');
   const imageKR = getRandomCeleb('kr');
 
-  if (loadError) return <FormattedMessage id="errorLoadingMaps" />;
-  if (!isLoaded) return <FormattedMessage id="loading" />;
-
   if (isLoading_thCelebrities || isLoading_krCelebrities || isLoading_cnCelebrities) {
     return (
       <div
@@ -276,28 +263,44 @@ const SuperstarCheckInThailand = () => {
       <Grid justify="center" align="center" gutter="xl" p="lg">
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            {isLoaded && bangkokLocation ? (
-              <GoogleMap
-                mapContainerStyle={{ width: '100%', height: '400px', borderRadius: 8 }}
-                center={bangkokLocation}
-                zoom={10}
-                onLoad={onLoad}
-                onUnmount={onUnmount}
+            {bangkokLocation ? (
+              <Map
+                initialViewState={{
+                  longitude: bangkokLocation.lng,
+                  latitude: bangkokLocation.lat,
+                  zoom: 10,
+                }}
+                style={{ width: '100%', height: '400px', borderRadius: 8 }}
+                mapStyle="mapbox://styles/mapbox/streets-v9"
+                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
               >
                 {placeDetails.places.map((place, index) => (
                   <Marker
                     key={index}
-                    position={place?.geometry?.location}
-                    icon={{
-                      url: `${nearestCeleb?.[index]?.image}`,
-                      scaledSize: new window.google.maps.Size(40, 40),
-                      origin: new window.google.maps.Point(0, 0),
-                      anchor: new window.google.maps.Point(0, 0),
-                    }}
-                  />
+                    longitude={place?.geometry?.location?.lng}
+                    latitude={place?.geometry?.location?.lat}
+                    style={{ zIndex: 10, cursor: 'pointer', height: 20 }}
+                  >
+                    <img
+                      src={`${nearestCeleb?.[index]?.image}`}
+                      alt="Celebrity"
+                      style={{ width: '40px', height: '40px', borderRadius: '50%' }}
+                    />
+                  </Marker>
                 ))}
-                <Marker position={currentLocation} />
-              </GoogleMap>
+                {currentLocation && (
+                  <Marker longitude={currentLocation.lng} latitude={currentLocation.lat}>
+                    <div
+                      style={{
+                        width: '10px',
+                        height: '10px',
+                        backgroundColor: 'blue',
+                        borderRadius: '50%',
+                      }}
+                    />
+                  </Marker>
+                )}
+              </Map>
             ) : (
               <Skeleton height={400} width="100%" />
             )}

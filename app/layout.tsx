@@ -1,4 +1,5 @@
 /* eslint-disable react/self-closing-comp */
+
 'use client';
 
 import '@mantine/core/styles.css';
