@@ -19,13 +19,12 @@ import {
 
 import Autoplay from 'embla-carousel-autoplay';
 import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import { FormattedMessage } from 'react-intl';
 import { Map, Marker } from 'react-map-gl';
 import CELEB_LISTS from '../celebs.json';
-import 'mapbox-gl/dist/mapbox-gl.css';
 
 const API_ENDPOINTS = {
   celebsNews: '/api/celebs-news',
@@ -166,7 +165,6 @@ const searchCelebrities = async (celebList: typeof CELEB_LISTS) => {
 };
 
 const SuperstarCheckInThailand = () => {
-  const [map, setMap] = useState(null);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [nearestCeleb, setNearestCeleb] = useState(null);
 
@@ -279,7 +277,6 @@ const SuperstarCheckInThailand = () => {
                     key={index}
                     longitude={place?.geometry?.location?.lng}
                     latitude={place?.geometry?.location?.lat}
-                    style={{ zIndex: 10, cursor: 'pointer', height: 20 }}
                   >
                     <img
                       src={`${nearestCeleb?.[index]?.image}`}
@@ -307,9 +304,8 @@ const SuperstarCheckInThailand = () => {
             <Button
               size="lg"
               component={Link}
-              href={`${formatNationality(
-                nearestCeleb?.nationality
-              )}/celebrities/${nearestCeleb?.id}`}
+              href={`${formatNationality(nearestCeleb?.nationality)}/celebrities/${nearestCeleb?.[0]
+                .id}`}
               variant="default"
             >
               <FormattedMessage id="nearbySuperstars" />
