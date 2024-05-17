@@ -10,7 +10,6 @@ import {
   Grid,
   GridCol,
   Image,
-  Loader,
   Skeleton,
   Stack,
   Text,
@@ -278,23 +277,53 @@ const SuperstarCheckInThailand = () => {
                     longitude={place?.geometry?.location?.lng}
                     latitude={place?.geometry?.location?.lat}
                   >
-                    <img
-                      src={`${nearestCeleb?.[index]?.image}`}
-                      alt="Celebrity"
-                      style={{ width: '40px', height: '40px', borderRadius: '50%' }}
-                    />
+                    <div style={{ position: 'relative' }}>
+                      <img
+                        src={nearestCeleb?.[index]?.image}
+                        alt="Celebrity"
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          borderRadius: '50%',
+                          border: '2px solid white',
+                          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+                        }}
+                      />
+                      <div
+                        style={{
+                          position: 'absolute',
+                          bottom: '-8px',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          width: '0',
+                          height: '0',
+                          borderLeft: '8px solid transparent',
+                          borderRight: '8px solid transparent',
+                          borderTop: '8px solid white',
+                        }}
+                      />
+                    </div>
                   </Marker>
                 ))}
                 {currentLocation && (
                   <Marker longitude={currentLocation.lng} latitude={currentLocation.lat}>
-                    <div
+                    <svg
+                      height={20}
+                      viewBox="0 0 24 24"
                       style={{
-                        width: '10px',
-                        height: '10px',
-                        backgroundColor: 'blue',
-                        borderRadius: '50%',
+                        cursor: 'pointer',
+                        fill: '#007bff',
+                        stroke: 'white',
+                        strokeWidth: '2px',
+                        transform: `translate(${-20 / 2}px,${-20}px)`,
                       }}
-                    />
+                    >
+                      <path
+                        d={`M20.2,15.7L20.2,15.7c1.1-1.6,1.8-3.6,1.8-5.7c0-5.6-4.5-10-10-10S2,4.5,2,10c0,2,0.6,3.9,1.6,5.4c0,0.1,0.1,0.2,0.2,0.3
+    c0,0,0.1,0.1,0.1,0.2c0.2,0.3,0.4,0.6,0.7,0.9c2.6,3.1,7.4,7.6,7.4,7.6s4.8-4.5,7.4-7.5c0.2-0.3,0.5-0.6,0.7-0.9
+    C20.1,15.8,20.2,15.8,20.2,15.7z`}
+                      />
+                    </svg>
                   </Marker>
                 )}
               </Map>
