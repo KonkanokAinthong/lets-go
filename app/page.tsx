@@ -55,12 +55,27 @@ const QUERY_KEYS = {
 const getPlaceDetails = async (places: string[]) => {
   try {
     const promises = places.map(async (place) => {
-      const response = await axios.get(`/api/places?query=${encodeURIComponent(place)}`);
+      const response = await axios.get(
+        'https://tatapi.tourismthailand.org/tatapi/v5/places/search',
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization:
+              'Bearer Gb6UecYN9hyd8JhU6Fs1wUl4mpJaY6Nb6)O)CLN)deKcdMmHpoaDMyH0Bj5ychzyHQSPcb6p5BDAfr4b9WowEa0=====2',
+            'Accept-Language': 'th',
+          },
+          params: {
+            keyword: 'อาหาร',
+            geolocation: '13.6904831,100.5226014',
+          },
+        }
+      );
 
-      return response.data.data.results;
+      return response.data.result;
     });
-    const results = await Promise.all(promises);
 
+    const results = await Promise.all(promises);
+    console.log(results);
     const flattenedResults = results.flat();
     return { places: flattenedResults };
   } catch (error) {
@@ -234,8 +249,6 @@ const SuperstarCheckInThailand = () => {
     {
       enabled: !!CELEB_LISTS,
       initialData: { places: [] },
-      staleTime: Infinity,
-      cacheTime: 24 * 60 * 60 * 1000,
     }
   );
 
@@ -244,6 +257,8 @@ const SuperstarCheckInThailand = () => {
   const imageTH = getRandomCeleb('th');
   const imageCN = getRandomCeleb('cn');
   const imageKR = getRandomCeleb('kr');
+
+  console.log(placeDetails);
 
   if (isLoading_thCelebrities || isLoading_krCelebrities || isLoading_cnCelebrities) {
     return (

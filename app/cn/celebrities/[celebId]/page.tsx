@@ -21,7 +21,7 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+
 import { IconArrowLeft } from '@tabler/icons-react';
 import axios from 'axios';
 import Link from 'next/link';
@@ -29,6 +29,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import ChatInterface from '@/components/ChatInterface';
+import { Map } from 'react-map-gl';
 
 const API_KEY = 'AIzaSyBKRFuroEmi6ocPRQzuBuX4ULAFiYTvTGo';
 
@@ -140,25 +141,11 @@ const getPlaceDetails = async (places: string[]) => {
 };
 
 export default function Page() {
-  const [map, setMap] = useState(null);
   const navigate = useRouter();
 
   const { celebId } = useParams();
 
   const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
-
-  const onLoad = useCallback(
-    (map) => {
-      map.setCenter(currentLocation);
-      map.setZoom(10);
-      setMap(map);
-    },
-    [currentLocation]
-  );
-
-  const onUnmount = useCallback((map) => {
-    setMap(null);
-  }, []);
 
   const { data: celebrity, isLoading: isCelebrityLoading } = useQuery(
     ['celebrity', celebId],
@@ -233,18 +220,6 @@ export default function Page() {
     width: '100%',
     height: '600px',
   };
-
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: '',
-  });
-
-  if (loadError) {
-    return <div>Error loading Google Maps API</div>;
-  }
-
-  if (!isLoaded) {
-    return <div>Loading...</div>;
-  }
 
   if (isCelebrityLoading) {
     return <div>Loading...</div>;
@@ -325,123 +300,43 @@ export default function Page() {
             </Stack>
           </TabsPanel>
           <TabsPanel value="visited-places">
-            <Stack justify="center" align="center">
-              {places ? (
-                places.places.some((place) => place !== undefined) ? (
-                  <>
-                    <GoogleMap
-                      mapContainerStyle={containerStyle}
-                      center={currentLocation}
-                      zoom={10}
-                      onLoad={onLoad}
-                      onUnmount={onUnmount}
-                    >
-                      {places.places.map((place: any) => (
-                        <Marker
-                          key={place?.name}
-                          position={{
-                            lat: place?.geometry.location.lat,
-                            lng: place?.geometry.location.lng,
-                          }}
-                          icon={{
-                            url: `https://image.tmdb.org/t/p/original/${info?.profile_path}`,
-                            scaledSize: new window.google.maps.Size(40, 40),
-                            anchor: new window.google.maps.Point(20, 20),
-                            labelOrigin: new window.google.maps.Point(20, 60),
-                          }}
-                          title={place?.name}
-                          label={{
-                            text: place?.name,
-                            color: 'black',
-                            fontWeight: 'bold',
-                            fontSize: '16px',
-                          }}
-                        />
-                      ))}
-                    </GoogleMap>
-                    <Stack mt="md">
-                      {places.places.map((place: any) => (
-                        <article key={place?.name}>
-                          <Stack>
-                            <Image
-                              src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place?.photos?.[0].photo_reference}&key=${API_KEY}`}
-                              alt={place?.name}
-                            />
-                            <Stack>
-                              <Title order={3} ta="center">
-                                {place?.name}
-                              </Title>
-                              <Text size="xs">{place?.formatted_address}</Text>
-                            </Stack>
-                            <Divider size="md" w="100%" />
-                          </Stack>
-                        </article>
-                      ))}
-                    </Stack>
-                  </>
-                ) : (
-                  <Text size="xs">ไม่มีข้อมูล</Text>
-                )
-              ) : (
-                <Stack justify="center" align="center">
-                  {Array(3)
-                    .fill(0)
-                    .map((_, index) => (
-                      <article key={index}>
-                        <Stack>
-                          <Skeleton height={200} />
-                          <Stack>
-                            <Skeleton height={30} width="50%" mx="auto" />
-                            <Skeleton height={20} width="80%" mx="auto" />
-                          </Stack>
-                          <Skeleton height={450} />
-                          <Divider size="md" w="100%" />
-                        </Stack>
-                      </article>
-                    ))}
-                </Stack>
-              )}
-            </Stack>
+            <TabsPanel value="visited-places">
+              <div
+                style={{
+                  width: '100%',
+                  height: '400px',
+                }}
+              >
+                <Map
+                  style={{ width: '100%', height: '400px' }}
+                  initialViewState={{
+                    latitude: currentLocation.lat,
+                    longitude: currentLocation.lng,
+                    zoom: 14,
+                  }}
+                  mapStyle="mapbox://styles/mapbox/streets-v9"
+                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
+                />
+              </div>
+            </TabsPanel>
           </TabsPanel>
           <TabsPanel value="nearby">
-            <div>
-              {isLoaded && places?.places[0] ? (
-                <>
-                  <GoogleMap
-                    mapContainerStyle={containerStyle}
-                    center={places?.places?.[0]?.geometry?.location}
-                    zoom={75}
-                    onLoad={onLoad}
-                    onUnmount={onUnmount}
-                  >
-                    <Marker
-                      position={{
-                        lat: places.places[0].geometry.location.lat,
-                        lng: places.places[0].geometry.location.lng,
-                      }}
-                      icon={{
-                        url: `https://image.tmdb.org/t/p/original/${info?.profile_path}`,
-                        scaledSize: new window.google.maps.Size(40, 40),
-                        anchor: new window.google.maps.Point(20, 20),
-                        labelOrigin: new window.google.maps.Point(20, 60),
-                      }}
-                      title={info?.name}
-                    />
-                    {nearbyPlaces?.map((place: any) => (
-                      <Marker
-                        key={place.id}
-                        position={{
-                          lat: place.location.latitude,
-                          lng: place.location.longitude,
-                        }}
-                        title={place.displayName.text}
-                      />
-                    ))}
-                  </GoogleMap>
-                </>
-              ) : (
-                <Skeleton height={600} />
-              )}
+            <div
+              style={{
+                width: '100%',
+                height: '400px',
+              }}
+            >
+              <Map
+                style={{ width: '100%', height: '400px' }}
+                initialViewState={{
+                  latitude: currentLocation.lat,
+                  longitude: currentLocation.lng,
+                  zoom: 14,
+                }}
+                mapStyle="mapbox://styles/mapbox/streets-v9"
+                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
+              />
             </div>
           </TabsPanel>
           <TabsPanel value="chatgpt-planner">
