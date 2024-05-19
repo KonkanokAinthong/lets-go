@@ -10,9 +10,12 @@ import {
   Stack,
   Modal,
   Button,
+  LoadingOverlay,
+  Alert,
 } from '@mantine/core';
-import { IconSend } from '@tabler/icons-react';
+import { IconSend, IconAlertCircle } from '@tabler/icons-react';
 import ReactMarkdown from 'react-markdown';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 interface ChatInterfaceProps {
   visitedPlaces: any[];
@@ -23,10 +26,13 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
   const [inputValue, setInputValue] = useState('');
   const chatContainerRef = useRef(null);
   const [selectedBudget, setSelectedBudget] = useState('');
-  const [selectedProvince, setSelectedProvince] = useState('');
+  const [selectedPlace, setSelectedPlace] = useState('');
   const [selectedDuration, setSelectedDuration] = useState('');
   const [showInstructions, setShowInstructions] = useState(false);
-  const [selectedPlace, setSelectedPlace] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const intl = useIntl();
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -42,6 +48,8 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
     if (inputValue.trim() !== '') {
       setMessages([...messages, { text: inputValue, sender: 'user' }]);
       setInputValue('');
+      setIsLoading(true);
+      setError('');
 
       try {
         const response = await fetch('/api/trip-planner', {
@@ -53,7 +61,7 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
             message: inputValue,
             context: `You are a trip planner assistant helping to plan a trip to Thailand with the following details:
               - Budget: ${selectedBudget} THB
-              - Province: ${selectedProvince}
+              - Place: ${selectedPlace}
               - Duration: ${selectedDuration}
               If the user's input is in Thai, respond in Thai. If the user's input is in English, respond in English. Provide your response in bullet points for easy readability, rather than in paragraphs.`,
           }),
@@ -66,21 +74,14 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
             { text: data.response, sender: 'assistant' },
           ]);
         } else {
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { text: data.error, sender: 'assistant' },
-          ]);
+          setError(intl.formatMessage({ id: 'errorMessage' }));
         }
       } catch (error) {
         console.error('Error:', error);
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            text: 'An error occurred. Please try again later.',
-            sender: 'assistant',
-          },
-        ]);
+        setError(intl.formatMessage({ id: 'errorMessage' }));
       }
+
+      setIsLoading(false);
     }
   };
 
@@ -91,74 +92,91 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
     }
   };
 
+  const handleClearChat = () => {
+    setMessages([]);
+  };
+
   return (
     <Paper shadow="sm" p="md" style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <LoadingOverlay visible={isLoading} />
       <Title order={3} mb="md">
-        Thailand Trip Planner
+        <FormattedMessage id="thailandTripPlanner" />
       </Title>
       <Modal
         opened={showInstructions}
         onClose={() => setShowInstructions(false)}
-        title="How to Use"
+        title={<FormattedMessage id="howToUse" />}
         centered
       >
         <Text size="sm">
-          1. Select your budget, desired province, and duration for the trip using the dropdown
-          menus.
+          <FormattedMessage id="instruction1" />
         </Text>
         <Text size="sm" mt="sm">
-          2. Type your message or query related to trip planning in the input field at the bottom.
+          <FormattedMessage id="instruction2" />
+          <ul style={{ marginTop: '8px', marginLeft: '16px', listStyle: 'none' }}>
+            <li>
+              <FormattedMessage id="exampleQuery1" />
+            </li>
+            <li>
+              <FormattedMessage id="exampleQuery2" />
+            </li>
+            <li>
+              <FormattedMessage id="exampleQuery3" />
+            </li>
+          </ul>
         </Text>
         <Text size="sm" mt="sm">
-          3. Press Enter or click the send icon to submit your message.
+          <FormattedMessage id="instruction3" />
         </Text>
         <Text size="sm" mt="sm">
-          4. The assistant will provide a response with trip suggestions based on your inputs.
+          <FormattedMessage id="instruction4" />
         </Text>
         <Text size="sm" mt="sm">
-          5. You can continue the conversation by typing additional messages or modifying your
-          selections.
+          <FormattedMessage id="instruction5" />
         </Text>
       </Modal>
       <Stack>
         <Button variant="outline" onClick={() => setShowInstructions(true)}>
-          Show Instructions
+          <FormattedMessage id="showInstructions" />
         </Button>
         <Select
-          label="Budget (THB)"
-          placeholder="เลือกงบประมาณ"
+          label={<FormattedMessage id="budget" />}
+          placeholder={<FormattedMessage id="selectBudget" />}
           value={selectedBudget}
           onChange={setSelectedBudget}
           data={[
-            { value: '1000', label: '1,000 บาท' },
-            { value: '2000', label: '2,000 บาท' },
-            { value: '5000', label: '5,000 บาท' },
-            { value: '10000', label: '10,000 บาท' },
+            { value: '1000', label: '1,000 THB' },
+            { value: '2000', label: '2,000 THB' },
+            { value: '5000', label: '5,000 THB' },
+            { value: '10000', label: '10,000 THB' },
           ]}
+          required
         />
 
         <Select
-          label="Places Visited by Celebrity"
-          placeholder="Select a place"
+          label={<FormattedMessage id="placesVisitedByCelebrity" />}
+          placeholder={<FormattedMessage id="selectPlace" />}
           value={selectedPlace}
           onChange={setSelectedPlace}
           data={visitedPlaces.map((place) => ({ value: place, label: place }))}
+          required
         />
 
         <Select
-          label="Duration"
-          placeholder="เลือกระยะเวลาการท่องเที่ยว"
+          label={<FormattedMessage id="duration" />}
+          placeholder={<FormattedMessage id="selectDuration" />}
           value={selectedDuration}
           onChange={setSelectedDuration}
           data={[
-            { value: '1-day', label: '1 วัน' },
-            { value: '2-days-1-night', label: '2 วัน 1 คืน' },
-            { value: '3-days-2-nights', label: '3 วัน 2 คืน' },
-            { value: '4-days-3-nights', label: '4 วัน 3 คืน' },
-            { value: '5-days-4-nights', label: '5 วัน 4 คืน' },
-            { value: '6-days-5-nights', label: '6 วัน 5 คืน' },
-            { value: '7-days-6-nights', label: '7 วัน 6 คืน' },
+            { value: '1-day', label: '1 day' },
+            { value: '2-days-1-night', label: '2 days 1 night' },
+            { value: '3-days-2-nights', label: '3 days 2 nights' },
+            { value: '4-days-3-nights', label: '4 days 3 nights' },
+            { value: '5-days-4-nights', label: '5 days 4 nights' },
+            { value: '6-days-5-nights', label: '6 days 5 nights' },
+            { value: '7-days-6-nights', label: '7 days 6 nights' },
           ]}
+          required
         />
       </Stack>
       <Box
@@ -199,14 +217,28 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
         ))}
       </Box>
 
+      {error && (
+        <Alert
+          icon={<IconAlertCircle size={16} />}
+          title={<FormattedMessage id="error" />}
+          color="red"
+          mb="sm"
+        >
+          {error}
+        </Alert>
+      )}
+
       <Box style={{ position: 'relative', bottom: 0, left: 0, right: 0 }}>
         <TextInput
-          placeholder="พิมข้อความวางแผนการเดินทางของคุณที่นี่.."
+          placeholder={<FormattedMessage id="typeTripPlan" />}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
           rightSection={<IconSend onClick={handleSendMessage} />}
         />
+        <Button variant="subtle" onClick={handleClearChat} mt="sm">
+          <FormattedMessage id="clearChat" />
+        </Button>
       </Box>
     </Paper>
   );

@@ -101,6 +101,21 @@ const getCelebrityInfo = async (person_id: string) => {
   return data.data;
 };
 
+const getPlaceDetailFromPlaceId = async (placeId: string) => {
+  const response = await axios.get(
+    `https://tatapi.tourismthailand.org/tatapi/v5/attraction/${placeId}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization:
+          'Bearer Gb6UecYN9hyd8JhU6Fs1wUl4mpJaY6Nb6)O)CLN)deKcdMmHpoaDMyH0Bj5ychzyHQSPcb6p5BDAfr4b9WowEa0=====2',
+        'Accept-Language': 'th',
+      },
+    }
+  );
+  return response.data.result;
+};
+
 /**
  * Fetches nearby places based on a given location using the Google Places API.
  * @param location - The location to search for nearby places.
@@ -145,14 +160,39 @@ const fetchNearbyPlaces = async (location) => {
 const getPlaceDetails = async (places: string[]) => {
   try {
     const promises = places.map(async (place) => {
-      const response = await axios.get(`/api/places2?query=${encodeURIComponent(place)}`);
-      return response.data.data.results;
+      try {
+        const response = await axios.get(
+          'https://tatapi.tourismthailand.org/tatapi/v5/places/search',
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization:
+                'Bearer Gb6UecYN9hyd8JhU6Fs1wUl4mpJaY6Nb6)O)CLN)deKcdMmHpoaDMyH0Bj5ychzyHQSPcb6p5BDAfr4b9WowEa0=====2',
+              'Accept-Language': 'th',
+            },
+            params: {
+              keyword: place,
+            },
+          }
+        );
+        return response.data.result.filter((result) => result.place_name === place);
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          return null;
+        }
+        throw error;
+      }
     });
-    const results = await Promise.all(promises);
-    const flattenedResults = results.flat();
+
+    const results = await Promise.allSettled(promises);
+    const fulfilledResults = results
+      .filter((result) => result.status === 'fulfilled')
+      .map((result) => result.value)
+      .filter((result) => result !== null);
+
+    const flattenedResults = fulfilledResults.flat();
     return { places: flattenedResults };
   } catch (error) {
-    console.error(error);
     return { places: [] };
   }
 };
@@ -163,9 +203,7 @@ export default function Page() {
 
   const { celebId } = useParams();
 
-  const { data: places } = useSearchPlaces({ geolocation: '13.7563,100.5018', keyword: 'Bangkok' });
-
-  console.log(places);
+  // const { data: places } = useSearchPlaces({ geolocation: '13.7563,100.5018', keyword: 'Bangkok' });
 
   const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
 
@@ -192,16 +230,26 @@ export default function Page() {
     refetchOnWindowFocus: false,
   });
 
-  // const { data: places } = useQuery(
-  //   ['places', celebrity?.placeVisited],
-  //   () => getPlaceDetails(celebrity?.placeVisited),
-  //   {
-  //     refetchOnWindowFocus: false,
-  //     initialData: { places: [] },
-  //   }
-  // );
+  const { data: places } = useQuery(
+    ['places', celebrity?.placeVisited],
+    () => getPlaceDetails(celebrity?.placeVisited),
+    {
+      refetchOnWindowFocus: false,
+      initialData: { places: [] },
+    }
+  );
 
-  // console.log(places);
+  const { data: placeDetails } = useQuery(
+    ['placeDetails', selectedPlace],
+    () => getPlaceDetailFromPlaceId('P03013233'),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  console.log(placeDetails);
+
+  console.log(places);
 
   const { data: nearbyPlaces } = useQuery(
     ['nearbyPlaces', places?.places],
@@ -359,42 +407,71 @@ export default function Page() {
               </Stack>
             </TabsPanel>
             <TabsPanel value="visited-places">
-              <div
-                style={{
-                  minWidth: '100%',
-                  height: '400px',
+              <Map
+                style={{ minWidth: '100%', height: '400px' }}
+                initialViewState={{
+                  latitude: currentLocation.lat,
+                  longitude: currentLocation.lng,
+                  zoom: 10,
                 }}
-              >
-                <Map
-                  style={{ minWidth: '100%', height: '400px' }}
-                  initialViewState={{
-                    latitude: currentLocation.lat,
-                    longitude: currentLocation.lng,
-                    zoom: 10,
-                  }}
-                  mapStyle="mapbox://styles/mapbox/streets-v9"
-                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-                />
-              </div>
+                mapStyle="mapbox://styles/mapbox/streets-v9"
+                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
+              />
+              {places ? (
+                <Stack>
+                  <Divider />
+                  <Stack>
+                    <Title order={3}>Visited Places</Title>
+                    <Grid>
+                      {places.places.map((place) => (
+                        <Grid.Col key={place.place_id}>
+                          <Stack>
+                            <Image src={place?.thumbnail_url} alt={place.place_name} />
+                            {placeDetails.hit_score ? (
+                              <Text>ระดับความฮิต: {placeDetails?.hit_score}</Text>
+                            ) : null}
+
+                            <Text>วิธีการเดินทาง: {placeDetails?.how_to_travel}</Text>
+                            <Text>{placeDetails?.place_information?.detail}</Text>
+                            <Text>{place?.place_address}</Text>
+                          </Stack>
+                        </Grid.Col>
+                      ))}
+                    </Grid>
+                  </Stack>
+                </Stack>
+              ) : (
+                <Stack>
+                  <Divider />
+                  <Stack>
+                    <Title order={3}>Visited Places</Title>
+                    <Grid>
+                      {Array(3)
+                        .fill(0)
+                        .map((_, index) => (
+                          <Grid.Col key={index}>
+                            <Stack>
+                              <Skeleton height={20} />
+                              <Skeleton height={20} />
+                            </Stack>
+                          </Grid.Col>
+                        ))}
+                    </Grid>
+                  </Stack>
+                </Stack>
+              )}
             </TabsPanel>
             <TabsPanel value="nearby">
-              <div
-                style={{
-                  width: '100%',
-                  height: '400px',
+              <Map
+                style={{ width: '100%', height: '100%' }}
+                initialViewState={{
+                  latitude: currentLocation.lat,
+                  longitude: currentLocation.lng,
+                  zoom: 10,
                 }}
-              >
-                <Map
-                  style={{ width: '100%', height: '100%' }}
-                  initialViewState={{
-                    latitude: currentLocation.lat,
-                    longitude: currentLocation.lng,
-                    zoom: 10,
-                  }}
-                  mapStyle="mapbox://styles/mapbox/streets-v9"
-                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-                />
-              </div>
+                mapStyle="mapbox://styles/mapbox/streets-v9"
+                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
+              />
             </TabsPanel>
             <TabsPanel value="chatgpt-planner">
               <ChatInterface visitedPlaces={[]} />
