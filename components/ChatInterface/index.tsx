@@ -14,7 +14,11 @@ import {
 import { IconSend } from '@tabler/icons-react';
 import ReactMarkdown from 'react-markdown';
 
-const ChatInterface = () => {
+interface ChatInterfaceProps {
+  visitedPlaces: any[];
+}
+
+const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const chatContainerRef = useRef(null);
@@ -22,6 +26,7 @@ const ChatInterface = () => {
   const [selectedProvince, setSelectedProvince] = useState('');
   const [selectedDuration, setSelectedDuration] = useState('');
   const [showInstructions, setShowInstructions] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState('');
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -133,89 +138,11 @@ const ChatInterface = () => {
         />
 
         <Select
-          label="Province"
-          placeholder="เลือกจังหวัดที่ต้องการไปท่องเที่ยว"
-          value={selectedProvince}
-          onChange={setSelectedProvince}
-          data={[
-            { value: 'bangkok', label: 'Bangkok' },
-            { value: 'amnatCharoen', label: 'Amnat Charoen' },
-            { value: 'angThong', label: 'Ang Thong' },
-            { value: 'buengKan', label: 'Bueng Kan' },
-            { value: 'buriram', label: 'Buriram' },
-            { value: 'chachoengsao', label: 'Chachoengsao' },
-            { value: 'chainat', label: 'Chainat' },
-            { value: 'chaiyaphum', label: 'Chaiyaphum' },
-            { value: 'chanthaburi', label: 'Chanthaburi' },
-            { value: 'chiangMai', label: 'Chiang Mai' },
-            { value: 'chiangRai', label: 'Chiang Rai' },
-            { value: 'chonburi', label: 'Chonburi' },
-            { value: 'chumphon', label: 'Chumphon' },
-            { value: 'kalasin', label: 'Kalasin' },
-            { value: 'kamphaengPhet', label: 'Kamphaeng Phet' },
-            { value: 'kanchanaburi', label: 'Kanchanaburi' },
-            { value: 'khonKaen', label: 'Khon Kaen' },
-            { value: 'krabi', label: 'Krabi' },
-            { value: 'lampang', label: 'Lampang' },
-            { value: 'lamphun', label: 'Lamphun' },
-            { value: 'loei', label: 'Loei' },
-            { value: 'lopburi', label: 'Lopburi' },
-            { value: 'mae Hong Son', label: 'Mae Hong Son' },
-            { value: 'maha Sarakham', label: 'Maha Sarakham' },
-            { value: 'mukdahan', label: 'Mukdahan' },
-            { value: 'nakhonNayok', label: 'Nakhon Nayok' },
-            { value: 'nakhonPathom', label: 'Nakhon Pathom' },
-            { value: 'nakhonPhanom', label: 'Nakhon Phanom' },
-            { value: 'nakhonRatchasima', label: 'Nakhon Ratchasima' },
-            { value: 'nakhonSawan', label: 'Nakhon Sawan' },
-            { value: 'nakhonSiThammarat', label: 'Nakhon Si Thammarat' },
-            { value: 'nan', label: 'Nan' },
-            { value: 'narathiwat', label: 'Narathiwat' },
-            { value: 'nongBuaLamphu', label: 'Nong Bua Lamphu' },
-            { value: 'nongKhai', label: 'Nong Khai' },
-            { value: 'nonthaburi', label: 'Nonthaburi' },
-            { value: 'pathumThani', label: 'Pathum Thani' },
-            { value: 'pattani', label: 'Pattani' },
-            { value: 'phangNga', label: 'Phang Nga' },
-            { value: 'phatthalung', label: 'Phatthalung' },
-            { value: 'phayao', label: 'Phayao' },
-            { value: 'phetchabun', label: 'Phetchabun' },
-            { value: 'phetchaburi', label: 'Phetchaburi' },
-            { value: 'phichit', label: 'Phichit' },
-            { value: 'phitsanulok', label: 'Phitsanulok' },
-            { value: 'phra Nakhon Si Ayutthaya', label: 'Phra Nakhon Si Ayutthaya' },
-            { value: 'phrae', label: 'Phrae' },
-            { value: 'phuket', label: 'Phuket' },
-            { value: 'prachinBuri', label: 'Prachin Buri' },
-            { value: 'prachuapKhiriKhan', label: 'Prachuap Khiri Khan' },
-            { value: 'ranong', label: 'Ranong' },
-            { value: 'ratchaburi', label: 'Ratchaburi' },
-            { value: 'rayong', label: 'Rayong' },
-            { value: 'roiEt', label: 'Roi Et' },
-            { value: 'saKaeo', label: 'Sa Kaeo' },
-            { value: 'sakonNakhon', label: 'Sakon Nakhon' },
-            { value: 'samutPrakan', label: 'Samut Prakan' },
-            { value: 'samutSakhon', label: 'Samut Sakhon' },
-            { value: 'samutSongkhram', label: 'Samut Songkhram' },
-            { value: 'saraburi', label: 'Saraburi' },
-            { value: 'satun', label: 'Satun' },
-            { value: 'singBuri', label: 'Sing Buri' },
-            { value: 'siSaKet', label: 'Si Sa Ket' },
-            { value: 'songkhla', label: 'Songkhla' },
-            { value: 'sukhothai', label: 'Sukhothai' },
-            { value: 'suphanburi', label: 'Suphanburi' },
-            { value: 'suratThani', label: 'Surat Thani' },
-            { value: 'surin', label: 'Surin' },
-            { value: 'tak', label: 'Tak' },
-            { value: 'trang', label: 'Trang' },
-            { value: 'trat', label: 'Trat' },
-            { value: 'ubonRatchathani', label: 'Ubon Ratchathani' },
-            { value: 'udonThani', label: 'Udon Thani' },
-            { value: 'uthaithani', label: 'Uthai Thani' },
-            { value: 'uttaradit', label: 'Uttaradit' },
-            { value: 'yala', label: 'Yala' },
-            { value: 'yasothon', label: 'Yasothon' },
-          ]}
+          label="Places Visited by Celebrity"
+          placeholder="Select a place"
+          value={selectedPlace}
+          onChange={setSelectedPlace}
+          data={visitedPlaces.map((place) => ({ value: place, label: place }))}
         />
 
         <Select

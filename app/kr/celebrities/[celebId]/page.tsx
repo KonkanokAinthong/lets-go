@@ -145,7 +145,7 @@ const fetchNearbyPlaces = async (location) => {
 const getPlaceDetails = async (places: string[]) => {
   try {
     const promises = places.map(async (place) => {
-      const response = await axios.get(`/api/places?query=${encodeURIComponent(place)}`);
+      const response = await axios.get(`/api/places2?query=${encodeURIComponent(place)}`);
       return response.data.data.results;
     });
     const results = await Promise.all(promises);
@@ -162,6 +162,10 @@ export default function Page() {
   const navigate = useRouter();
 
   const { celebId } = useParams();
+
+  const { data: places } = useSearchPlaces({ geolocation: '13.7563,100.5018', keyword: 'Bangkok' });
+
+  console.log(places);
 
   const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
 
@@ -188,14 +192,16 @@ export default function Page() {
     refetchOnWindowFocus: false,
   });
 
-  const { data: places } = useQuery(
-    ['places', celebrity?.placeVisited],
-    () => getPlaceDetails(celebrity?.placeVisited),
-    {
-      refetchOnWindowFocus: false,
-      initialData: { places: [] },
-    }
-  );
+  // const { data: places } = useQuery(
+  //   ['places', celebrity?.placeVisited],
+  //   () => getPlaceDetails(celebrity?.placeVisited),
+  //   {
+  //     refetchOnWindowFocus: false,
+  //     initialData: { places: [] },
+  //   }
+  // );
+
+  // console.log(places);
 
   const { data: nearbyPlaces } = useQuery(
     ['nearbyPlaces', places?.places],
@@ -289,7 +295,7 @@ export default function Page() {
                 <TabsTab value="info">ประวัติ</TabsTab>
                 <TabsTab value="visited-places">การท่องเที่ยว</TabsTab>
                 <TabsTab value="nearby">สถานที่ท่องเที่ยวใกล้เคียง</TabsTab>
-                <TabsTab value="chatgpt-planner">Trip Planner</TabsTab>
+                <TabsTab value="chatgpt-planner">วางแผนการเดินทาง</TabsTab>
               </TabsList>
             </nav>
             <TabsPanel value="info">
@@ -355,23 +361,22 @@ export default function Page() {
             <TabsPanel value="visited-places">
               <div
                 style={{
-                  width: '100%',
+                  minWidth: '100%',
                   height: '400px',
                 }}
               >
                 <Map
-                  style={{ width: '100%', height: '400px' }}
+                  style={{ minWidth: '100%', height: '400px' }}
                   initialViewState={{
                     latitude: currentLocation.lat,
                     longitude: currentLocation.lng,
-                    zoom: 14,
+                    zoom: 10,
                   }}
                   mapStyle="mapbox://styles/mapbox/streets-v9"
                   mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
                 />
               </div>
             </TabsPanel>
-
             <TabsPanel value="nearby">
               <div
                 style={{
@@ -380,11 +385,11 @@ export default function Page() {
                 }}
               >
                 <Map
-                  style={{ width: '100%', height: '400px' }}
+                  style={{ width: '100%', height: '100%' }}
                   initialViewState={{
                     latitude: currentLocation.lat,
                     longitude: currentLocation.lng,
-                    zoom: 14,
+                    zoom: 10,
                   }}
                   mapStyle="mapbox://styles/mapbox/streets-v9"
                   mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
@@ -392,7 +397,7 @@ export default function Page() {
               </div>
             </TabsPanel>
             <TabsPanel value="chatgpt-planner">
-              <ChatInterface />
+              <ChatInterface visitedPlaces={[]} />
             </TabsPanel>
           </Tabs>
         </main>

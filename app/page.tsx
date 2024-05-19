@@ -55,31 +55,39 @@ const QUERY_KEYS = {
 const getPlaceDetails = async (places: string[]) => {
   try {
     const promises = places.map(async (place) => {
-      const response = await axios.get(
-        'https://tatapi.tourismthailand.org/tatapi/v5/places/search',
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization:
-              'Bearer Gb6UecYN9hyd8JhU6Fs1wUl4mpJaY6Nb6)O)CLN)deKcdMmHpoaDMyH0Bj5ychzyHQSPcb6p5BDAfr4b9WowEa0=====2',
-            'Accept-Language': 'th',
-          },
-          params: {
-            keyword: 'อาหาร',
-            geolocation: '13.6904831,100.5226014',
-          },
+      try {
+        const response = await axios.get(
+          'https://tatapi.tourismthailand.org/tatapi/v5/places/search',
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization:
+                'Bearer Gb6UecYN9hyd8JhU6Fs1wUl4mpJaY6Nb6)O)CLN)deKcdMmHpoaDMyH0Bj5ychzyHQSPcb6p5BDAfr4b9WowEa0=====2',
+              'Accept-Language': 'th',
+            },
+            params: {
+              keyword: place,
+            },
+          }
+        );
+        return response.data.result.filter((result) => result.place_name === place);
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          return null;
         }
-      );
-
-      return response.data.result;
+        throw error;
+      }
     });
 
-    const results = await Promise.all(promises);
-    console.log(results);
-    const flattenedResults = results.flat();
+    const results = await Promise.allSettled(promises);
+    const fulfilledResults = results
+      .filter((result) => result.status === 'fulfilled')
+      .map((result) => result.value)
+      .filter((result) => result !== null);
+
+    const flattenedResults = fulfilledResults.flat();
     return { places: flattenedResults };
   } catch (error) {
-    console.error(error);
     return { places: [] };
   }
 };
@@ -252,13 +260,13 @@ const SuperstarCheckInThailand = () => {
     }
   );
 
+  console.log(placeDetails);
+
   const bangkokLocation = { lat: 13.7563, lng: 100.5018 };
 
   const imageTH = getRandomCeleb('th');
   const imageCN = getRandomCeleb('cn');
   const imageKR = getRandomCeleb('kr');
-
-  console.log(placeDetails);
 
   if (isLoading_thCelebrities || isLoading_krCelebrities || isLoading_cnCelebrities) {
     return (
@@ -289,57 +297,17 @@ const SuperstarCheckInThailand = () => {
                 {placeDetails.places.map((place, index) => (
                   <Marker
                     key={index}
-                    longitude={place?.geometry?.location?.lng}
-                    latitude={place?.geometry?.location?.lat}
-                  >
-                    <div style={{ position: 'relative' }}>
-                      <img
-                        src={nearestCeleb?.[index]?.image}
-                        alt="Celebrity"
-                        style={{
-                          width: '40px',
-                          height: '40px',
-                          borderRadius: '50%',
-                          border: '2px solid white',
-                          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-                        }}
-                      />
-                      <div
-                        style={{
-                          position: 'absolute',
-                          bottom: '-8px',
-                          left: '50%',
-                          transform: 'translateX(-50%)',
-                          width: '0',
-                          height: '0',
-                          borderLeft: '8px solid transparent',
-                          borderRight: '8px solid transparent',
-                          borderTop: '8px solid white',
-                        }}
-                      />
-                    </div>
-                  </Marker>
+                    longitude={place?.longitude}
+                    latitude={place?.latitude}
+                    color="rgba(255, 106, 26, 1)"
+                    onClick={() => {
+                      const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${place?.longitude},${place?.latitude}`;
+                      window.open(googleMapsUrl, '_blank');
+                    }}
+                  />
                 ))}
                 {currentLocation && (
-                  <Marker longitude={currentLocation.lng} latitude={currentLocation.lat}>
-                    <svg
-                      height={20}
-                      viewBox="0 0 24 24"
-                      style={{
-                        cursor: 'pointer',
-                        fill: '#007bff',
-                        stroke: 'white',
-                        strokeWidth: '2px',
-                        transform: `translate(${-20 / 2}px,${-20}px)`,
-                      }}
-                    >
-                      <path
-                        d={`M20.2,15.7L20.2,15.7c1.1-1.6,1.8-3.6,1.8-5.7c0-5.6-4.5-10-10-10S2,4.5,2,10c0,2,0.6,3.9,1.6,5.4c0,0.1,0.1,0.2,0.2,0.3
-    c0,0,0.1,0.1,0.1,0.2c0.2,0.3,0.4,0.6,0.7,0.9c2.6,3.1,7.4,7.6,7.4,7.6s4.8-4.5,7.4-7.5c0.2-0.3,0.5-0.6,0.7-0.9
-    C20.1,15.8,20.2,15.8,20.2,15.7z`}
-                      />
-                    </svg>
-                  </Marker>
+                  <Marker longitude={currentLocation.lng} latitude={currentLocation.lat} />
                 )}
               </Map>
             ) : (
