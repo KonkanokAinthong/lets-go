@@ -301,9 +301,13 @@ const SuperstarCheckInThailand = () => {
                     latitude={place?.latitude}
                     color="rgba(255, 106, 26, 1)"
                     onClick={() => {
-                      const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${place?.longitude},${place?.latitude}`;
+                      const destination = `${place?.latitude},${place?.longitude}`;
+                      const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+                        destination
+                      )}`;
                       window.open(googleMapsUrl, '_blank');
                     }}
+                    style={{ cursor: 'pointer' }}
                   />
                 ))}
                 {currentLocation && (
