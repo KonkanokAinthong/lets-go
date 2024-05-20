@@ -92,12 +92,20 @@ const searchCelebrity = async (name: string) => {
  * @param person_id - The ID of the celebrity to retrieve information for.
  * @returns The detailed celebrity information from the TMDb API.
  */
-const getCelebrityInfo = async (person_id: string) => {
-  const data = await axios.get(`https://api.themoviedb.org/3/person/${person_id}`, {
-    headers: {
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_TOKEN}`,
-    },
-  });
+const getCelebrityInfo = async (
+  person_id: string,
+  options: {
+    language?: string;
+  }
+) => {
+  const data = await axios.get(
+    `https://api.themoviedb.org/3/person/${person_id}?language=${options.language}`,
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_TOKEN}`,
+      },
+    }
+  );
   return data.data;
 };
 
@@ -225,10 +233,17 @@ export default function Page() {
     }
   );
 
-  const { data: info } = useQuery(['info', celebInfo?.id], () => getCelebrityInfo(celebInfo?.id), {
-    enabled: !!celebInfo?.id,
-    refetchOnWindowFocus: false,
-  });
+  const { data: info } = useQuery(
+    ['info', celebInfo?.id],
+    () =>
+      getCelebrityInfo(celebInfo?.id, {
+        language: document.documentElement.lang,
+      }),
+    {
+      enabled: !!celebInfo?.id,
+      refetchOnWindowFocus: false,
+    }
+  );
 
   const { data: places } = useQuery(
     ['places', celebrity?.placeVisited],
@@ -427,13 +442,43 @@ export default function Page() {
                         <Grid.Col key={place.place_id}>
                           <Stack>
                             <Image src={place?.thumbnail_url} alt={place.place_name} />
-                            {placeDetails.hit_score ? (
+                            {/* {placeDetails.hit_score ? (
                               <Text>ระดับความฮิต: {placeDetails?.hit_score}</Text>
                             ) : null}
 
-                            <Text>วิธีการเดินทาง: {placeDetails?.how_to_travel}</Text>
-                            <Text>{placeDetails?.place_information?.detail}</Text>
-                            <Text>{place?.place_address}</Text>
+                            <Text>วิธีการเดินทาง: {placeDetails?.how_to_travel}</Text> */}
+                            <Stack>
+                              <Title order={2}>ประวัติและความเป็นมา</Title>
+                              <Text>{placeDetails?.place_information?.detail}</Text>
+                            </Stack>
+                            <Stack>
+                              <Title order={2}>ที่ตั้ง</Title>
+                              <Text>
+                                {place?.location.address} {place?.location.sub_district}{' '}
+                                {place?.location.district} {place?.location.province}{' '}
+                                {place?.location.postcode}
+                              </Text>
+                            </Stack>
+                            <Stack>
+                              <Title order={2}>เวลาทำการ</Title>
+                              <Text>
+                                {placeDetails?.place_information?.open_now ? 'เปิดอยู่' : 'ปิดแล้ว'}
+                              </Text>
+                            </Stack>
+                            <Stack>
+                              <Title order={2}>เบอร์โทร</Title>
+                              <Text>{placeDetails?.contact?.phones[0]}</Text>
+                            </Stack>
+                            <Stack>
+                              <Title order={2}>กิจกรรมแนะนำ</Title>
+                              <Stack>
+                                {placeDetails?.place_information?.activities.map((activity) => (
+                                  <Stack key={activity.id}>
+                                    <Text>{activity}</Text>
+                                  </Stack>
+                                ))}
+                              </Stack>
+                            </Stack>
                           </Stack>
                         </Grid.Col>
                       ))}

@@ -299,7 +299,6 @@ const SuperstarCheckInThailand = () => {
                     key={index}
                     longitude={place?.longitude}
                     latitude={place?.latitude}
-                    color="rgba(255, 106, 26, 1)"
                     onClick={() => {
                       const destination = `${place?.latitude},${place?.longitude}`;
                       const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
@@ -308,7 +307,57 @@ const SuperstarCheckInThailand = () => {
                       window.open(googleMapsUrl, '_blank');
                     }}
                     style={{ cursor: 'pointer' }}
-                  />
+                  >
+                    <div
+                      style={{
+                        position: 'relative',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '50%',
+                          left: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          width: '64px',
+                          height: '64px',
+                          borderRadius: '50%',
+                          backgroundColor: 'white',
+                          border: '6px solid rgba(255, 106, 26, 1)',
+                          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          zIndex: -1,
+                        }}
+                      >
+                        <img
+                          src={CELEB_LISTS[index].image}
+                          alt="Celebrity Avatar"
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                          }}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          // width: 0,
+                          // height: 0,
+                          borderLeft: '20px solid transparent',
+                          borderRight: '20px solid transparent',
+                          borderTop: '30px solid rgba(255, 106, 26, 1)',
+                          position: 'absolute',
+                          top: '24px',
+                        }}
+                      />
+                    </div>
+                  </Marker>
                 ))}
                 {currentLocation && (
                   <Marker longitude={currentLocation.lng} latitude={currentLocation.lat} />

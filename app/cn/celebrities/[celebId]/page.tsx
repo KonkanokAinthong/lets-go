@@ -340,7 +340,7 @@ export default function Page() {
             </div>
           </TabsPanel>
           <TabsPanel value="chatgpt-planner">
-            <ChatInterface />
+            <ChatInterface visitedPlaces={[]} />
           </TabsPanel>
         </Tabs>
       </Stack>
