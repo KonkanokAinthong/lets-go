@@ -351,7 +351,7 @@ const SuperstarCheckInThailand = () => {
                           // height: 0,
                           borderLeft: '20px solid transparent',
                           borderRight: '20px solid transparent',
-                          borderTop: '30px solid rgba(255, 106, 26, 1)',
+                          borderTop: '20px solid rgba(255, 106, 26, 1)',
                           position: 'absolute',
                           top: '24px',
                         }}
