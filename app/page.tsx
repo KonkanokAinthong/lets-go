@@ -52,7 +52,7 @@ const QUERY_KEYS = {
   trendingChineseCelebrities: 'trendingChineseCelebrities',
 };
 
-const getPlaceDetails = async (places: string[]) => {
+const getPlaceDetails = async (places: any) => {
   try {
     const promises = places.map(async (place) => {
       try {
@@ -66,11 +66,11 @@ const getPlaceDetails = async (places: string[]) => {
               'Accept-Language': 'th',
             },
             params: {
-              keyword: place,
+              keyword: place.name,
             },
           }
         );
-        return response.data.result.filter((result) => result.place_name === place);
+        return response.data.result[response.data.result.length - 1];
       } catch (error) {
         if (error.response && error.response.status === 404) {
           return null;
@@ -248,7 +248,7 @@ const SuperstarCheckInThailand = () => {
     return celebrities[randomIndex];
   };
 
-  const { data: placeDetails } = useQuery(
+  const { data: placeDetails, isLoading: isLoadingPlaceDetails } = useQuery(
     ['placeDetails', CELEB_LISTS],
     () => {
       const allPlaces = CELEB_LISTS?.flatMap((celeb) => celeb.placeVisited) || [];
@@ -268,7 +268,14 @@ const SuperstarCheckInThailand = () => {
   const imageCN = getRandomCeleb('cn');
   const imageKR = getRandomCeleb('kr');
 
-  if (isLoading_thCelebrities || isLoading_krCelebrities || isLoading_cnCelebrities) {
+  console.log(imageCN);
+
+  if (
+    isLoading_thCelebrities ||
+    isLoading_krCelebrities ||
+    isLoading_cnCelebrities ||
+    isLoadingPlaceDetails
+  ) {
     return (
       <div
         style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}
@@ -335,8 +342,8 @@ const SuperstarCheckInThailand = () => {
                         }}
                       >
                         <img
-                          src={CELEB_LISTS[index].image}
-                          alt="Celebrity Avatar"
+                          src={CELEB_LISTS[index]?.image}
+                          alt={CELEB_LISTS[index]?.name}
                           style={{
                             width: '100%',
                             height: '100%',
@@ -345,6 +352,7 @@ const SuperstarCheckInThailand = () => {
                           }}
                         />
                       </div>
+
                       <div
                         style={{
                           // width: 0,

@@ -159,7 +159,7 @@ export default function Page() {
 
   const { data: nearbyPlaces } = useQuery(
     ['nearbyPlaces', places?.places],
-    () => fetchNearbyPlaces(places?.places[0].geometry.location),
+    () => fetchNearbyPlaces(places?.places?.[0]?.geometry?.location),
     {
       enabled: !!places,
     }

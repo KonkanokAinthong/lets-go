@@ -23,7 +23,7 @@ import {
 
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { Map } from 'react-map-gl';
@@ -165,7 +165,7 @@ const fetchNearbyPlaces = async (location) => {
  * @param places - An array of place names to retrieve details for.
  * @returns An object containing the detailed place information.
  */
-const getPlaceDetails = async (places: string[]) => {
+const getPlaceDetails = async (places: any) => {
   try {
     const promises = places.map(async (place) => {
       try {
@@ -179,11 +179,12 @@ const getPlaceDetails = async (places: string[]) => {
               'Accept-Language': 'th',
             },
             params: {
-              keyword: place,
+              keyword: place.name,
             },
           }
         );
-        return response.data.result.filter((result) => result.place_name === place);
+
+        return response.data.result[response.data.result.length - 1];
       } catch (error) {
         if (error.response && error.response.status === 404) {
           return null;
@@ -193,6 +194,7 @@ const getPlaceDetails = async (places: string[]) => {
     });
 
     const results = await Promise.allSettled(promises);
+    console.log(results);
     const fulfilledResults = results
       .filter((result) => result.status === 'fulfilled')
       .map((result) => result.value)
@@ -210,6 +212,7 @@ export default function Page() {
   const navigate = useRouter();
 
   const { celebId } = useParams();
+  const mapContainerRef = useRef(null);
 
   // const { data: places } = useSearchPlaces({ geolocation: '13.7563,100.5018', keyword: 'Bangkok' });
 
@@ -251,24 +254,22 @@ export default function Page() {
     {
       refetchOnWindowFocus: false,
       initialData: { places: [] },
+      enabled: !!celebrity?.placeVisited,
     }
   );
 
   const { data: placeDetails } = useQuery(
     ['placeDetails', selectedPlace],
-    () => getPlaceDetailFromPlaceId('P03013233'),
+    () => getPlaceDetailFromPlaceId(selectedPlace?.place_id),
     {
       refetchOnWindowFocus: false,
+      enabled: !!selectedPlace,
     }
   );
 
-  console.log(placeDetails);
-
-  console.log(places);
-
   const { data: nearbyPlaces } = useQuery(
     ['nearbyPlaces', places?.places],
-    () => fetchNearbyPlaces(places?.places[0].geometry.location),
+    () => fetchNearbyPlaces(),
     {
       enabled: !!places,
       refetchOnWindowFocus: false,
@@ -284,6 +285,8 @@ export default function Page() {
 
   const [biography, setBiography] = useState('');
   const [isFetching, setIsFetching] = useState(false);
+
+  console.log(places);
 
   useEffect(() => {
     const fetchBiography = async () => {
@@ -313,6 +316,14 @@ export default function Page() {
       );
     }
   }, []);
+
+  const [mapInstance, setMapInstance] = useState(null);
+
+  useEffect(() => {
+    if (mapInstance) {
+      mapInstance.resize();
+    }
+  }, [mapInstance]);
 
   if (isCelebrityLoading) {
     return <div>Loading...</div>;
@@ -422,16 +433,21 @@ export default function Page() {
               </Stack>
             </TabsPanel>
             <TabsPanel value="visited-places">
-              <Map
-                style={{ minWidth: '100%', height: '400px' }}
-                initialViewState={{
-                  latitude: currentLocation.lat,
-                  longitude: currentLocation.lng,
-                  zoom: 10,
-                }}
-                mapStyle="mapbox://styles/mapbox/streets-v9"
-                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-              />
+              {/* <div>
+                <Map
+                  style={{ width: '100%', height: '400px' }}
+                  initialViewState={{
+                    latitude: currentLocation.lat,
+                    longitude: currentLocation.lng,
+                    zoom: 10,
+                  }}
+                  mapStyle="mapbox://styles/mapbox/streets-v9"
+                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
+                  onLoad={(evt) => {
+                    setMapInstance(evt.target);
+                  }}
+                />
+              </div> */}
               {places ? (
                 <Stack>
                   <Divider />

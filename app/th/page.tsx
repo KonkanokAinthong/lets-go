@@ -10,7 +10,6 @@ import { useQuery } from 'react-query';
 async function getTrendingThaiCelebrities() {
   try {
     const response = await axios.get('/api/trending-celebs?nationality=Thai');
-
     return response.data;
   } catch (error) {
     console.error(error);
@@ -114,7 +113,7 @@ export default function Page() {
           </Stack>
         </section>
 
-        <section>
+        {/* <section>
           <Stack my="xl">
             <Title order={1} mb="xl" ta="center" c="white">
               <FormattedMessage id="recommendedThaiSeries" />
@@ -125,7 +124,7 @@ export default function Page() {
               align="center"
               slidesToScroll="auto"
             >
-              {/* {uniqueSeries?.map((serie: any) => (
+              {uniqueSeries?.map((serie: any) => (
                 <Carousel.Slide key={serie.name}>
                   <Stack>
                     <Image
@@ -137,10 +136,10 @@ export default function Page() {
                     </Title>
                   </Stack>
                 </Carousel.Slide>
-              ))} */}
+              ))}
             </Carousel>
           </Stack>
-        </section>
+        </section> */}
       </Stack>
     </Container>
   );

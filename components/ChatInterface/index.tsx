@@ -135,13 +135,16 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
           <FormattedMessage id="instruction5" />
         </Text>
       </Modal>
-      <Stack>
+      <Stack
+        c="black
+      "
+      >
         <Button variant="outline" onClick={() => setShowInstructions(true)}>
           <FormattedMessage id="showInstructions" />
         </Button>
         <Select
           label={<FormattedMessage id="budget" />}
-          placeholder={<FormattedMessage id="selectBudget" />}
+          placeholder="Select budget"
           value={selectedBudget}
           onChange={setSelectedBudget}
           data={[
@@ -155,16 +158,16 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
 
         <Select
           label={<FormattedMessage id="placesVisitedByCelebrity" />}
-          placeholder={<FormattedMessage id="selectPlace" />}
+          placeholder="Search place"
           value={selectedPlace}
           onChange={setSelectedPlace}
-          data={visitedPlaces.map((place) => ({ value: place, label: place }))}
+          data={visitedPlaces?.map((place) => ({ value: place, label: place }))}
           required
         />
 
         <Select
           label={<FormattedMessage id="duration" />}
-          placeholder={<FormattedMessage id="selectDuration" />}
+          placeholder="Select duration"
           value={selectedDuration}
           onChange={setSelectedDuration}
           data={[
@@ -230,7 +233,7 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
 
       <Box style={{ position: 'relative', bottom: 0, left: 0, right: 0 }}>
         <TextInput
-          placeholder={<FormattedMessage id="typeTripPlan" />}
+          placeholder="Type your message here..."
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={handleKeyPress}
