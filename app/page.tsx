@@ -202,19 +202,19 @@ const SuperstarCheckInThailand = () => {
   const { data: thCelebrities, isLoading: isLoading_thCelebrities } = useQuery(
     QUERY_KEYS.trendingThaiCelebrities,
     () => searchCelebrities(CELEB_LISTS.filter((celeb) => celeb.nationality === 'Thai')),
-    { refetchOnWindowFocus: false, staleTime: Infinity, cacheTime: 24 * 60 * 60 * 1000 }
+    { refetchOnWindowFocus: false }
   );
 
   const { data: krCelebrities, isLoading: isLoading_krCelebrities } = useQuery(
     QUERY_KEYS.trendingKoreanCelebrities,
     () => searchCelebrities(CELEB_LISTS.filter((celeb) => celeb.nationality === 'Korean')),
-    { refetchOnWindowFocus: false, staleTime: Infinity, cacheTime: 24 * 60 * 60 * 1000 }
+    { refetchOnWindowFocus: false }
   );
 
   const { data: cnCelebrities, isLoading: isLoading_cnCelebrities } = useQuery(
     QUERY_KEYS.trendingChineseCelebrities,
     () => searchCelebrities(CELEB_LISTS.filter((celeb) => celeb.nationality === 'Chinese')),
-    { refetchOnWindowFocus: false, staleTime: Infinity, cacheTime: 24 * 60 * 60 * 1000 }
+    { refetchOnWindowFocus: false }
   );
 
   useEffect(() => {
@@ -251,7 +251,7 @@ const SuperstarCheckInThailand = () => {
   const { data: placeDetails, isLoading: isLoadingPlaceDetails } = useQuery(
     ['placeDetails', CELEB_LISTS],
     () => {
-      const allPlaces = CELEB_LISTS?.flatMap((celeb) => celeb.placeVisited) || [];
+      const allPlaces = CELEB_LISTS?.flatMap((celeb) => celeb.placeVisited)?.slice(0, 34) || [];
       return getPlaceDetails(allPlaces);
     },
     {
@@ -267,8 +267,6 @@ const SuperstarCheckInThailand = () => {
   const imageTH = getRandomCeleb('th');
   const imageCN = getRandomCeleb('cn');
   const imageKR = getRandomCeleb('kr');
-
-  console.log(imageCN);
 
   if (
     isLoading_thCelebrities ||

@@ -10,6 +10,7 @@ import { useQuery } from 'react-query';
 async function getTrendingThaiCelebrities() {
   try {
     const response = await axios.get('/api/trending-celebs?nationality=Thai');
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -19,9 +20,11 @@ async function getTrendingThaiCelebrities() {
 
 export default function Page() {
   const { data: celebs, isLoading: isTrendingLoading } = useQuery(
-    'trendingKoreanCelebrities',
+    'getTrendingThaiCelebrities',
     getTrendingThaiCelebrities
   );
+
+  console.log(celebs);
 
   // // Sort by popularity in descending order
   // const sortedByPopularity = celebs?.map((f) => {

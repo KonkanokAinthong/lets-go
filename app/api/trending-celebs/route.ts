@@ -15,19 +15,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // const searchResults = filteredCelebrities.filter((item) =>
-    //   item.name.toLowerCase().includes(search.toLowerCase())
-    // );
-
-    // const formattedResults = searchResults.map((result) => ({
-    //   id: result.id,
-    //   value: result.id,
-    //   label: result.name,
-    //   profile_path: result.image || null,
-    // }));
-
-    console.log('filteredCelebrities:', filteredCelebrities);
-
     return new Response(JSON.stringify(filteredCelebrities), {
       headers: {
         'Content-Type': 'application/json',

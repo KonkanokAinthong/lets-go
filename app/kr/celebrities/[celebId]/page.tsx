@@ -32,7 +32,7 @@ import ChatInterface from '@/components/ChatInterface';
 import { useSearchPlaces } from '@/hooks/useSearchPlaces';
 import { useAttractionDetails } from '@/hooks/useAttractionDetails';
 
-const API_KEY = 'AIzaSyBKRFuroEmi6ocPRQzuBuX4ULAFiYTvTGo';
+const API_KEY = 'AIzaSyCG4FU9FKT8WkwMZtOLxO1cJyYDuJQGnk8';
 
 /**
  * Retrieves celebrity data by ID from the API.
@@ -180,7 +180,7 @@ const getPlaceDetails = async (places: any) => {
               'Accept-Language': 'th',
             },
             params: {
-              keyword: 'กรุงเทพ',
+              keyword: place,
             },
           }
         );
@@ -195,7 +195,7 @@ const getPlaceDetails = async (places: any) => {
     });
 
     const results = await Promise.allSettled(promises);
-    console.log(results);
+
     const fulfilledResults = results
       .filter((result) => result.status === 'fulfilled')
       .map((result) => result.value)
@@ -259,8 +259,6 @@ export default function Page() {
     }
   );
 
-  console.log(places);
-
   const { data: placeDetails } = useQuery(
     ['placeDetails', selectedPlace],
     () => getPlaceDetailFromPlaceId(selectedPlace?.place_id),
@@ -292,8 +290,6 @@ export default function Page() {
 
   const [biography, setBiography] = useState('');
   const [isFetching, setIsFetching] = useState(false);
-
-  console.log(places);
 
   useEffect(() => {
     const fetchBiography = async () => {
@@ -440,18 +436,6 @@ export default function Page() {
               </Stack>
             </TabsPanel>
             <TabsPanel value="visited-places">
-              {/* <Map
-                style={{ width: '400px', height: '400px' }}
-                initialViewState={{
-                  latitude: currentLocation.lat,
-                  longitude: currentLocation.lng,
-                  zoom: 10,
-                }}
-                mapStyle="mapbox://styles/mapbox/streets-v9"
-                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-                reuseMaps
-              /> */}
-
               {places ? (
                 <Stack>
                   <Stack>
@@ -459,46 +443,54 @@ export default function Page() {
                     <Grid>
                       {places.places.map((place) => (
                         <Grid.Col key={place.place_id}>
-                          <Stack>
-                            <Image src={place?.thumbnail_url} alt={place.place_name} />
-                            {/* {placeDetails.hit_score ? (
-                              <Text>ระดับความฮิต: {placeDetails?.hit_score}</Text>
-                            ) : null}
-
-                            <Text>วิธีการเดินทาง: {placeDetails?.how_to_travel}</Text> */}
-                            <Stack>
-                              <Title order={2}>ประวัติและความเป็นมา</Title>
-                              <Text>{placeDetails?.place_information?.detail}</Text>
-                            </Stack>
-                            <Stack>
-                              <Title order={2}>ที่ตั้ง</Title>
-                              <Text>
-                                {place?.location.address} {place?.location.sub_district}{' '}
-                                {place?.location.district} {place?.location.province}{' '}
-                                {place?.location.postcode}
-                              </Text>
-                            </Stack>
-                            <Stack>
-                              <Title order={2}>เวลาทำการ</Title>
-                              <Text>
-                                {placeDetails?.place_information?.open_now ? 'เปิดอยู่' : 'ปิดแล้ว'}
-                              </Text>
-                            </Stack>
-                            <Stack>
-                              <Title order={2}>เบอร์โทร</Title>
-                              <Text>{placeDetails?.contact?.phones[0]}</Text>
-                            </Stack>
-                            <Stack>
-                              <Title order={2}>กิจกรรมแนะนำ</Title>
+                          <Card shadow="sm" p="md">
+                            <Card.Section>
+                              <Image
+                                src={place?.thumbnail_url}
+                                alt={place.place_name}
+                                height={200}
+                              />
+                            </Card.Section>
+                            <Stack mt="md">
+                              <Title order={3}>{place.place_name}</Title>
+                              {/* {placeDetails.hit_score ? (
+                  <Text>ระดับความฮิต: {placeDetails?.hit_score}</Text>
+                ) : null}
+                <Text>วิธีการเดินทาง: {placeDetails?.how_to_travel}</Text> */}
                               <Stack>
-                                {placeDetails?.place_information?.activities.map((activity) => (
-                                  <Stack key={activity.id}>
-                                    <Text>{activity}</Text>
-                                  </Stack>
-                                ))}
+                                <Title order={4}>ประวัติและความเป็นมา</Title>
+                                <Text>{placeDetails?.place_information?.detail}</Text>
+                              </Stack>
+                              <Stack>
+                                <Title order={4}>ที่ตั้ง</Title>
+                                <Text>
+                                  {place?.location.address} {place?.location.sub_district}{' '}
+                                  {place?.location.district} {place?.location.province}{' '}
+                                  {place?.location.postcode}
+                                </Text>
+                              </Stack>
+                              <Stack>
+                                <Title order={4}>เวลาทำการ</Title>
+                                <Text>
+                                  {placeDetails?.place_information?.open_now
+                                    ? 'เปิดอยู่'
+                                    : 'ปิดแล้ว'}
+                                </Text>
+                              </Stack>
+                              <Stack>
+                                <Title order={4}>เบอร์โทร</Title>
+                                <Text>{placeDetails?.contact?.phones[0]}</Text>
+                              </Stack>
+                              <Stack>
+                                <Title order={4}>กิจกรรมแนะนำ</Title>
+                                <Stack>
+                                  {placeDetails?.place_information?.activities.map((activity) => (
+                                    <Text key={activity.id}>{activity}</Text>
+                                  ))}
+                                </Stack>
                               </Stack>
                             </Stack>
-                          </Stack>
+                          </Card>
                         </Grid.Col>
                       ))}
                     </Grid>
@@ -514,10 +506,13 @@ export default function Page() {
                         .fill(0)
                         .map((_, index) => (
                           <Grid.Col key={index}>
-                            <Stack>
-                              <Skeleton height={20} />
-                              <Skeleton height={20} />
-                            </Stack>
+                            <Card shadow="sm" p="md">
+                              <Skeleton height={200} />
+                              <Stack mt="md">
+                                <Skeleton height={20} width="70%" />
+                                <Skeleton height={20} width="50%" />
+                              </Stack>
+                            </Card>
                           </Grid.Col>
                         ))}
                     </Grid>
@@ -528,26 +523,6 @@ export default function Page() {
             <TabsPanel value="nearby">
               {nearbyPlaces && nearbyPlaces.length > 0 ? (
                 <Stack>
-                  {/* <Map
-                    style={{ width: '800px', height: '400px' }}
-                    initialViewState={{
-                      latitude: nearbyPlaces[0].location.latitude,
-                      longitude: nearbyPlaces[0].location.longitude,
-                      zoom: 10,
-                    }}
-                    mapStyle="mapbox://styles/mapbox/streets-v9"
-                    mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-                  >
-                    {nearbyPlaces.map((place) => (
-                      <Marker
-                        key={place.name}
-                        latitude={place.location.latitude}
-                        longitude={place.location.longitude}
-                      >
-                        <div>{place.displayName.text}</div>{' '}
-                      </Marker>
-                    ))}
-                  </Map> */}
                   <Stack>
                     {nearbyPlaces.map((place) => (
                       <Card key={place.name}>
