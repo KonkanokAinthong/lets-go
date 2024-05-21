@@ -5,6 +5,7 @@ import {
   Box,
   Breadcrumbs,
   Button,
+  Card,
   Center,
   Container,
   Divider,
@@ -26,7 +27,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { IconArrowLeft } from '@tabler/icons-react';
-import { Map } from 'react-map-gl';
+import { Map, Marker } from 'react-map-gl';
 import ChatInterface from '@/components/ChatInterface';
 import { useSearchPlaces } from '@/hooks/useSearchPlaces';
 import { useAttractionDetails } from '@/hooks/useAttractionDetails';
@@ -179,7 +180,7 @@ const getPlaceDetails = async (places: any) => {
               'Accept-Language': 'th',
             },
             params: {
-              keyword: place.name,
+              keyword: 'กรุงเทพ',
             },
           }
         );
@@ -250,13 +251,15 @@ export default function Page() {
 
   const { data: places } = useQuery(
     ['places', celebrity?.placeVisited],
-    () => getPlaceDetails(celebrity?.placeVisited),
+    () => getPlaceDetails(celebrity.placeVisited.map((place) => place)),
     {
       refetchOnWindowFocus: false,
       initialData: { places: [] },
       enabled: !!celebrity?.placeVisited,
     }
   );
+
+  console.log(places);
 
   const { data: placeDetails } = useQuery(
     ['placeDetails', selectedPlace],
@@ -269,7 +272,11 @@ export default function Page() {
 
   const { data: nearbyPlaces } = useQuery(
     ['nearbyPlaces', places?.places],
-    () => fetchNearbyPlaces(),
+    () =>
+      fetchNearbyPlaces({
+        lat: currentLocation.lat,
+        lng: currentLocation.lng,
+      }),
     {
       enabled: !!places,
       refetchOnWindowFocus: false,
@@ -433,24 +440,20 @@ export default function Page() {
               </Stack>
             </TabsPanel>
             <TabsPanel value="visited-places">
-              {/* <div>
-                <Map
-                  style={{ width: '100%', height: '400px' }}
-                  initialViewState={{
-                    latitude: currentLocation.lat,
-                    longitude: currentLocation.lng,
-                    zoom: 10,
-                  }}
-                  mapStyle="mapbox://styles/mapbox/streets-v9"
-                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-                  onLoad={(evt) => {
-                    setMapInstance(evt.target);
-                  }}
-                />
-              </div> */}
+              {/* <Map
+                style={{ width: '400px', height: '400px' }}
+                initialViewState={{
+                  latitude: currentLocation.lat,
+                  longitude: currentLocation.lng,
+                  zoom: 10,
+                }}
+                mapStyle="mapbox://styles/mapbox/streets-v9"
+                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
+                reuseMaps
+              /> */}
+
               {places ? (
                 <Stack>
-                  <Divider />
                   <Stack>
                     <Title order={3}>Visited Places</Title>
                     <Grid>
@@ -523,16 +526,54 @@ export default function Page() {
               )}
             </TabsPanel>
             <TabsPanel value="nearby">
-              <Map
-                style={{ width: '100%', height: '100%' }}
-                initialViewState={{
-                  latitude: currentLocation.lat,
-                  longitude: currentLocation.lng,
-                  zoom: 10,
-                }}
-                mapStyle="mapbox://styles/mapbox/streets-v9"
-                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-              />
+              {nearbyPlaces && nearbyPlaces.length > 0 ? (
+                <Stack>
+                  {/* <Map
+                    style={{ width: '800px', height: '400px' }}
+                    initialViewState={{
+                      latitude: nearbyPlaces[0].location.latitude,
+                      longitude: nearbyPlaces[0].location.longitude,
+                      zoom: 10,
+                    }}
+                    mapStyle="mapbox://styles/mapbox/streets-v9"
+                    mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
+                  >
+                    {nearbyPlaces.map((place) => (
+                      <Marker
+                        key={place.name}
+                        latitude={place.location.latitude}
+                        longitude={place.location.longitude}
+                      >
+                        <div>{place.displayName.text}</div>{' '}
+                      </Marker>
+                    ))}
+                  </Map> */}
+                  <Stack>
+                    {nearbyPlaces.map((place) => (
+                      <Card key={place.name}>
+                        {place.photos && place.photos.length > 0 && (
+                          <Card.Section>
+                            <Image
+                              src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${place.photos[0].name}&key=${API_KEY}`}
+                              alt={place.displayName.text}
+                              height={200}
+                            />
+                          </Card.Section>
+                        )}
+                        <Box p="md">
+                          <Title order={3}>{place.displayName.text}</Title>
+                          <Text>{place.primaryTypeDisplayName.text}</Text>
+                          <Text>{place.formattedAddress}</Text>
+                          <Text>Rating: {place.rating}</Text>
+                          <Text>Open Now: {place.currentOpeningHours?.openNow ? 'Yes' : 'No'}</Text>
+                        </Box>
+                      </Card>
+                    ))}
+                  </Stack>
+                </Stack>
+              ) : (
+                <Text>No nearby places found.</Text>
+              )}
             </TabsPanel>
             <TabsPanel value="chatgpt-planner">
               <ChatInterface visitedPlaces={[]} />
