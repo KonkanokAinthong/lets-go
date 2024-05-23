@@ -15,6 +15,8 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    console.log('Filtered celebrities:', filteredCelebrities);
+
     return new Response(JSON.stringify(filteredCelebrities), {
       headers: {
         'Content-Type': 'application/json',

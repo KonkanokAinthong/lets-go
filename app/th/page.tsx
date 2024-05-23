@@ -1,7 +1,8 @@
 'use client';
 
 import { Carousel } from '@mantine/carousel';
-import { Avatar, Container, Grid, Image, Skeleton, Stack, Title } from '@mantine/core';
+import { Avatar, Container, Grid, Image, Skeleton, Stack, Text, Title } from '@mantine/core';
+import { IconCrown } from '@tabler/icons-react';
 import axios from 'axios';
 import Link from 'next/link';
 import { FormattedMessage } from 'react-intl';
@@ -82,7 +83,7 @@ export default function Page() {
               <FormattedMessage id="topTrendingThaiCelebrities" />
             </Title>
             <Grid gutter={64} columns={24} justify="center" align="center">
-              {celebs?.map((celebrity: any) => (
+              {celebs?.map((celebrity: any, index) => (
                 <Grid.Col
                   key={celebrity.name}
                   span={{
@@ -97,8 +98,21 @@ export default function Page() {
                       justifyContent: 'center',
                       alignItems: 'center',
                       gap: 16,
+                      position: 'relative',
                     }}
                   >
+                    {index === 0 && (
+                      <IconCrown
+                        size={64}
+                        style={{
+                          position: 'absolute',
+                          top: -48,
+                          zIndex: 1,
+                          fill: 'gold',
+                          stroke: 'gold',
+                        }}
+                      />
+                    )}
                     <Avatar
                       size={124}
                       src={`https://image.tmdb.org/t/p/original/${celebrity.image}`}
@@ -106,6 +120,19 @@ export default function Page() {
                       component={Link}
                       href={`/th/celebrities/${celebrity?.id}`}
                     />
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: 24,
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        padding: '4px 8px',
+                      }}
+                    >
+                      <Text fw={700} fz="md" c="white">
+                        #{index + 1}
+                      </Text>
+                    </div>
                     <Title order={6} ta="center">
                       <Link href={`/th/celebrities/${celebrity.id}`}>{celebrity.name}</Link>
                     </Title>
@@ -116,7 +143,7 @@ export default function Page() {
           </Stack>
         </section>
 
-        {/* <section>
+        <section>
           <Stack my="xl">
             <Title order={1} mb="xl" ta="center" c="white">
               <FormattedMessage id="recommendedThaiSeries" />
@@ -127,7 +154,7 @@ export default function Page() {
               align="center"
               slidesToScroll="auto"
             >
-              {uniqueSeries?.map((serie: any) => (
+              {/* {uniqueSeries?.map((serie: any) => (
                 <Carousel.Slide key={serie.name}>
                   <Stack>
                     <Image
@@ -139,10 +166,10 @@ export default function Page() {
                     </Title>
                   </Stack>
                 </Carousel.Slide>
-              ))}
+              ))} */}
             </Carousel>
           </Stack>
-        </section> */}
+        </section>
       </Stack>
     </Container>
   );

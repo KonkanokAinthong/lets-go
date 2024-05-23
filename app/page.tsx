@@ -257,10 +257,9 @@ const SuperstarCheckInThailand = () => {
     {
       enabled: !!CELEB_LISTS,
       initialData: { places: [] },
+      refetchOnWindowFocus: false,
     }
   );
-
-  console.log(placeDetails);
 
   const bangkokLocation = { lat: 13.7563, lng: 100.5018 };
 
@@ -456,16 +455,15 @@ const Top10Locations = () => {
     async () => {
       const response = await fetch('/api/top10-locations');
       const data = await response.json();
+      console.log(data);
       return data.locations ?? [];
     },
     {
       refetchOnWindowFocus: false,
-      staleTime: Infinity,
-      cacheTime: 24 * 60 * 60 * 1000,
     }
   );
 
-  const memoizedLocations = useMemo(() => top10Locations, [top10Locations]);
+  console.log(top10Locations);
 
   if (isLoading) {
     return (
@@ -487,14 +485,14 @@ const Top10Locations = () => {
 
   return (
     <section>
-      <Grid columns={12} align="stretch">
-        {memoizedLocations?.map((location, index) => (
+      <Grid columns={12} align="stretch" justify="center">
+        {top10Locations?.map((location, index) => (
           <GridCol key={location.title} span={{ xs: 12, sm: 6, md: 12 / 5 }}>
             <Card
               shadow="sm"
               radius="lg"
               p="xl"
-              style={{ position: 'relative' }}
+              style={{ position: 'relative', height: '100%' }}
               component={Link}
               href={location.link}
               rel="noreferrer"

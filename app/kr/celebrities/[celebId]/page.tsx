@@ -180,12 +180,13 @@ const getPlaceDetails = async (places: any) => {
               'Accept-Language': 'th',
             },
             params: {
-              keyword: place,
+              geolocation: `${place.lat},${place.lng}`,
             },
           }
         );
+        console.log(response);
 
-        return response.data.result[response.data.result.length - 1];
+        return response.data.result;
       } catch (error) {
         if (error.response && error.response.status === 404) {
           return null;
@@ -213,7 +214,6 @@ export default function Page() {
   const navigate = useRouter();
 
   const { celebId } = useParams();
-  const mapContainerRef = useRef(null);
 
   // const { data: places } = useSearchPlaces({ geolocation: '13.7563,100.5018', keyword: 'Bangkok' });
 
@@ -258,6 +258,8 @@ export default function Page() {
       enabled: !!celebrity?.placeVisited,
     }
   );
+
+  console.log(places);
 
   const { data: placeDetails } = useQuery(
     ['placeDetails', selectedPlace],
@@ -319,14 +321,6 @@ export default function Page() {
       );
     }
   }, []);
-
-  const [mapInstance, setMapInstance] = useState(null);
-
-  useEffect(() => {
-    if (mapInstance) {
-      mapInstance.resize();
-    }
-  }, [mapInstance]);
 
   if (isCelebrityLoading) {
     return <div>Loading...</div>;
