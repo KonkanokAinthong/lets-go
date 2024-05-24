@@ -3,7 +3,6 @@ import celebritiesData from '../../../celebs.json';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-
   const nationality = searchParams.get('nationality');
 
   try {
@@ -14,6 +13,9 @@ export async function GET(req: NextRequest) {
         (item) => item.nationality?.toLowerCase() === nationality.toLowerCase()
       );
     }
+
+    // Sort the filtered celebrities by trending points in descending order
+    filteredCelebrities.sort((a, b) => (b.trendingPoint || 0) - (a.trendingPoint || 0));
 
     console.log('Filtered celebrities:', filteredCelebrities);
 

@@ -10,7 +10,8 @@
       }
     ],
     "nationality": "Chinese",
-    "image": "https://image.tmdb.org/t/p/original/bWqkbqfwuDsWI5CMBiUJS1PLlx8.jpg"
+    "image": "https://image.tmdb.org/t/p/original/bWqkbqfwuDsWI5CMBiUJS1PLlx8.jpg",
+    "trendingPoint": 310
   },
   {
     "id": 2,
@@ -23,7 +24,8 @@
       }
     ],
     "nationality": "Chinese",
-    "image": "https://image.tmdb.org/t/p/original/p64ZDD9kj5lFEXZsKPcv4BGBROl.jpg"
+    "image": "https://image.tmdb.org/t/p/original/p64ZDD9kj5lFEXZsKPcv4BGBROl.jpg",
+    "trendingPoint": 68
   },
   {
     "id": 3,
@@ -36,7 +38,8 @@
       }
     ],
     "nationality": "Chinese",
-    "image": "https://image.tmdb.org/t/p/original/6FSWtajuFzP1OUoIPPK1mkCPvbP.jpg"
+    "image": "https://image.tmdb.org/t/p/original/6FSWtajuFzP1OUoIPPK1mkCPvbP.jpg",
+    "trendingPoint": 32
   },
   {
     "id": 4,
@@ -49,7 +52,8 @@
       }
     ],
     "nationality": "Chinese",
-    "image": "https://image.tmdb.org/t/p/original/2AvnGenFrR7GOWfqvuCmqsEJZMK.jpg"
+    "image": "https://image.tmdb.org/t/p/original/2AvnGenFrR7GOWfqvuCmqsEJZMK.jpg",
+    "trendingPoint": 198
   },
   {
     "id": 5,
@@ -62,7 +66,8 @@
       }
     ],
     "nationality": "Chinese",
-    "image": "https://image.tmdb.org/t/p/original/rtjBdEF61NySmDDnoDgAtuclAJJ.jpg"
+    "image": "https://image.tmdb.org/t/p/original/rtjBdEF61NySmDDnoDgAtuclAJJ.jpg",
+    "trendingPoint": 4649
   },
   {
     "id": 6,
@@ -80,7 +85,8 @@
       }
     ],
     "nationality": "Chinese",
-    "image": "https://image.tmdb.org/t/p/original/yb8sSkTFZVUjCLPlfSPiAoEE68v.jpg"
+    "image": "https://image.tmdb.org/t/p/original/yb8sSkTFZVUjCLPlfSPiAoEE68v.jpg",
+    "trendingPoint": 2180
   },
   {
     "id": 7,
@@ -103,7 +109,8 @@
       }
     ],
     "nationality": "Chinese",
-    "image": "https://image.tmdb.org/t/p/original/kiWfDjqHY8bCavX2N8nA0dOIg2E.jpg"
+    "image": "https://image.tmdb.org/t/p/original/kiWfDjqHY8bCavX2N8nA0dOIg2E.jpg",
+    "trendingPoint": 930
   },
   {
     "id": 8,
@@ -116,7 +123,8 @@
       }
     ],
     "nationality": "Chinese",
-    "image": "https://image.tmdb.org/t/p/original/ygck6qi2U8eoazOZilOaomqflBL.jpg"
+    "image": "https://image.tmdb.org/t/p/original/ygck6qi2U8eoazOZilOaomqflBL.jpg",
+    "trendingPoint": 11506
   },
   {
     "id": 9,
@@ -134,7 +142,8 @@
       }
     ],
     "nationality": "Chinese",
-    "image": "https://image.tmdb.org/t/p/original/kKYlPzXucTQ4GGC6Iac5Hw2p4cI.jpg"
+    "image": "https://image.tmdb.org/t/p/original/kKYlPzXucTQ4GGC6Iac5Hw2p4cI.jpg",
+    "trendingPoint": 2236
   },
   {
     "id": 10,
@@ -157,7 +166,8 @@
       }
     ],
     "nationality": "Chinese",
-    "image": "https://image.tmdb.org/t/p/original//93yxGN5Ld0BSUKfQBtH6F3QIb7Q.jpg"
+    "image": "https://image.tmdb.org/t/p/original//93yxGN5Ld0BSUKfQBtH6F3QIb7Q.jpg",
+    "trendingPoint": 9406
   },
   {
     "id": 11,
@@ -193,7 +203,8 @@
       }
     ],
     "nationality": "Chinese",
-    "image": "https://image.tmdb.org/t/p/original/mYS8XqCMKOcJfUPQpvsmZIducw4.jpg"
+    "image": "https://image.tmdb.org/t/p/original/mYS8XqCMKOcJfUPQpvsmZIducw4.jpg",
+    "trendingPoint": 616
   },
   {
     "id": 13,
@@ -206,7 +217,8 @@
       }
     ],
     "nationality": "Korean",
-    "image": "https://image.tmdb.org/t/p/original/1p7xMHRNsrUJacXqOFs1EZqSIvp.jpg"
+    "image": "https://image.tmdb.org/t/p/original/1p7xMHRNsrUJacXqOFs1EZqSIvp.jpg",
+    "trendingPoint": 5206
   },
   {
     "id": 14,
@@ -229,7 +241,8 @@
       }
     ],
     "nationality": "Korean",
-    "image": "https://image.tmdb.org/t/p/original/yPhD9nXzmOVA4IUyVsqv7ZzvTKX.jpg"
+    "image": "https://image.tmdb.org/t/p/original/yPhD9nXzmOVA4IUyVsqv7ZzvTKX.jpg",
+    "trendingPoint": 1613
   },
   {
     "id": 15,
@@ -242,7 +255,8 @@
       }
     ],
     "nationality": "Korean",
-    "image": "https://image.tmdb.org/t/p/original/kgjb5OppOVTh5tz3hhnfDVnTvDv.jpg"
+    "image": "https://image.tmdb.org/t/p/original/kgjb5OppOVTh5tz3hhnfDVnTvDv.jpg",
+    "trendingPoint": 15960
   },
   {
     "id": 16,
@@ -255,7 +269,8 @@
       }
     ],
     "nationality": "Korean",
-    "image": "https://image.tmdb.org/t/p/original/4U0cNinwOf7DdsBYA3BFi7arDmz.jpg"
+    "image": "https://image.tmdb.org/t/p/original/4U0cNinwOf7DdsBYA3BFi7arDmz.jpg",
+    "trendingPoint": 1528
   },
   {
     "id": 17,
@@ -268,7 +283,8 @@
       }
     ],
     "nationality": "Korean",
-    "image": "https://image.tmdb.org/t/p/original/b9CCj9gtvgA2DQkuzcrPPwC6eok.jpg"
+    "image": "https://image.tmdb.org/t/p/original/b9CCj9gtvgA2DQkuzcrPPwC6eok.jpg",
+    "trendingPoint": 212
   },
   {
     "id": 18,
@@ -286,7 +302,8 @@
       }
     ],
     "nationality": "Korean",
-    "image": "https://image.tmdb.org/t/p/original/5OEh0OgobdiTGTYRqGvH6TbjfgV.jpg"
+    "image": "https://image.tmdb.org/t/p/original/5OEh0OgobdiTGTYRqGvH6TbjfgV.jpg",
+    "trendingPoint": 193
   },
   {
     "id": 19,
@@ -299,7 +316,8 @@
       }
     ],
     "nationality": "Korean",
-    "image": "https://image.tmdb.org/t/p/original/2XaVaqaYXIKw1CBMyjEfcCAyVNF.jpg"
+    "image": "https://image.tmdb.org/t/p/original/2XaVaqaYXIKw1CBMyjEfcCAyVNF.jpg",
+    "trendingPoint": 244
   },
   {
     "id": 20,
@@ -312,7 +330,8 @@
       }
     ],
     "nationality": "Korean",
-    "image": "https://image.tmdb.org/t/p/original/aXOjIBUxu7fmBOxTJcgYmtTKD1D.jpg"
+    "image": "https://image.tmdb.org/t/p/original/aXOjIBUxu7fmBOxTJcgYmtTKD1D.jpg",
+    "trendingPoint": 3396
   },
   {
     "id": 21,
@@ -325,7 +344,8 @@
       }
     ],
     "nationality": "Korean",
-    "image": "https://image.tmdb.org/t/p/original/dlXYHMiz1eyN5QrdA6Gh6wmwRVm.jpg"
+    "image": "https://image.tmdb.org/t/p/original/dlXYHMiz1eyN5QrdA6Gh6wmwRVm.jpg",
+    "trendingPoint": 761
   },
   {
     "id": 22,
@@ -338,7 +358,8 @@
       }
     ],
     "nationality": "Korean",
-    "image": "https://image.tmdb.org/t/p/original/2TOcTPdc2Z4XgbwBV1y9T8o7G1M.jpg"
+    "image": "https://image.tmdb.org/t/p/original/2TOcTPdc2Z4XgbwBV1y9T8o7G1M.jpg",
+    "trendingPoint": 86
   },
   {
     "id": 23,
@@ -356,7 +377,8 @@
       }
     ],
     "nationality": "Korean",
-    "image": "https://image.tmdb.org/t/p/original//afgwHQJ3BP6ygM2ZUUZO60U84q0.jpg"
+    "image": "https://image.tmdb.org/t/p/original//afgwHQJ3BP6ygM2ZUUZO60U84q0.jpg",
+    "trendingPoint": 18778
   },
   {
     "id": 24,
@@ -412,7 +434,8 @@
       }
     ],
     "nationality": "Thai",
-    "image": "https://image.tmdb.org/t/p/original/alCgpzXB50QWfck3KFlfzkRnXSW.jpg"
+    "image": "https://image.tmdb.org/t/p/original/alCgpzXB50QWfck3KFlfzkRnXSW.jpg",
+    "trendingPoint": 3150
   },
   {
     "id": 26,
@@ -425,7 +448,8 @@
       }
     ],
     "nationality": "Thai",
-    "image": "https://image.tmdb.org/t/p/original/uJ1THfL7y8tuWpCNpow6eoPIr27.jpg"
+    "image": "https://image.tmdb.org/t/p/original/uJ1THfL7y8tuWpCNpow6eoPIr27.jpg",
+    "trendingPoint": 9218
   },
   {
     "id": 27,
@@ -438,7 +462,8 @@
       }
     ],
     "nationality": "Thai",
-    "image": "https://image.tmdb.org/t/p/original/3UvwJGTDRXVYjUfaiLQuk7vKqHR.jpg"
+    "image": "https://image.tmdb.org/t/p/original/3UvwJGTDRXVYjUfaiLQuk7vKqHR.jpg",
+    "trendingPoint": 2166
   },
   {
     "id": 28,
@@ -451,7 +476,8 @@
       }
     ],
     "nationality": "Thai",
-    "image": "https://image.tmdb.org/t/p/original/wlbfFnZg5TfNJHiBr6nkJvtpHm6.jpg"
+    "image": "https://image.tmdb.org/t/p/original/wlbfFnZg5TfNJHiBr6nkJvtpHm6.jpg",
+    "trendingPoint": 2677
   },
   {
     "id": 29,
@@ -484,7 +510,8 @@
       }
     ],
     "nationality": "Thai",
-    "image": "https://image.tmdb.org/t/p/original//p2mHicig9Obk6InadpCmdxFIMpj.jpg"
+    "image": "https://image.tmdb.org/t/p/original//p2mHicig9Obk6InadpCmdxFIMpj.jpg",
+    "trendingPoint": 462
   },
   {
     "id": 30,
@@ -510,7 +537,8 @@
       }
     ],
     "nationality": "Thai",
-    "image": "https://image.tmdb.org/t/p/original/ui6VKMPZpAPzc6f7dl9YdQVi7Tj.jpg"
+    "image": "https://image.tmdb.org/t/p/original/ui6VKMPZpAPzc6f7dl9YdQVi7Tj.jpg",
+    "trendingPoint": 1658
   },
   {
     "id": 32,
@@ -528,7 +556,8 @@
       }
     ],
     "nationality": "Thai",
-    "image": "https://image.tmdb.org/t/p/original/lo6zChxhJrIGYaSZV46IG1K98Rw.jpg"
+    "image": "https://image.tmdb.org/t/p/original/lo6zChxhJrIGYaSZV46IG1K98Rw.jpg",
+    "trendingPoint": 1788
   },
   {
     "id": 33,
@@ -571,7 +600,8 @@
       }
     ],
     "nationality": "Thai",
-    "image": "https://image.tmdb.org/t/p/original/dAPMDffwxEgGT2DQnVH493JaB8T.jpg"
+    "image": "https://image.tmdb.org/t/p/original/dAPMDffwxEgGT2DQnVH493JaB8T.jpg",
+    "trendingPoint": 595
   },
   {
     "id": 34,
@@ -584,7 +614,8 @@
       }
     ],
     "nationality": "Thai",
-    "image": "https://image.tmdb.org/t/p/original/zgo2a0h3N3oDhsteZzl6f0HEeAE.jpg"
+    "image": "https://image.tmdb.org/t/p/original/zgo2a0h3N3oDhsteZzl6f0HEeAE.jpg",
+    "trendingPoint": 321
   },
   {
     "id": 35,
@@ -665,6 +696,39 @@
       }
     ],
     "nationality": "Thai",
-    "image": "https://image.tmdb.org/t/p/original//1XpsbadqmopyBby3OrZcuhrkY0z.jpg"
+    "image": "https://image.tmdb.org/t/p/original//1XpsbadqmopyBby3OrZcuhrkY0z.jpg",
+    "trendingPoint": 123
+  },
+  {
+    "id": 37,
+    "name": "Lee Jong Suk",
+    "nationality": "Korean",
+    "image": "https://image.tmdb.org/t/p/original//eW73DbmKQrqb6xDC52oMbVehw6G.jpg",
+    "placeVisited": [""],
+    "trendingPoint": 22216
+  },
+  {
+    "id": 39,
+    "name": "Kim Soo Hyun",
+    "nationality": "Korean",
+    "image": "https://image.tmdb.org/t/p/original//q24P4pmtWGhe08T7rTkoDc5EC1p.jpg",
+    "placeVisited": [""],
+    "trendingPoint": 16087
+  },
+  {
+    "id": 40,
+    "name": "Mike Angelo",
+    "nationality": "Thai",
+    "image": "https://image.tmdb.org/t/p/original//1LwWkpD8iETov97ieeKcdiCiPJW.jpg",
+    "placeVisited": [""],
+    "trendingPoint": 3679
+  },
+  {
+    "id": 41,
+    "name": "Xiao Zhan",
+    "nationality": "Chinese",
+    "image": "https://image.tmdb.org/t/p/original//468n73j2sSJIbfZvsIZvDpvUaS8.jpg",
+    "placeVisited": [""],
+    "trendingPoint": 10824
   }
 ]
