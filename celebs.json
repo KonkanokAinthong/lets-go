@@ -170,29 +170,6 @@
     "trendingPoint": 9406
   },
   {
-    "id": 11,
-    "name": "Dylan Wang",
-    "placeVisited": [
-      {
-        "name": "ศาลพรหมเอราวัณ",
-        "lat": 13.7640967,
-        "lng": 100.5384222
-      },
-      {
-        "name": "ย่าน RCA",
-        "lat": 13.7560008,
-        "lng": 100.5700008
-      },
-      {
-        "name": "เกาะยาวน้อย",
-        "lat": 8.0723983,
-        "lng": 98.5896628
-      }
-    ],
-    "nationality": "Chinese",
-    "image": "https://image.tmdb.org/t/p/original/lj0KGutrA0MSJxgsjNzvIGMDnFX.jpg"
-  },
-  {
     "id": 12,
     "name": "Nine Kornchid Boonsathitpakdee",
     "placeVisited": [
@@ -524,7 +501,8 @@
       }
     ],
     "nationality": "Thai",
-    "image": "https://image.tmdb.org/t/p/original/w58HrktpHZ7UVGY5SKoJxFkitCy.jpg"
+    "image": "https://image.tmdb.org/t/p/original/w58HrktpHZ7UVGY5SKoJxFkitCy.jpg",
+    "trendingPoint": 979
   },
   {
     "id": 31,
@@ -653,52 +631,10 @@
       }
     ],
     "nationality": "Thai",
-    "image": "https://image.tmdb.org/t/p/original//m0wsd5KI9w9qk5TFPt8a5pBwL97.jpg"
+    "image": "https://image.tmdb.org/t/p/original//m0wsd5KI9w9qk5TFPt8a5pBwL97.jpg",
+    "trendingPoint": 3901
   },
-  {
-    "id": 36,
-    "name": "Bright Vachirawit Chivaaree",
-    "placeVisited": [
-      {
-        "name": "พัทยา",
-        "lat": 12.9349753,
-        "lng": 100.8837958
-      },
-      {
-        "name": "เขาใหญ่",
-        "lat": 14.4412618,
-        "lng": 101.3784823
-      },
-      {
-        "name": "เกาะเสม็ด",
-        "lat": 12.5724444,
-        "lng": 101.4573096
-      },
-      {
-        "name": "เกาะพีพี",
-        "lat": 7.7407431,
-        "lng": 98.7708014
-      },
-      {
-        "name": "เยาวราช",
-        "lat": 13.7397317,
-        "lng": 100.5104616
-      },
-      {
-        "name": "ตลาดนัดจตุจักร",
-        "lat": 13.8005433,
-        "lng": 100.5502302
-      },
-      {
-        "name": "เกาะสมุย",
-        "lat": 9.5120168,
-        "lng": 100.013429
-      }
-    ],
-    "nationality": "Thai",
-    "image": "https://image.tmdb.org/t/p/original//1XpsbadqmopyBby3OrZcuhrkY0z.jpg",
-    "trendingPoint": 123
-  },
+
   {
     "id": 37,
     "name": "Lee Jong Suk",
