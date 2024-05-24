@@ -5,6 +5,7 @@
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mantine/core/styles.css';
 import '@mantine/carousel/styles.css';
+
 import React from 'react';
 import { MantineProvider, ColorSchemeScript, Container } from '@mantine/core';
 import { QueryClient, QueryClientProvider } from 'react-query';

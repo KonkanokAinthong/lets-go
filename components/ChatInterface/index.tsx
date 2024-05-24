@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import {
-  TextInput,
   Paper,
   Text,
   Box,
@@ -13,7 +12,7 @@ import {
   LoadingOverlay,
   Alert,
 } from '@mantine/core';
-import { IconSend, IconAlertCircle } from '@tabler/icons-react';
+import { IconAlertCircle } from '@tabler/icons-react';
 import ReactMarkdown from 'react-markdown';
 import { FormattedMessage, useIntl } from 'react-intl';
 
@@ -23,7 +22,6 @@ interface ChatInterfaceProps {
 
 const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
   const [messages, setMessages] = useState([]);
-  const [inputValue, setInputValue] = useState('');
   const chatContainerRef = useRef(null);
   const [selectedBudget, setSelectedBudget] = useState('');
   const [selectedPlace, setSelectedPlace] = useState('');
@@ -44,57 +42,47 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = async () => {
-    if (inputValue.trim() !== '') {
-      setMessages([...messages, { text: inputValue, sender: 'user' }]);
-      setInputValue('');
-      setIsLoading(true);
-      setError('');
+  const handleGenerateTripPlan = async () => {
+    setIsLoading(true);
+    setError('');
 
-      try {
-        const response = await fetch('/api/trip-planner', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            message: inputValue,
-            context: `You are a trip planner assistant helping to plan a trip to Thailand with the following details:
-              - Budget: ${selectedBudget} THB
-              - Place: ${selectedPlace}
-              - Duration: ${selectedDuration}
-              If the user's input is in Thai, respond in Thai. If the user's input is in English, respond in English. Provide your response in bullet points for easy readability, rather than in paragraphs.`,
-          }),
-        });
+    try {
+      const response = await fetch('/api/trip-planner', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          context: `You are a trip planner assistant helping to plan a trip to Thailand with the following details:
+            - Budget: ${selectedBudget} THB
+            - Place: ${selectedPlace}
+            - Duration: ${selectedDuration}
+            If the user's input is in Thai, respond in Thai. If the user's input is in English, respond in English. Provide your response in bullet points for easy readability, rather than in paragraphs.`,
+        }),
+      });
 
-        const data = await response.json();
-        if (data.response) {
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { text: data.response, sender: 'assistant' },
-          ]);
-        } else {
-          setError(intl.formatMessage({ id: 'errorMessage' }));
-        }
-      } catch (error) {
-        console.error('Error:', error);
+      const data = await response.json();
+      if (data.response) {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { text: data.response, sender: 'assistant' },
+        ]);
+      } else {
         setError(intl.formatMessage({ id: 'errorMessage' }));
       }
-
-      setIsLoading(false);
+    } catch (error) {
+      console.error('Error:', error);
+      setError(intl.formatMessage({ id: 'errorMessage' }));
     }
-  };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleSendMessage();
-    }
+    setIsLoading(false);
   };
 
   const handleClearChat = () => {
     setMessages([]);
   };
+
+  console.log(visitedPlaces);
 
   return (
     <Paper shadow="sm" p="md" style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -113,17 +101,6 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
         </Text>
         <Text size="sm" mt="sm">
           <FormattedMessage id="instruction2" />
-          <ul style={{ marginTop: '8px', marginLeft: '16px', listStyle: 'none' }}>
-            <li>
-              <FormattedMessage id="exampleQuery1" />
-            </li>
-            <li>
-              <FormattedMessage id="exampleQuery2" />
-            </li>
-            <li>
-              <FormattedMessage id="exampleQuery3" />
-            </li>
-          </ul>
         </Text>
         <Text size="sm" mt="sm">
           <FormattedMessage id="instruction3" />
@@ -131,34 +108,34 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
         <Text size="sm" mt="sm">
           <FormattedMessage id="instruction4" />
         </Text>
-        <Text size="sm" mt="sm">
-          <FormattedMessage id="instruction5" />
-        </Text>
       </Modal>
-      <Stack
-        c="black
-      "
-      >
+      <Stack>
         <Button variant="outline" onClick={() => setShowInstructions(true)}>
           <FormattedMessage id="showInstructions" />
         </Button>
         <Select
+          style={{
+            color: 'black',
+          }}
           label={<FormattedMessage id="budget" />}
-          placeholder="Select budget"
+          placeholder={intl.formatMessage({ id: 'selectBudget' })}
           value={selectedBudget}
           onChange={setSelectedBudget}
           data={[
-            { value: '1000', label: '1,000 THB' },
-            { value: '2000', label: '2,000 THB' },
-            { value: '5000', label: '5,000 THB' },
-            { value: '10000', label: '10,000 THB' },
+            { value: '1000', label: intl.formatMessage({ id: 'budgetOption1' }) },
+            { value: '2000', label: intl.formatMessage({ id: 'budgetOption2' }) },
+            { value: '5000', label: intl.formatMessage({ id: 'budgetOption3' }) },
+            { value: '10000', label: intl.formatMessage({ id: 'budgetOption4' }) },
           ]}
           required
         />
 
         <Select
+          style={{
+            color: 'black',
+          }}
           label={<FormattedMessage id="placesVisitedByCelebrity" />}
-          placeholder="Search place"
+          placeholder={intl.formatMessage({ id: 'searchPlace' })}
           value={selectedPlace}
           onChange={setSelectedPlace}
           data={visitedPlaces?.map((place) => ({ value: place, label: place }))}
@@ -166,21 +143,27 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
         />
 
         <Select
+          style={{
+            color: 'black',
+          }}
           label={<FormattedMessage id="duration" />}
-          placeholder="Select duration"
+          placeholder={intl.formatMessage({ id: 'selectDuration' })}
           value={selectedDuration}
           onChange={setSelectedDuration}
           data={[
-            { value: '1-day', label: '1 day' },
-            { value: '2-days-1-night', label: '2 days 1 night' },
-            { value: '3-days-2-nights', label: '3 days 2 nights' },
-            { value: '4-days-3-nights', label: '4 days 3 nights' },
-            { value: '5-days-4-nights', label: '5 days 4 nights' },
-            { value: '6-days-5-nights', label: '6 days 5 nights' },
-            { value: '7-days-6-nights', label: '7 days 6 nights' },
+            { value: '1-day', label: intl.formatMessage({ id: 'durationOption1' }) },
+            { value: '2-days-1-night', label: intl.formatMessage({ id: 'durationOption2' }) },
+            { value: '3-days-2-nights', label: intl.formatMessage({ id: 'durationOption3' }) },
+            { value: '4-days-3-nights', label: intl.formatMessage({ id: 'durationOption4' }) },
+            { value: '5-days-4-nights', label: intl.formatMessage({ id: 'durationOption5' }) },
+            { value: '6-days-5-nights', label: intl.formatMessage({ id: 'durationOption6' }) },
+            { value: '7-days-6-nights', label: intl.formatMessage({ id: 'durationOption7' }) },
           ]}
           required
         />
+        <Button onClick={handleGenerateTripPlan}>
+          <FormattedMessage id="generateTripPlan" />
+        </Button>
       </Stack>
       <Box
         style={{
@@ -232,13 +215,6 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
       )}
 
       <Box style={{ position: 'relative', bottom: 0, left: 0, right: 0 }}>
-        <TextInput
-          placeholder="Type your message here..."
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyPress={handleKeyPress}
-          rightSection={<IconSend onClick={handleSendMessage} />}
-        />
         <Button variant="subtle" onClick={handleClearChat} mt="sm">
           <FormattedMessage id="clearChat" />
         </Button>

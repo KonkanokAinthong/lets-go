@@ -29,17 +29,7 @@ import { useQuery } from 'react-query';
 import { IconArrowLeft } from '@tabler/icons-react';
 import { Map, Marker } from 'react-map-gl';
 import ChatInterface from '@/components/ChatInterface';
-import { useSearchPlaces } from '@/hooks/useSearchPlaces';
-import { useAttractionDetails } from '@/hooks/useAttractionDetails';
 
-const API_KEY = 'AIzaSyCG4FU9FKT8WkwMZtOLxO1cJyYDuJQGnk8';
-
-/**
- * Retrieves celebrity data by ID from the API.
- * @param celebId - The ID of the celebrity to retrieve.
- * @returns The celebrity data.
- * @throws An error if there was a problem retrieving the celebrity data.
- */
 const getCelebrityById = async (celebId: string) => {
   try {
     const response = await axios.get(`/api/celebrities?id=${celebId}`);
@@ -74,11 +64,6 @@ const getWikipediaBiography = async (name: string) => {
   }
 };
 
-/**
- * Searches for a celebrity by name using The Movie Database (TMDb) API.
- * @param name - The name of the celebrity to search for.
- * @returns The first search result from the TMDb API.
- */
 const searchCelebrity = async (name: string) => {
   const data = await axios.get(`https://api.themoviedb.org/3/search/person?query=${name}`, {
     headers: {
@@ -88,11 +73,6 @@ const searchCelebrity = async (name: string) => {
   return data.data.results[0];
 };
 
-/**
- * Retrieves detailed information about a celebrity using the TMDb API.
- * @param person_id - The ID of the celebrity to retrieve information for.
- * @returns The detailed celebrity information from the TMDb API.
- */
 const getCelebrityInfo = async (
   person_id: string,
   options: {
@@ -125,47 +105,24 @@ const getPlaceDetailFromPlaceId = async (placeId: string) => {
   return response.data.result;
 };
 
-/**
- * Fetches nearby places based on a given location using the Google Places API.
- * @param location - The location to search for nearby places.
- * @returns An array of nearby places.
- */
-const fetchNearbyPlaces = async (location) => {
-  const { lat, lng } = location;
-  const response = await axios.post(
-    'https://places.googleapis.com/v1/places:searchNearby',
-    {
-      languageCode: 'th',
-      regionCode: 'TH',
-      includedTypes: ['restaurant'],
-      rankPreference: 'DISTANCE',
-      maxResultCount: 10,
-      locationRestriction: {
-        circle: {
-          center: {
-            latitude: lat,
-            longitude: lng,
-          },
-          radius: 1000.0,
-        },
+const fetchNearbyPlaces = async (places) => {
+  const promises = places.map(async (place) => {
+    const response = await axios.get('https://search.longdo.com/mapsearch/json/search', {
+      params: {
+        keyword: place.name,
+        area: `${place.lat},${place.lng}`,
+        span: '1km',
+        limit: 10,
+        key: process.env.NEXT_PUBLIC_LONGDO_API_KEY,
       },
-    },
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Goog-Api-Key': API_KEY,
-        'X-Goog-FieldMask': '*',
-      },
-    }
-  );
-  return response.data.places;
+    });
+    return response.data.data;
+  });
+
+  const results = await Promise.all(promises);
+  return results.flat();
 };
 
-/**
- * Retrieves details for a list of places.
- * @param places - An array of place names to retrieve details for.
- * @returns An object containing the detailed place information.
- */
 const getPlaceDetails = async (places: any) => {
   try {
     const promises = places.map(async (place) => {
@@ -214,8 +171,6 @@ export default function Page() {
   const navigate = useRouter();
 
   const { celebId } = useParams();
-
-  // const { data: places } = useSearchPlaces({ geolocation: '13.7563,100.5018', keyword: 'Bangkok' });
 
   const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
 
@@ -271,24 +226,13 @@ export default function Page() {
   );
 
   const { data: nearbyPlaces } = useQuery(
-    ['nearbyPlaces', places?.places],
-    () =>
-      fetchNearbyPlaces({
-        lat: currentLocation.lat,
-        lng: currentLocation.lng,
-      }),
+    ['nearbyPlaces', celebrity?.placeVisited],
+    () => fetchNearbyPlaces(celebrity?.placeVisited || []),
     {
-      enabled: !!places,
+      enabled: !!celebrity?.placeVisited,
       refetchOnWindowFocus: false,
     }
   );
-
-  // const { data: searchPlaces } = useSearchPlaces({
-  //   keyword: celebrity?.placeVisited,
-  //   geolocation: `${currentLocation.lat},${currentLocation.lng}`,
-  // });
-
-  // const { data: attractionsDetails } = useAttractionDetails(searchPlaces?.[0]?.place_id);
 
   const [biography, setBiography] = useState('');
   const [isFetching, setIsFetching] = useState(false);
@@ -447,10 +391,6 @@ export default function Page() {
                             </Card.Section>
                             <Stack mt="md">
                               <Title order={3}>{place.place_name}</Title>
-                              {/* {placeDetails.hit_score ? (
-                  <Text>ระดับความฮิต: {placeDetails?.hit_score}</Text>
-                ) : null}
-                <Text>วิธีการเดินทาง: {placeDetails?.how_to_travel}</Text> */}
                               <Stack>
                                 <Title order={4}>ประวัติและความเป็นมา</Title>
                                 <Text>{placeDetails?.place_information?.detail}</Text>
@@ -515,37 +455,36 @@ export default function Page() {
               )}
             </TabsPanel>
             <TabsPanel value="nearby">
-              {nearbyPlaces && nearbyPlaces.length > 0 ? (
-                <Stack>
-                  <Stack>
-                    {nearbyPlaces.map((place) => (
-                      <Card key={place.name}>
-                        {place.photos && place.photos.length > 0 && (
-                          <Card.Section>
-                            <Image
-                              src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${place.photos[0].name}&key=${API_KEY}`}
-                              alt={place.displayName.text}
-                              height={200}
-                            />
-                          </Card.Section>
-                        )}
-                        <Box p="md">
-                          <Title order={3}>{place.displayName.text}</Title>
-                          <Text>{place.primaryTypeDisplayName.text}</Text>
-                          <Text>{place.formattedAddress}</Text>
-                          <Text>Rating: {place.rating}</Text>
-                          <Text>Open Now: {place.currentOpeningHours?.openNow ? 'Yes' : 'No'}</Text>
-                        </Box>
-                      </Card>
-                    ))}
-                  </Stack>
-                </Stack>
-              ) : (
-                <Text>No nearby places found.</Text>
-              )}
+              <Map
+                latitude={currentLocation.lat}
+                longitude={currentLocation.lng}
+                zoom={12}
+                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
+                style={{ width: 1000, height: 400 }}
+                mapStyle="mapbox://styles/mapbox/streets-v9"
+              >
+                {/* {nearbyPlaces?.map((place) => (
+                  <Marker
+                    key={place?.id}
+                    latitude={place?.lat}
+                    longitude={place?.lon}
+                    offset={{
+                      x: -20,
+                      y: -40,
+                    }}
+                  >
+                    <Avatar
+                      size={40}
+                      src={place?.icon}
+                      alt={place?.name}
+                      onClick={() => setSelectedPlace(place)}
+                    />
+                  </Marker>
+                ))} */}
+              </Map>
             </TabsPanel>
             <TabsPanel value="chatgpt-planner">
-              <ChatInterface visitedPlaces={[]} />
+              <ChatInterface visitedPlaces={celebrity.placeVisited} />
             </TabsPanel>
           </Tabs>
         </main>

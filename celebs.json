@@ -640,7 +640,13 @@
     "name": "Lee Jong Suk",
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original//eW73DbmKQrqb6xDC52oMbVehw6G.jpg",
-    "placeVisited": [""],
+    "placeVisited": [
+      "เซ็นทรัลแจ้งวัฒนะ",
+      "วัดพระธาตุดอยสุเทพราชวรวิหาร",
+      "ถนนคนเดินวัวลาย",
+      "สวนสัตว์เชียงใหม่",
+      "ดอยม่อนแจ่ม"
+    ],
     "trendingPoint": 22216
   },
   {
@@ -648,7 +654,11 @@
     "name": "Kim Soo Hyun",
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original//q24P4pmtWGhe08T7rTkoDc5EC1p.jpg",
-    "placeVisited": [""],
+    "placeVisited": [
+      "สนามบินนานาชาติสุวรรณภูมิ",
+      "ธันเดอร์โดม เมืองทองธานี",
+      "ห้างสรรพสินค้าเซ็นทรัลเวิลด์"
+    ],
     "trendingPoint": 16087
   },
   {
@@ -656,7 +666,7 @@
     "name": "Mike Angelo",
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original//1LwWkpD8iETov97ieeKcdiCiPJW.jpg",
-    "placeVisited": [""],
+    "placeVisited": ["พระบรมมหาราชวัง", "วัดอรุณราชวราราม", "ตลาดน้ำอัมพวา", "สยามพารากอน"],
     "trendingPoint": 3679
   },
   {
@@ -664,7 +674,19 @@
     "name": "Xiao Zhan",
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original//468n73j2sSJIbfZvsIZvDpvUaS8.jpg",
-    "placeVisited": [""],
+    "placeVisited": [
+      "วัดพระศรีรัตนศาสดาราม (วัดพระแก้ว)",
+      "ตลาดน้ำอัมพวา",
+      "สยามพารากอน",
+      "ร้านอาหารบ้านลุงไสว",
+      "ห้างสรรพสินค้าเซ็นทรัลเวิลด์",
+      "วัดพระธาตุดอยสุเทพราชวรวิหาร",
+      "ถนนคนเดินวัวลาย",
+      "สวนสัตว์เชียงใหม่",
+      "ดอยม่อนแจ่ม",
+      "ปางช้างแม่สา",
+      "เกาะพีพี"
+    ],
     "trendingPoint": 10824
   }
 ]

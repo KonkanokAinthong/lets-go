@@ -42,5 +42,18 @@
   "error": "Error",
   "errorMessage": "An error occurred. Please try again later.",
   "typeTripPlan": "Type your trip plan here...",
-  "clearChat": "Clear Chat"
+  "clearChat": "Clear Chat",
+  "generateTripPlan": "Generate Trip Plan",
+  "searchPlace": "Search place",
+  "budgetOption1": "1,000 THB",
+  "budgetOption2": "2,000 THB",
+  "budgetOption3": "5,000 THB",
+  "budgetOption4": "10,000 THB",
+  "durationOption1": "1 day",
+  "durationOption2": "2 days 1 night",
+  "durationOption3": "3 days 2 nights",
+  "durationOption4": "4 days 3 nights",
+  "durationOption5": "5 days 4 nights",
+  "durationOption6": "6 days 5 nights",
+  "durationOption7": "7 days 6 nights"
 }
