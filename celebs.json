@@ -2,13 +2,7 @@
   {
     "id": 1,
     "name": "Pornnappan Pornpenpipat",
-    "placeVisited": [
-      {
-        "name": "สนามบินสุวรรณภูมิ",
-        "lat": 13.6899991,
-        "lng": 100.7501124
-      }
-    ],
+    "placeVisited": ["สนามบินสุวรรณภูมิ"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/bWqkbqfwuDsWI5CMBiUJS1PLlx8.jpg",
     "trendingPoint": 310
@@ -16,13 +10,7 @@
   {
     "id": 2,
     "name": "Sunnee",
-    "placeVisited": [
-      {
-        "name": "ธันเดอร์โดม เมืองทองธานี",
-        "lat": 13.9909339,
-        "lng": 100.5261233
-      }
-    ],
+    "placeVisited": ["ธันเดอร์โดม เมืองทองธานี"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/p64ZDD9kj5lFEXZsKPcv4BGBROl.jpg",
     "trendingPoint": 68
@@ -30,13 +18,7 @@
   {
     "id": 3,
     "name": "Li Zi Ting",
-    "placeVisited": [
-      {
-        "name": "Old Phuket Town",
-        "lat": 7.8804624,
-        "lng": 98.3922504
-      }
-    ],
+    "placeVisited": ["Old Phuket Town"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/6FSWtajuFzP1OUoIPPK1mkCPvbP.jpg",
     "trendingPoint": 32
@@ -44,13 +26,7 @@
   {
     "id": 4,
     "name": "Nattawat Finkler",
-    "placeVisited": [
-      {
-        "name": "แม่น้ำเจ้าพระยา",
-        "lat": 13.7563309,
-        "lng": 100.5017651
-      }
-    ],
+    "placeVisited": ["แม่น้ำเจ้าพระยา"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/2AvnGenFrR7GOWfqvuCmqsEJZMK.jpg",
     "trendingPoint": 198
@@ -58,13 +34,7 @@
   {
     "id": 5,
     "name": "Gong Jun",
-    "placeVisited": [
-      {
-        "name": "ทะเลสมุย",
-        "lat": 9.5120168,
-        "lng": 100.013429
-      }
-    ],
+    "placeVisited": ["ทะเลสมุย"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/rtjBdEF61NySmDDnoDgAtuclAJJ.jpg",
     "trendingPoint": 4649
@@ -72,18 +42,7 @@
   {
     "id": 6,
     "name": "Cheng Xiao",
-    "placeVisited": [
-      {
-        "name": "Old Phuket Town",
-        "lat": 7.8804624,
-        "lng": 98.3922504
-      },
-      {
-        "name": "เกาะยาวน้อย",
-        "lat": 8.0723983,
-        "lng": 98.5896628
-      }
-    ],
+    "placeVisited": ["Old Phuket Town", "เกาะยาวน้อย"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/yb8sSkTFZVUjCLPlfSPiAoEE68v.jpg",
     "trendingPoint": 2180
@@ -91,23 +50,7 @@
   {
     "id": 7,
     "name": "Eleanor Lee",
-    "placeVisited": [
-      {
-        "name": "ตลาดนัดจตุจักร",
-        "lat": 13.8005433,
-        "lng": 100.5502302
-      },
-      {
-        "name": "ตลาดน้ำอัมพวา",
-        "lat": 13.4256177,
-        "lng": 99.9528342
-      },
-      {
-        "name": "หาดเขาตะเกียบ",
-        "lat": 12.5804528,
-        "lng": 99.9677481
-      }
-    ],
+    "placeVisited": ["ตลาดนัดจตุจักร", "ตลาดน้ำอัมพวา", "หาดเขาตะเกียบ"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/kiWfDjqHY8bCavX2N8nA0dOIg2E.jpg",
     "trendingPoint": 930
@@ -115,13 +58,7 @@
   {
     "id": 8,
     "name": "Yang Yang",
-    "placeVisited": [
-      {
-        "name": "หาดกะรน",
-        "lat": 7.8380164,
-        "lng": 98.2923754
-      }
-    ],
+    "placeVisited": ["หาดกะรน"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/ygck6qi2U8eoazOZilOaomqflBL.jpg",
     "trendingPoint": 11506
@@ -129,18 +66,7 @@
   {
     "id": 9,
     "name": "Ju Jingyi",
-    "placeVisited": [
-      {
-        "name": "สกายวอล์ก",
-        "lat": 7.5139183,
-        "lng": 99.2350859
-      },
-      {
-        "name": "ประตูน้ำ",
-        "lat": 14.0481287,
-        "lng": 100.5903987
-      }
-    ],
+    "placeVisited": ["สกายวอล์ก", "ประตูน้ำ"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/kKYlPzXucTQ4GGC6Iac5Hw2p4cI.jpg",
     "trendingPoint": 2236
@@ -148,23 +74,7 @@
   {
     "id": 10,
     "name": "Zhao Lu si",
-    "placeVisited": [
-      {
-        "name": "ถนนข้าวสาร",
-        "lat": 13.7589101,
-        "lng": 100.4967357
-      },
-      {
-        "name": "ยูเนี่ยน มอลล์",
-        "lat": 13.7378544,
-        "lng": 100.5302085
-      },
-      {
-        "name": "เยาวราช",
-        "lat": 13.7397317,
-        "lng": 100.5104616
-      }
-    ],
+    "placeVisited": ["ถนนข้าวสาร", "ยูเนี่ยน มอลล์", "เยาวราช"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original//93yxGN5Ld0BSUKfQBtH6F3QIb7Q.jpg",
     "trendingPoint": 9406
@@ -172,13 +82,7 @@
   {
     "id": 12,
     "name": "Nine Kornchid Boonsathitpakdee",
-    "placeVisited": [
-      {
-        "name": "สนามบินสุวรรณภูมิ",
-        "lat": 13.6899991,
-        "lng": 100.7501124
-      }
-    ],
+    "placeVisited": ["สนามบินสุวรรณภูมิ"],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/mYS8XqCMKOcJfUPQpvsmZIducw4.jpg",
     "trendingPoint": 616
@@ -186,13 +90,7 @@
   {
     "id": 13,
     "name": "Kim Seon Ho",
-    "placeVisited": [
-      {
-        "name": "สวนลุมพินี",
-        "lat": 13.7314037,
-        "lng": 100.5416451
-      }
-    ],
+    "placeVisited": ["สวนลุมพินี"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/1p7xMHRNsrUJacXqOFs1EZqSIvp.jpg",
     "trendingPoint": 5206
@@ -201,21 +99,9 @@
     "id": 14,
     "name": "Jackson Wang",
     "placeVisited": [
-      {
-        "name": "Dalmatian 달마시안 Siam Square Block I",
-        "lat": 13.7453691,
-        "lng": 100.5324392
-      },
-      {
-        "name": "Yuzu Omakase ゆずお任せ",
-        "lat": 13.7327802,
-        "lng": 100.5818517
-      },
-      {
-        "name": "หมูกระทะคนรวย",
-        "lat": 13.7620852,
-        "lng": 100.6356701
-      }
+      "Dalmatian 달마시안 Siam Square Block I",
+      "Yuzu Omakase ゆずお任せ",
+      "หมูกระทะคนรวย"
     ],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/yPhD9nXzmOVA4IUyVsqv7ZzvTKX.jpg",
@@ -224,13 +110,7 @@
   {
     "id": 15,
     "name": "Song Jung-gi",
-    "placeVisited": [
-      {
-        "name": "เยาวราช",
-        "lat": 13.7397317,
-        "lng": 100.5104616
-      }
-    ],
+    "placeVisited": ["เยาวราช"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/kgjb5OppOVTh5tz3hhnfDVnTvDv.jpg",
     "trendingPoint": 15960
@@ -238,13 +118,7 @@
   {
     "id": 16,
     "name": "Kwon Na-ra",
-    "placeVisited": [
-      {
-        "name": "PAT Stadium",
-        "lat": 13.7760813,
-        "lng": 100.5276184
-      }
-    ],
+    "placeVisited": ["PAT Stadium"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/4U0cNinwOf7DdsBYA3BFi7arDmz.jpg",
     "trendingPoint": 1528
@@ -252,13 +126,7 @@
   {
     "id": 17,
     "name": "Dex101",
-    "placeVisited": [
-      {
-        "name": "Dalmatian 달마시안 Siam Square Block I",
-        "lat": 13.7453691,
-        "lng": 100.5324392
-      }
-    ],
+    "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/b9CCj9gtvgA2DQkuzcrPPwC6eok.jpg",
     "trendingPoint": 212
@@ -266,18 +134,7 @@
   {
     "id": 18,
     "name": "Park Ji-hyo",
-    "placeVisited": [
-      {
-        "name": "วัดพระศรีรัตนศาสดาราม",
-        "lat": 13.7501391,
-        "lng": 100.4924463
-      },
-      {
-        "name": "ร้านเจ๊ไฝ",
-        "lat": 13.7454534,
-        "lng": 100.4973471
-      }
-    ],
+    "placeVisited": ["วัดพระศรีรัตนศาสดาราม", "ร้านเจ๊ไฝ"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/5OEh0OgobdiTGTYRqGvH6TbjfgV.jpg",
     "trendingPoint": 193
@@ -285,13 +142,7 @@
   {
     "id": 19,
     "name": "ณิชา ยนตรรักษ์",
-    "placeVisited": [
-      {
-        "name": "ทิพย์สมัย ผัดไทยประตูผี",
-        "lat": 13.7583956,
-        "lng": 100.4959844
-      }
-    ],
+    "placeVisited": ["ทิพย์สมัย ผัดไทยประตูผี"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/2XaVaqaYXIKw1CBMyjEfcCAyVNF.jpg",
     "trendingPoint": 244
@@ -299,13 +150,7 @@
   {
     "id": 20,
     "name": "정지훈",
-    "placeVisited": [
-      {
-        "name": "เซ็นทรัลเวิลด์",
-        "lat": 13.7466289,
-        "lng": 100.5393351
-      }
-    ],
+    "placeVisited": ["เซ็นทรัลเวิลด์"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/aXOjIBUxu7fmBOxTJcgYmtTKD1D.jpg",
     "trendingPoint": 3396
@@ -313,13 +158,7 @@
   {
     "id": 21,
     "name": "แบมแบม กันต์พิมุกต์",
-    "placeVisited": [
-      {
-        "name": "Rajamangala National Stadium",
-        "lat": 13.7553817,
-        "lng": 100.6225277
-      }
-    ],
+    "placeVisited": ["Rajamangala National Stadium"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/dlXYHMiz1eyN5QrdA6Gh6wmwRVm.jpg",
     "trendingPoint": 761
@@ -327,13 +166,7 @@
   {
     "id": 22,
     "name": "Baekho",
-    "placeVisited": [
-      {
-        "name": "Savoey Seafood CO. Sukhumvit26",
-        "lat": 13.7220986,
-        "lng": 100.5721554
-      }
-    ],
+    "placeVisited": ["Savoey Seafood CO. Sukhumvit26"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/2TOcTPdc2Z4XgbwBV1y9T8o7G1M.jpg",
     "trendingPoint": 86
@@ -341,18 +174,7 @@
   {
     "id": 23,
     "name": "Ji Chang Wook",
-    "placeVisited": [
-      {
-        "name": "พัทยา",
-        "lat": 12.9349753,
-        "lng": 100.8837958
-      },
-      {
-        "name": "วัดพระแก้ว",
-        "lat": 13.7502595,
-        "lng": 100.492435
-      }
-    ],
+    "placeVisited": ["พัทยา", "วัดพระแก้ว"],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original//afgwHQJ3BP6ygM2ZUUZO60U84q0.jpg",
     "trendingPoint": 18778
@@ -361,41 +183,13 @@
     "id": 24,
     "name": "Lee Jun Ho",
     "placeVisited": [
-      {
-        "name": "โรงแรม Siri Sala",
-        "lat": 13.7420656,
-        "lng": 100.5376656
-      },
-      {
-        "name": "คุณแดง ก๋วยจั๊บญวน",
-        "lat": 13.7411072,
-        "lng": 100.5387888
-      },
-      {
-        "name": "ถนนคนเดินคลองโอ่งอ่าง",
-        "lat": 13.757785,
-        "lng": 100.4930279
-      },
-      {
-        "name": "วัดอรุณราชวราราม",
-        "lat": 13.743746,
-        "lng": 100.487851
-      },
-      {
-        "name": "ลานแสดงน้ำพุ ไอคอนสยาม",
-        "lat": 13.7263597,
-        "lng": 100.5084575
-      },
-      {
-        "name": "เมืองโบราณ",
-        "lat": 13.5783789,
-        "lng": 100.5986613
-      },
-      {
-        "name": "โลหะปราสาท วัดราชนัดดารามวรวิหาร",
-        "lat": 13.7677005,
-        "lng": 100.5041869
-      }
+      "โรงแรม Siri Sala",
+      "คุณแดง ก๋วยจั๊บญวน",
+      "ถนนคนเดินคลองโอ่งอ่าง",
+      "วัดอรุณราชวราราม",
+      "ลานแสดงน้ำพุ ไอคอนสยาม",
+      "เมืองโบราณ",
+      "โลหะปราสาท วัดราชนัดดารามวรวิหาร"
     ],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original//DJYwG0eWdCoxvqWhLsnJNKQlMR.jpg"
@@ -403,13 +197,7 @@
   {
     "id": 25,
     "name": "Jumpol Adulkittiporn",
-    "placeVisited": [
-      {
-        "name": "หัวหิน",
-        "lat": 12.5683747,
-        "lng": 99.9576888
-      }
-    ],
+    "placeVisited": ["หัวหิน"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/alCgpzXB50QWfck3KFlfzkRnXSW.jpg",
     "trendingPoint": 3150
@@ -417,13 +205,7 @@
   {
     "id": 26,
     "name": "Atthaphan Phunsawat",
-    "placeVisited": [
-      {
-        "name": "หัวหิน",
-        "lat": 12.5683747,
-        "lng": 99.9576888
-      }
-    ],
+    "placeVisited": ["หัวหิน"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/uJ1THfL7y8tuWpCNpow6eoPIr27.jpg",
     "trendingPoint": 9218
@@ -431,13 +213,7 @@
   {
     "id": 27,
     "name": "Tawan Vihokratana",
-    "placeVisited": [
-      {
-        "name": "หัวหิน",
-        "lat": 12.5683747,
-        "lng": 99.9576888
-      }
-    ],
+    "placeVisited": ["หัวหิน"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/3UvwJGTDRXVYjUfaiLQuk7vKqHR.jpg",
     "trendingPoint": 2166
@@ -445,13 +221,7 @@
   {
     "id": 28,
     "name": "Thitipoom Techa-apaikhun",
-    "placeVisited": [
-      {
-        "name": "หัวหิน",
-        "lat": 12.5683747,
-        "lng": 99.9576888
-      }
-    ],
+    "placeVisited": ["หัวหิน"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/wlbfFnZg5TfNJHiBr6nkJvtpHm6.jpg",
     "trendingPoint": 2677
@@ -460,31 +230,11 @@
     "id": 29,
     "name": "Ranee Campen",
     "placeVisited": [
-      {
-        "name": "วัดปากน้ำแขมหนู",
-        "lat": 13.5941389,
-        "lng": 100.5958997
-      },
-      {
-        "name": "ทุ่งโปรงทอง ปากน้ำกระแส",
-        "lat": 11.6645408,
-        "lng": 102.6038368
-      },
-      {
-        "name": "น้ำตกตาดวิมานทิพย์ จังหวัดบึงกาฬ",
-        "lat": 18.2298489,
-        "lng": 103.7533726
-      },
-      {
-        "name": "สะพานเฉลิมพระเกียรติฯ 80 พรรษา จังหวัดพัทลุง",
-        "lat": 7.5134869,
-        "lng": 100.1059213
-      },
-      {
-        "name": "เขื่อนศรีนครินทร์",
-        "lat": 14.890595,
-        "lng": 100.401214
-      }
+      "วัดปากน้ำแขมหนู",
+      "ทุ่งโปรงทอง ปากน้ำกระแส",
+      "น้ำตกตาดวิมานทิพย์ จังหวัดบึงกาฬ",
+      "สะพานเฉลิมพระเกียรติฯ 80 พรรษา จังหวัดพัทลุง",
+      "เขื่อนศรีนครินทร์"
     ],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original//p2mHicig9Obk6InadpCmdxFIMpj.jpg",
@@ -493,13 +243,7 @@
   {
     "id": 30,
     "name": "Nadech Kugimiya",
-    "placeVisited": [
-      {
-        "name": "อนันตรา ลายัน ภูเก็ต รีสอร์ท",
-        "lat": 7.9519331,
-        "lng": 98.283172
-      }
-    ],
+    "placeVisited": ["อนันตรา ลายัน ภูเก็ต รีสอร์ท"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/w58HrktpHZ7UVGY5SKoJxFkitCy.jpg",
     "trendingPoint": 979
@@ -507,13 +251,7 @@
   {
     "id": 31,
     "name": "Urassaya Sperbund",
-    "placeVisited": [
-      {
-        "name": "Memories Beach Bar",
-        "lat": 7.780184,
-        "lng": 98.3001102
-      }
-    ],
+    "placeVisited": ["Memories Beach Bar"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/ui6VKMPZpAPzc6f7dl9YdQVi7Tj.jpg",
     "trendingPoint": 1658
@@ -521,18 +259,7 @@
   {
     "id": 32,
     "name": "Prin Suparat",
-    "placeVisited": [
-      {
-        "name": "แม่น้ำแควน้อย",
-        "lat": 14.8454578,
-        "lng": 98.9022685
-      },
-      {
-        "name": "โรสวูด ภูเก็ต",
-        "lat": 7.9744524,
-        "lng": 98.2834839
-      }
-    ],
+    "placeVisited": ["แม่น้ำแควน้อย", "โรสวูด ภูเก็ต"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/lo6zChxhJrIGYaSZV46IG1K98Rw.jpg",
     "trendingPoint": 1788
@@ -541,41 +268,13 @@
     "id": 33,
     "name": "Davika Hoorne",
     "placeVisited": [
-      {
-        "name": "เขาหลัก จังหวัดพังงา",
-        "lat": 8.6446585,
-        "lng": 98.245467
-      },
-      {
-        "name": "ทุ่งดอกบัวตองดอยแม่อูคอ จังหวัดแม่ฮ่องสอน",
-        "lat": 19.3106675,
-        "lng": 97.9733699
-      },
-      {
-        "name": "สะพานเขียว",
-        "lat": 13.7348591,
-        "lng": 100.5437123
-      },
-      {
-        "name": "เขื่อนป่าสักชลสิทธิ์ จังหวัดลพบุรี",
-        "lat": 14.8009428,
-        "lng": 100.9107421
-      },
-      {
-        "name": "บ้านรักไทย จังหวัดแม่ฮ่องสอน",
-        "lat": 19.301652,
-        "lng": 97.9651287
-      },
-      {
-        "name": "โมริ เนเชอรัล ฟาร์ม (Mori Natural Farm) จังหวัดเชียงใหม่",
-        "lat": 18.7677111,
-        "lng": 98.9336967
-      },
-      {
-        "name": "Vala Hua Hin จังหวัดเพชรบุรี",
-        "lat": 12.5550856,
-        "lng": 99.9147685
-      }
+      "เขาหลัก จังหวัดพังงา",
+      "ทุ่งดอกบัวตองดอยแม่อูคอ จังหวัดแม่ฮ่องสอน",
+      "สะพานเขียว",
+      "เขื่อนป่าสักชลสิทธิ์ จังหวัดลพบุรี",
+      "บ้านรักไทย จังหวัดแม่ฮ่องสอน",
+      "โมริ เนเชอรัล ฟาร์ม (Mori Natural Farm) จังหวัดเชียงใหม่",
+      "Vala Hua Hin จังหวัดเพชรบุรี"
     ],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/dAPMDffwxEgGT2DQnVH493JaB8T.jpg",
@@ -584,13 +283,7 @@
   {
     "id": 34,
     "name": "Kimberly Ann Voltemas",
-    "placeVisited": [
-      {
-        "name": "โรสวูด ภูเก็ต",
-        "lat": 7.9744524,
-        "lng": 98.2834839
-      }
-    ],
+    "placeVisited": ["โรสวูด ภูเก็ต"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/zgo2a0h3N3oDhsteZzl6f0HEeAE.jpg",
     "trendingPoint": 321
@@ -598,38 +291,7 @@
   {
     "id": 35,
     "name": "Ohm Pawat Chittsawangdee",
-    "placeVisited": [
-      {
-        "name": "พัทยา",
-        "lat": 12.9349753,
-        "lng": 100.8837958
-      },
-      {
-        "name": "เขาใหญ่",
-        "lat": 14.4412618,
-        "lng": 101.3784823
-      },
-      {
-        "name": "เกาะยาวน้อย",
-        "lat": 8.0723983,
-        "lng": 98.5896628
-      },
-      {
-        "name": "เกาะพีพี",
-        "lat": 7.7407431,
-        "lng": 98.7708014
-      },
-      {
-        "name": "เยาวราช",
-        "lat": 13.7397317,
-        "lng": 100.5104616
-      },
-      {
-        "name": "ตลาดนัดจตุจักร",
-        "lat": 13.8005433,
-        "lng": 100.5502302
-      }
-    ],
+    "placeVisited": ["พัทยา", "เขาใหญ่", "เกาะยาวน้อย", "เกาะพีพี", "เยาวราช", "ตลาดนัดจตุจักร"],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original//m0wsd5KI9w9qk5TFPt8a5pBwL97.jpg",
     "trendingPoint": 3901

@@ -105,23 +105,23 @@ const getPlaceDetailFromPlaceId = async (placeId: string) => {
   return response.data.result;
 };
 
-const fetchNearbyPlaces = async (places) => {
-  const promises = places.map(async (place) => {
-    const response = await axios.get('https://search.longdo.com/mapsearch/json/search', {
-      params: {
-        keyword: place.name,
-        area: `${place.lat},${place.lng}`,
-        span: '1km',
-        limit: 10,
-        key: process.env.NEXT_PUBLIC_LONGDO_API_KEY,
-      },
-    });
-    return response.data.data;
-  });
+// const fetchNearbyPlaces = async (places) => {
+//   const promises = places.map(async (place) => {
+//     const response = await axios.get('https://search.longdo.com/mapsearch/json/search', {
+//       params: {
+//         keyword: place.name,
+//         area: `${place.lat},${place.lng}`,
+//         span: '1km',
+//         limit: 10,
+//         key: process.env.NEXT_PUBLIC_LONGDO_API_KEY,
+//       },
+//     });
+//     return response.data.data;
+//   });
 
-  const results = await Promise.all(promises);
-  return results.flat();
-};
+//   const results = await Promise.all(promises);
+//   return results.flat();
+// };
 
 const getPlaceDetails = async (places: any) => {
   try {
@@ -223,14 +223,14 @@ export default function Page() {
   //   }
   // );
 
-  const { data: nearbyPlaces } = useQuery(
-    ['nearbyPlaces', celebrity?.placeVisited],
-    () => fetchNearbyPlaces(celebrity?.placeVisited || []),
-    {
-      enabled: !!celebrity?.placeVisited,
-      refetchOnWindowFocus: false,
-    }
-  );
+  // const { data: nearbyPlaces } = useQuery(
+  //   ['nearbyPlaces', celebrity?.placeVisited],
+  //   () => fetchNearbyPlaces(celebrity?.placeVisited || []),
+  //   {
+  //     enabled: !!celebrity?.placeVisited,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // );
 
   const [biography, setBiography] = useState('');
   const [isFetching, setIsFetching] = useState(false);
@@ -455,7 +455,7 @@ export default function Page() {
               </Stack>
             </TabsPanel>
             <TabsPanel value="chatgpt-planner">
-              <ChatInterface visitedPlaces={celebrity.placeVisited} />
+              <ChatInterface visitedPlaces={celebrity?.placeVisited} />
             </TabsPanel>
           </Tabs>
         </main>

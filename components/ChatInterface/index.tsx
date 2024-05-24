@@ -21,6 +21,9 @@ interface ChatInterfaceProps {
 }
 
 const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
+  if (visitedPlaces.length === 0) {
+    return 'No visited places found';
+  }
   const [messages, setMessages] = useState([]);
   const chatContainerRef = useRef(null);
   const [selectedBudget, setSelectedBudget] = useState('');
