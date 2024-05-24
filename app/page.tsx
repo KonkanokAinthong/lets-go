@@ -22,7 +22,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import { FormattedMessage } from 'react-intl';
-import { Map, Marker } from 'react-map-gl';
+import { FullscreenControl, Map, Marker } from 'react-map-gl';
 import CELEB_LISTS from '../celebs.json';
 
 const API_ENDPOINTS = {
@@ -187,6 +187,7 @@ const searchCelebrities = async (celebList: typeof CELEB_LISTS) => {
 };
 
 const SuperstarCheckInThailand = () => {
+  const [isMapFullscreen, setIsMapFullscreen] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [nearestCeleb, setNearestCeleb] = useState(null);
 
@@ -298,6 +299,7 @@ const SuperstarCheckInThailand = () => {
                 mapStyle="mapbox://styles/mapbox/streets-v9"
                 mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
               >
+                <FullscreenControl />
                 {placeDetails.places.map((place, index) => (
                   <Marker
                     key={index}
@@ -372,11 +374,11 @@ const SuperstarCheckInThailand = () => {
               <Skeleton height={400} width="100%" />
             )}
             <Button
+              style={{
+                visibility: 'hidden',
+              }}
               size="lg"
-              component={Link}
-              href={`${formatNationality(
-                nearestCeleb?.[0]?.nationality
-              )}/celebrities/${nearestCeleb?.[0].id}`}
+              onClick={() => setIsMapFullscreen(true)}
               variant="default"
             >
               <FormattedMessage id="nearbySuperstars" />
