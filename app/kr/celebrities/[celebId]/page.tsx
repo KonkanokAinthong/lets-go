@@ -11,7 +11,7 @@ import {
   Divider,
   Grid,
   Image,
-  Rating,
+  Select,
   Skeleton,
   Stack,
   Tabs,
@@ -214,16 +214,14 @@ export default function Page() {
     }
   );
 
-  console.log(places);
-
-  const { data: placeDetails } = useQuery(
-    ['placeDetails', selectedPlace],
-    () => getPlaceDetailFromPlaceId(selectedPlace?.place_id),
-    {
-      refetchOnWindowFocus: false,
-      enabled: !!selectedPlace,
-    }
-  );
+  // const { data: placeDetails } = useQuery(
+  //   ['placeDetails', selectedPlace],
+  //   () => getPlaceDetailFromPlaceId(selectedPlace?.place_id),
+  //   {
+  //     refetchOnWindowFocus: false,
+  //     enabled: !!selectedPlace,
+  //   }
+  // );
 
   const { data: nearbyPlaces } = useQuery(
     ['nearbyPlaces', celebrity?.placeVisited],
@@ -374,114 +372,87 @@ export default function Page() {
               </Stack>
             </TabsPanel>
             <TabsPanel value="visited-places">
-              {places ? (
+              {celebrity?.placeVisited && celebrity.placeVisited.length > 0 ? (
                 <Stack>
-                  <Stack>
-                    <Title order={3}>Visited Places</Title>
-                    <Grid>
-                      {places.places.map((place) => (
-                        <Grid.Col key={place.place_id}>
-                          <Card shadow="sm" p="md">
-                            <Card.Section>
-                              <Image
-                                src={place?.thumbnail_url}
-                                alt={place.place_name}
-                                height={200}
-                              />
-                            </Card.Section>
-                            <Stack mt="md">
-                              <Title order={3}>{place.place_name}</Title>
-                              <Stack>
-                                <Title order={4}>ประวัติและความเป็นมา</Title>
-                                <Text>{placeDetails?.place_information?.detail}</Text>
-                              </Stack>
-                              <Stack>
-                                <Title order={4}>ที่ตั้ง</Title>
-                                <Text>
-                                  {place?.location.address} {place?.location.sub_district}{' '}
-                                  {place?.location.district} {place?.location.province}{' '}
-                                  {place?.location.postcode}
-                                </Text>
-                              </Stack>
-                              <Stack>
-                                <Title order={4}>เวลาทำการ</Title>
-                                <Text>
-                                  {placeDetails?.place_information?.open_now
-                                    ? 'เปิดอยู่'
-                                    : 'ปิดแล้ว'}
-                                </Text>
-                              </Stack>
-                              <Stack>
-                                <Title order={4}>เบอร์โทร</Title>
-                                <Text>{placeDetails?.contact?.phones[0]}</Text>
-                              </Stack>
-                              <Stack>
-                                <Title order={4}>กิจกรรมแนะนำ</Title>
-                                <Stack>
-                                  {placeDetails?.place_information?.activities.map((activity) => (
-                                    <Text key={activity.id}>{activity}</Text>
-                                  ))}
-                                </Stack>
-                              </Stack>
-                            </Stack>
-                          </Card>
-                        </Grid.Col>
-                      ))}
-                    </Grid>
-                  </Stack>
+                  <Title order={3}>สถานที่ท่องเที่ยวที่เคยไป</Title>
+                  <Grid>
+                    {/* {celebrity.placeVisited.map((place, index) => (
+                      <Grid.Col key={index} span={12} sm={6} md={4}>
+                        <Card shadow="sm" p="md">
+                          <Card.Section>
+                            <Image
+                              src={`https://maps.googleapis.com/maps/api/staticmap?center=${place.lat},${place.lng}&zoom=14&size=400x200&maptype=roadmap&markers=color:red%7C${place.lat},${place.lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
+                              alt={place.name}
+                              height={200}
+                            />
+                          </Card.Section>
+                          <Stack mt="md">
+                            <Title order={4}>{place.name}</Title>
+                            <Text>
+                              ละติจูด: {place.lat}, ลองจิจูด: {place.lng}
+                            </Text>
+                          </Stack>
+                        </Card>
+                      </Grid.Col>
+                    ))} */}
+                  </Grid>
                 </Stack>
               ) : (
-                <Stack>
-                  <Divider />
-                  <Stack>
-                    <Title order={3}>Visited Places</Title>
-                    <Grid>
-                      {Array(3)
-                        .fill(0)
-                        .map((_, index) => (
-                          <Grid.Col key={index}>
-                            <Card shadow="sm" p="md">
-                              <Skeleton height={200} />
-                              <Stack mt="md">
-                                <Skeleton height={20} width="70%" />
-                                <Skeleton height={20} width="50%" />
-                              </Stack>
-                            </Card>
-                          </Grid.Col>
-                        ))}
-                    </Grid>
-                  </Stack>
-                </Stack>
+                <Text>ไม่มีข้อมูลสถานที่ท่องเที่ยวที่ไปแล้ว</Text>
               )}
             </TabsPanel>
+
             <TabsPanel value="nearby">
-              <Map
-                latitude={currentLocation.lat}
-                longitude={currentLocation.lng}
-                zoom={12}
-                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-                style={{ width: 1000, height: 400 }}
-                mapStyle="mapbox://styles/mapbox/streets-v9"
-              >
-                {/* {nearbyPlaces?.map((place) => (
-                  <Marker
-                    key={place?.id}
-                    latitude={place?.lat}
-                    longitude={place?.lon}
-                    offset={{
-                      x: -20,
-                      y: -40,
+              <Stack>
+                {/* <Select
+                  label="เลือกสถานที่"
+                  placeholder="เลือกสถานที่"
+                  data={celebrity?.placeVisited.map((place) => ({
+                    value: place.name,
+                    label: place.name,
+                  }))}
+                  onChange={(value) => {
+                    console.log(value);
+                    const selected_places = celebrity.placeVisited.find(
+                      (place) => place.name === value
+                    );
+                    setSelectedPlace(selected_places);
+                  }}
+                /> */}
+                {/* {selectedPlace && (
+                  <Map
+                    initialViewState={{
+                      latitude: selectedPlace.lat,
+                      longitude: selectedPlace.lng,
+                      zoom: 12,
                     }}
+                    mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
+                    style={{ width: 1000, height: 400 }}
+                    mapStyle="mapbox://styles/mapbox/streets-v9"
                   >
-                    <Avatar
-                      size={40}
-                      src={place?.icon}
-                      alt={place?.name}
-                      onClick={() => setSelectedPlace(place)}
-                    />
-                  </Marker>
-                ))} */}
-              </Map>
+                    <Marker
+                      latitude={selectedPlace.lat}
+                      longitude={selectedPlace.lng}
+                      offsetLeft={-20}
+                      offsetTop={-40}
+                    >
+                      <Avatar size={40} />
+                    </Marker>
+                    {nearbyPlaces?.map((place) => (
+                      <Marker
+                        key={place?.id}
+                        latitude={place?.lat}
+                        longitude={place?.lon}
+                        offsetLeft={-20}
+                        offsetTop={-40}
+                        onClick={() => setSelectedPlace(place)}
+                      >
+                        <Avatar size={40} src={place?.icon} alt={place?.name} />
+                      </Marker>
+                    ))}
+                  </Map>
+                )} */}
+              </Stack>
             </TabsPanel>
             <TabsPanel value="chatgpt-planner">
               <ChatInterface visitedPlaces={celebrity.placeVisited} />

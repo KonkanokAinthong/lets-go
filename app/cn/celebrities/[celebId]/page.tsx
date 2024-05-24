@@ -301,7 +301,7 @@ export default function Page() {
           </TabsPanel>
           <TabsPanel value="visited-places">
             <TabsPanel value="visited-places">
-              <div
+              {/* <div
                 style={{
                   width: '100%',
                   height: '400px',
@@ -317,11 +317,11 @@ export default function Page() {
                   mapStyle="mapbox://styles/mapbox/streets-v9"
                   mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
                 />
-              </div>
+              </div> */}
             </TabsPanel>
           </TabsPanel>
           <TabsPanel value="nearby">
-            <div
+            {/* <div
               style={{
                 width: '100%',
                 height: '400px',
@@ -337,10 +337,10 @@ export default function Page() {
                 mapStyle="mapbox://styles/mapbox/streets-v9"
                 mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
               />
-            </div>
+            </div> */}
           </TabsPanel>
           <TabsPanel value="chatgpt-planner">
-            <ChatInterface visitedPlaces={[]} />
+            <ChatInterface visitedPlaces={celebrity.placeVisited} />
           </TabsPanel>
         </Tabs>
       </Stack>
