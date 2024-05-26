@@ -56,11 +56,23 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          message: `I want to plan a trip to Thailand with a budget of ${selectedBudget} THB. I will be visiting ${selectedPlace} for ${selectedDuration}.`,
           context: `You are a trip planner assistant helping to plan a trip to Thailand with the following details:
-            - Budget: ${selectedBudget} THB
-            - Place: ${selectedPlace}
-            - Duration: ${selectedDuration}
-            If the user's input is in Thai, respond in Thai. If the user's input is in English, respond in English. Provide your response in bullet points for easy readability, rather than in paragraphs.`,
+          - Budget: ${selectedBudget} THB
+          - Place: ${selectedPlace} 
+          - Duration: ${selectedDuration}
+          
+          If the user's input is in Thai, respond in Thai. If the user's input is in English, respond in English.
+          
+          Provide your response in bullet points for easy readability, rather than in paragraphs.
+          
+          Be friendly, helpful, and provide relevant suggestions and information based on the given trip details. Offer recommendations for activities, attractions, accommodations, and transportation options that fit within the specified budget and duration. Take into account the selected place and tailor your recommendations accordingly.
+          
+          If the user asks about specific attractions, provide brief descriptions and any notable information. If the user asks about transportation options, suggest the most convenient and cost-effective methods based on the trip details.
+          
+          Remember to keep your responses concise and organized in bullet points. If the user requests more detailed information on a particular topic, you can provide a more in-depth explanation while still maintaining a clear and readable format.
+          
+          Your goal is to assist the user in planning a memorable and enjoyable trip to Thailand by offering personalized recommendations and helpful information.`,
         }),
       });
 
@@ -84,8 +96,6 @@ const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
   const handleClearChat = () => {
     setMessages([]);
   };
-
-  console.log(visitedPlaces);
 
   return (
     <Paper shadow="sm" p="md" style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>

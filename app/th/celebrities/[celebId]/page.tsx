@@ -148,6 +148,8 @@ export default function Page() {
     enabled: !!celebInfo?.id,
   });
 
+  console.log('celebrity:', celebInfo);
+
   const { data: places } = useQuery(
     ['places', celebrity?.placeVisited],
     () => getPlaceDetails(celebrity?.placeVisited),
@@ -342,7 +344,7 @@ export default function Page() {
               </div> */}
             </TabsPanel>
             <TabsPanel value="chatgpt-planner">
-              <ChatInterface visitedPlaces={[celebrity.placeVisited]} />
+              {/* <ChatInterface visitedPlaces={[celebrity.placeVisited]} /> */}
             </TabsPanel>
           </Tabs>
         </main>

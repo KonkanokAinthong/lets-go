@@ -11,13 +11,37 @@ import { useQuery } from 'react-query';
 async function getTrendingThaiCelebrities() {
   try {
     const response = await axios.get('/api/trending-celebs?nationality=Thai');
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error(error);
     throw new Error('Failed to fetch data');
   }
 }
+
+async function getCelebrityDetails(id: string) {
+  try {
+    const response = await axios.get(`/api/celebs/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to fetch data');
+  }
+}
+
+const mockSeries = [
+  {
+    title: 'The Legend of White Snake',
+    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/1ZYBRDnpgMcDI3h5ZovCRS2NJvX.jpg',
+  },
+  {
+    title: 'Word of Honor',
+    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/op0ZXBZodAc12CVqEN55KxD0FYe.jpg',
+  },
+  {
+    title: 'The Shiny Group',
+    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/rE6vK2eX04zEw35MOd6ykStz8CA.jpg',
+  },
+];
 
 export default function Page() {
   const { data: celebs, isLoading: isTrendingLoading } = useQuery(
@@ -27,18 +51,20 @@ export default function Page() {
 
   console.log(celebs);
 
-  // // Sort by popularity in descending order
-  // const sortedByPopularity = celebs?.map((f) => {
-  //   const tvShows = f.known_for.filter((media) => media.media_type === 'tv');
-  //   tvShows.sort((a, b) => b.popularity - a.popularity); // Sort by popularity descending
-  //   return { ...f, known_for: tvShows };
-  // });
+  // Sort by popularity in descending order
+  const sortedByPopularity = celebs?.map((f) => {
+    const trendingSeries = f.trendingSeries;
+    trendingSeries?.sort((a, b) => b.trendingPoint - a.trendingPoint); // Sort by trendingPoint descending
+    return { ...f, trendingSeries };
+  });
 
-  // const trendingSeries = sortedByPopularity?.map((f) => f?.known_for.map((item) => item)).flat();
+  const allSeries = sortedByPopularity?.map((f) => f?.trendingSeries).flat();
 
-  // const uniqueNames = Array.from(new Set(trendingSeries?.map((obj) => obj?.name)));
+  const uniqueNames = Array.from(new Set(allSeries?.map((obj) => obj?.title)));
 
-  // const uniqueSeries = trendingSeries?.filter((obj) => uniqueNames?.includes(obj?.name));
+  const uniqueSeries = allSeries?.filter((obj) => uniqueNames?.includes(obj?.title));
+
+  console.log(uniqueSeries);
 
   if (isTrendingLoading) {
     return (
@@ -115,7 +141,7 @@ export default function Page() {
                     )}
                     <Avatar
                       size={124}
-                      src={`https://image.tmdb.org/t/p/original/${celebrity.image}`}
+                      src={celebrity.image}
                       alt={celebrity.name}
                       component={Link}
                       href={`/th/celebrities/${celebrity?.id}`}
@@ -154,19 +180,16 @@ export default function Page() {
               align="center"
               slidesToScroll="auto"
             >
-              {/* {uniqueSeries?.map((serie: any) => (
-                <Carousel.Slide key={serie.name}>
+              {uniqueSeries?.map((serie: any) => (
+                <Carousel.Slide key={serie?.title}>
                   <Stack>
-                    <Image
-                      src={`https://image.tmdb.org/t/p/original/${serie.poster_path}`}
-                      alt={serie.name}
-                    />
+                    <Image src={serie?.image} alt={serie?.title} />
                     <Title order={6} ta="center">
-                      {serie.name}
+                      {serie?.title}
                     </Title>
                   </Stack>
                 </Carousel.Slide>
-              ))} */}
+              ))}
             </Carousel>
           </Stack>
         </section>

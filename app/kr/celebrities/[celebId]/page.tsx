@@ -204,6 +204,10 @@ export default function Page() {
     }
   );
 
+  console.log(info);
+
+  console.log(celebrity);
+
   const { data: places } = useQuery(
     ['places', celebrity?.placeVisited],
     () => getPlaceDetails(celebrity.placeVisited.map((place) => place)),
@@ -299,6 +303,9 @@ export default function Page() {
               <Title order={1} ta="center" mb={24}>
                 {celebrity?.name}
               </Title>
+              {/* <Text ta="center" size="lg">
+                Also known as: {info?.also_known_as?.join(', ')}
+              </Text> */}
             </Stack>
           </section>
 
@@ -376,25 +383,15 @@ export default function Page() {
                 <Stack>
                   <Title order={3}>สถานที่ท่องเที่ยวที่เคยไป</Title>
                   <Grid>
-                    {/* {celebrity.placeVisited.map((place, index) => (
-                      <Grid.Col key={index} span={12} sm={6} md={4}>
+                    {celebrity.placeVisited.map((place, index) => (
+                      <Grid.Col key={index} span={12}>
                         <Card shadow="sm" p="md">
-                          <Card.Section>
-                            <Image
-                              src={`https://maps.googleapis.com/maps/api/staticmap?center=${place.lat},${place.lng}&zoom=14&size=400x200&maptype=roadmap&markers=color:red%7C${place.lat},${place.lng}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
-                              alt={place.name}
-                              height={200}
-                            />
-                          </Card.Section>
                           <Stack mt="md">
                             <Title order={4}>{place.name}</Title>
-                            <Text>
-                              ละติจูด: {place.lat}, ลองจิจูด: {place.lng}
-                            </Text>
                           </Stack>
                         </Card>
                       </Grid.Col>
-                    ))} */}
+                    ))}
                   </Grid>
                 </Stack>
               ) : (
@@ -404,6 +401,27 @@ export default function Page() {
 
             <TabsPanel value="nearby">
               <Stack>
+                <Select
+                  label="เลือกสถานที่"
+                  placeholder="เลือกสถานที่"
+                  data={celebrity?.placeVisited?.map((place) => ({
+                    value: place,
+                    label: place,
+                  }))}
+                  onChange={(value) => {
+                    setSelectedPlace(value);
+                  }}
+                />
+                <iframe
+                  title="map"
+                  width="100%"
+                  height="450"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src={`https://www.google.com/maps/embed/v1/search?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${selectedPlace}`}
+                />
                 {/* <Select
                   label="เลือกสถานที่"
                   placeholder="เลือกสถานที่"
