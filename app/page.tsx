@@ -24,6 +24,7 @@ import axios from 'axios';
 import { FormattedMessage } from 'react-intl';
 import { FullscreenControl, Map, Marker } from 'react-map-gl';
 import CELEB_LISTS from '../celebs.json';
+import { CNFlag, KRFlag, THFlag } from 'mantine-flagpack';
 
 const API_ENDPOINTS = {
   celebsNews: '/api/celebs-news',
@@ -393,7 +394,13 @@ const SuperstarCheckInThailand = () => {
             ) : (
               <Skeleton height={400} width="100%" />
             )}
-            <Button rightSection="🇰🇷" size="lg" component={Link} href="/kr" variant="default">
+            <Button
+              rightSection={<KRFlag w={18} h={18} />}
+              size="lg"
+              component={Link}
+              href="/kr"
+              variant="default"
+            >
               <FormattedMessage id="southKorea" />
             </Button>
           </Stack>
@@ -413,7 +420,13 @@ const SuperstarCheckInThailand = () => {
             ) : (
               <Skeleton height={400} width="100%" />
             )}
-            <Button rightSection="🇨🇳" size="lg" component={Link} href="/cn" variant="default">
+            <Button
+              rightSection={<CNFlag w={18} h={18} />}
+              size="lg"
+              component={Link}
+              href="/cn"
+              variant="default"
+            >
               <FormattedMessage id="china" />
             </Button>
           </Stack>
@@ -434,7 +447,13 @@ const SuperstarCheckInThailand = () => {
             ) : (
               <Skeleton height={400} width="100%" />
             )}
-            <Button rightSection="🇹🇭" size="lg" component={Link} href="/th" variant="default">
+            <Button
+              rightSection={<THFlag w={18} h={18} />}
+              size="lg"
+              component={Link}
+              href="/th"
+              variant="default"
+            >
               <FormattedMessage id="thailand" />
             </Button>
           </Stack>

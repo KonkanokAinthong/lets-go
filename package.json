@@ -33,6 +33,7 @@
     "embla-carousel-react": "^7.1.0",
     "geolib": "^3.3.4",
     "leaflet-defaulticon-compatibility": "^0.1.2",
+    "mantine-flagpack": "^4.0.1",
     "mapbox-gl": "^3.3.0",
     "next": "^13.5.6",
     "openai": "^4.29.2",

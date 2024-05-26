@@ -26,6 +26,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { FormattedMessage } from 'react-intl';
+import { THFlag, USFlag } from 'mantine-flagpack';
 
 interface LayoutProps {
   locale: string;
@@ -178,13 +179,13 @@ export function Layout({ children, locale, onLocaleChange }: LayoutProps) {
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Item
-                    leftSection={<Image src="/path/to/en/flag.png" width={18} height={18} />}
+                    leftSection={<USFlag w={18} h={18} />}
                     onClick={() => handleLocaleChange('en')}
                   >
                     English
                   </Menu.Item>
                   <Menu.Item
-                    leftSection={<Image src="/path/to/th/flag.png" width={18} height={18} />}
+                    leftSection={<THFlag w={18} h={18} />}
                     onClick={() => handleLocaleChange('th')}
                   >
                     ภาษาไทย
