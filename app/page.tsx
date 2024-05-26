@@ -18,7 +18,7 @@ import {
 
 import Autoplay from 'embla-carousel-autoplay';
 import Link from 'next/link';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import { FormattedMessage } from 'react-intl';
@@ -66,7 +66,7 @@ const getPlaceDetails = async (places: any) => {
               'Accept-Language': 'th',
             },
             params: {
-              keyword: place.name,
+              keyword: place,
             },
           }
         );
@@ -373,14 +373,7 @@ const SuperstarCheckInThailand = () => {
             ) : (
               <Skeleton height={400} width="100%" />
             )}
-            <Button
-              style={{
-                visibility: 'hidden',
-              }}
-              size="lg"
-              onClick={() => setIsMapFullscreen(true)}
-              variant="default"
-            >
+            <Button size="lg" onClick={() => {}} variant="default">
               <FormattedMessage id="nearbySuperstars" />
             </Button>
           </Stack>
@@ -400,7 +393,7 @@ const SuperstarCheckInThailand = () => {
             ) : (
               <Skeleton height={400} width="100%" />
             )}
-            <Button size="lg" component={Link} href="/kr" variant="default">
+            <Button rightSection="🇰🇷" size="lg" component={Link} href="/kr" variant="default">
               <FormattedMessage id="southKorea" />
             </Button>
           </Stack>
@@ -420,7 +413,7 @@ const SuperstarCheckInThailand = () => {
             ) : (
               <Skeleton height={400} width="100%" />
             )}
-            <Button size="lg" component={Link} href="/cn" variant="default">
+            <Button rightSection="🇨🇳" size="lg" component={Link} href="/cn" variant="default">
               <FormattedMessage id="china" />
             </Button>
           </Stack>
@@ -441,7 +434,7 @@ const SuperstarCheckInThailand = () => {
             ) : (
               <Skeleton height={400} width="100%" />
             )}
-            <Button size="lg" component={Link} href="/th" variant="default">
+            <Button rightSection="🇹🇭" size="lg" component={Link} href="/th" variant="default">
               <FormattedMessage id="thailand" />
             </Button>
           </Stack>
