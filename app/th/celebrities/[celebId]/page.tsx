@@ -4,10 +4,12 @@ import {
   Avatar,
   Breadcrumbs,
   Button,
+  Card,
   Center,
   Container,
   Grid,
   Image,
+  Select,
   Skeleton,
   Stack,
   Tabs,
@@ -23,7 +25,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 import { IconArrowLeft } from '@tabler/icons-react';
-import { Map } from 'react-map-gl';
+
 import ChatInterface from '@/components/ChatInterface';
 
 const API_KEY = 'AIzaSyBKRFuroEmi6ocPRQzuBuX4ULAFiYTvTGo';
@@ -106,15 +108,14 @@ const fetchNearbyPlaces = async (location) => {
 const getPlaceDetails = async (places: string[]) => {
   try {
     const promises = places.map(async (place) => {
-      const response = await axios.get(`/api/places?query=${encodeURIComponent(place)}`);
-
-      return response.data.data.results;
+      const response = await axios.get(`/api/places2?place=${encodeURIComponent(place)}`);
+      return response.data;
     });
 
     const results = await Promise.all(promises);
-    const flattenedResults = results.flat();
+    const filteredResults = results.filter((result) => result !== undefined);
 
-    return { places: flattenedResults };
+    return { places: filteredResults };
   } catch (error) {
     console.error(error);
     return { places: [] };
@@ -123,6 +124,7 @@ const getPlaceDetails = async (places: string[]) => {
 
 export default function Page() {
   const navigate = useRouter();
+  const [selectedPlace, setSelectedPlace] = useState(null);
 
   const { celebId } = useParams();
 
@@ -305,46 +307,73 @@ export default function Page() {
               </Stack>
             </TabsPanel>
             <TabsPanel value="visited-places">
-              {/* <div
-                style={{
-                  width: '100%',
-                  height: '400px',
-                }}
-              >
-                <Map
-                  style={{ width: '100%', height: '400px' }}
-                  initialViewState={{
-                    latitude: currentLocation.lat,
-                    longitude: currentLocation.lng,
-                    zoom: 14,
-                  }}
-                  mapStyle="mapbox://styles/mapbox/streets-v9"
-                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-                />
-              </div> */}
+              {celebrity?.placeVisited && celebrity.placeVisited.length > 0 ? (
+                <Stack>
+                  <Title order={3}>สถานที่ท่องเที่ยวที่เคยไป</Title>
+                  <Grid>
+                    {places.places.map((place, index) => (
+                      <Grid.Col key={index} span={12}>
+                        <Card shadow="sm" p="md">
+                          <Stack mt="md">
+                            <Image
+                              src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
+                              alt={place.name}
+                            />
+                            <Title order={4}>{place.name}</Title>
+                            {place.editorial_summary && (
+                              <div>
+                                <Title order={5}>Biography:</Title>
+                                <Text>{place.editorial_summary.overview}</Text>
+                              </div>
+                            )}
+                            {place.types && (
+                              <div>
+                                <Title order={5}>Activities:</Title>
+                                <ul>
+                                  {place.types.map((type, typeIndex) => (
+                                    <li key={typeIndex}>{type}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </Stack>
+                        </Card>
+                      </Grid.Col>
+                    ))}
+                  </Grid>
+                </Stack>
+              ) : (
+                <Text>ไม่มีข้อมูลสถานที่ท่องเที่ยวที่ไปแล้ว</Text>
+              )}
             </TabsPanel>
 
             <TabsPanel value="nearby">
-              {/* <div
-                style={{
-                  width: '100%',
-                  height: '400px',
-                }}
-              >
-                <Map
-                  style={{ width: '100%', height: '400px' }}
-                  initialViewState={{
-                    latitude: currentLocation.lat,
-                    longitude: currentLocation.lng,
-                    zoom: 14,
+              <Stack>
+                <Select
+                  label="เลือกสถานที่"
+                  placeholder="เลือกสถานที่"
+                  data={celebrity?.placeVisited?.map((place) => ({
+                    value: place,
+                    label: place,
+                  }))}
+                  onChange={(value) => {
+                    setSelectedPlace(value);
                   }}
-                  mapStyle="mapbox://styles/mapbox/streets-v9"
-                  mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
                 />
-              </div> */}
+                <iframe
+                  title="map"
+                  width="100%"
+                  height="450"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src={`https://www.google.com/maps/embed/v1/search?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${selectedPlace}`}
+                />
+              </Stack>
             </TabsPanel>
             <TabsPanel value="chatgpt-planner">
-              {/* <ChatInterface visitedPlaces={[celebrity.placeVisited]} /> */}
+              <ChatInterface visitedPlaces={celebrity?.placeVisited} />
             </TabsPanel>
           </Tabs>
         </main>

@@ -1,89 +1,44 @@
 import { NextResponse } from 'next/server';
+import axios from 'axios';
 
-interface PlaceSearchParams {
-  keyword: string;
-  geolocation: string;
-  categorycodes?: string;
-  provincename?: string;
-  searchradius?: number;
-  numberofresult?: number;
-  pagenumber?: number;
-  destination?: string;
-  filterByUpdateDate?: string;
-}
-
-interface PlaceSearchInfo {
-  // Define the structure of the PlaceSearchInfo object based on the API response
-  // Example:
-  // id: string;
-  // name: string;
-  // address: string;
-  // ...
-}
+const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-
-  const keyword = searchParams.get('keyword');
-  const geolocation = searchParams.get('geolocation');
-  const categorycodes = searchParams.get('categorycodes');
-  const provincename = searchParams.get('provincename');
-  const searchradius = searchParams.get('searchradius');
-  const numberofresult = searchParams.get('numberofresult');
-  const pagenumber = searchParams.get('pagenumber');
-  const destination = searchParams.get('destination');
-  const filterByUpdateDate = searchParams.get('filterByUpdateDate');
-
-  if (!keyword || !geolocation) {
-    return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
-  }
-
-  const url = new URL('https://tatapi.tourismthailand.org/tatapi/v5/places/search');
-
-  url.searchParams.append('keyword', keyword);
-  url.searchParams.append('geolocation', geolocation);
-
-  if (categorycodes) {
-    url.searchParams.append('categorycodes', categorycodes);
-  }
-  if (provincename) {
-    url.searchParams.append('provincename', provincename);
-  }
-  if (searchradius) {
-    url.searchParams.append('searchradius', searchradius);
-  }
-  if (numberofresult) {
-    url.searchParams.append('numberofresult', numberofresult);
-  }
-  if (pagenumber) {
-    url.searchParams.append('pagenumber', pagenumber);
-  }
-  if (destination) {
-    url.searchParams.append('destination', destination);
-  }
-  if (filterByUpdateDate) {
-    url.searchParams.append('filterByUpdateDate', filterByUpdateDate);
-  }
-
-  const headers = new Headers();
-  headers.append('Content-Type', 'application/json');
-  headers.append('Authorization', `Bearer ${process.env.TAT_API_KEY}`);
-  headers.append('Accept-Language', 'th');
+  const place = searchParams.get('place');
 
   try {
-    const response = await fetch(url.toString(), {
-      method: 'GET',
-      headers,
-    });
+    const response = await axios.get(
+      `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${encodeURIComponent(
+        place as string
+      )}&inputtype=textquery&fields=place_id&key=${API_KEY}`
+    );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    const placeId = response.data.candidates[0]?.place_id;
+
+    console.log(response.data);
+
+    if (placeId) {
+      const detailsResponse = await axios.get(
+        `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&fields=name,formatted_address,geometry,opening_hours,rating,user_ratings_total,photos,editorial_summary,types&key=${API_KEY}`
+      );
+
+      console.log(detailsResponse.data);
+
+      const placeDetails = detailsResponse.data.result;
+
+      if (placeDetails && placeDetails.photos) {
+        const photoResponse = await axios.get(
+          `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${placeDetails.photos[0].photo_reference}&key=${API_KEY}`
+        );
+        placeDetails.photo = photoResponse.request.responseURL;
+      }
+
+      return NextResponse.json(placeDetails);
     }
-
-    const data = await response.json();
-    return NextResponse.json(data.result as PlaceSearchInfo[]);
+    return NextResponse.json({ error: 'Place not found' }, { status: 404 });
   } catch (error) {
-    console.error('Error searching places:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    console.error(error);
+    return NextResponse.json({ error: 'An error occurred' }, { status: 500 });
   }
 }

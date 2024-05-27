@@ -123,45 +123,19 @@ const getPlaceDetailFromPlaceId = async (placeId: string) => {
 //   return results.flat();
 // };
 
-const getPlaceDetails = async (places: any) => {
+const getPlaceDetails = async (places: string[]) => {
   try {
     const promises = places.map(async (place) => {
-      try {
-        const response = await axios.get(
-          'https://tatapi.tourismthailand.org/tatapi/v5/places/search',
-          {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization:
-                'Bearer Gb6UecYN9hyd8JhU6Fs1wUl4mpJaY6Nb6)O)CLN)deKcdMmHpoaDMyH0Bj5ychzyHQSPcb6p5BDAfr4b9WowEa0=====2',
-              'Accept-Language': 'th',
-            },
-            params: {
-              geolocation: `${place.lat},${place.lng}`,
-            },
-          }
-        );
-        console.log(response);
-
-        return response.data.result;
-      } catch (error) {
-        if (error.response && error.response.status === 404) {
-          return null;
-        }
-        throw error;
-      }
+      const response = await axios.get(`/api/places2?place=${encodeURIComponent(place)}`);
+      return response.data;
     });
 
-    const results = await Promise.allSettled(promises);
+    const results = await Promise.all(promises);
+    const filteredResults = results.filter((result) => result !== undefined);
 
-    const fulfilledResults = results
-      .filter((result) => result.status === 'fulfilled')
-      .map((result) => result.value)
-      .filter((result) => result !== null);
-
-    const flattenedResults = fulfilledResults.flat();
-    return { places: flattenedResults };
+    return { places: filteredResults };
   } catch (error) {
+    console.error(error);
     return { places: [] };
   }
 };
@@ -217,6 +191,7 @@ export default function Page() {
       enabled: !!celebrity?.placeVisited,
     }
   );
+  console.log(places);
 
   // const { data: placeDetails } = useQuery(
   //   ['placeDetails', selectedPlace],
@@ -383,11 +358,31 @@ export default function Page() {
                 <Stack>
                   <Title order={3}>สถานที่ท่องเที่ยวที่เคยไป</Title>
                   <Grid>
-                    {celebrity.placeVisited.map((place, index) => (
+                    {places.places.map((place, index) => (
                       <Grid.Col key={index} span={12}>
                         <Card shadow="sm" p="md">
                           <Stack mt="md">
+                            <Image
+                              src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
+                              alt={place.name}
+                            />
                             <Title order={4}>{place.name}</Title>
+                            {place.editorial_summary && (
+                              <div>
+                                <Title order={5}>Biography:</Title>
+                                <Text>{place.editorial_summary.overview}</Text>
+                              </div>
+                            )}
+                            {place.types && (
+                              <div>
+                                <Title order={5}>Activities:</Title>
+                                <ul>
+                                  {place.types.map((type, typeIndex) => (
+                                    <li key={typeIndex}>{type}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
                           </Stack>
                         </Card>
                       </Grid.Col>
@@ -422,54 +417,6 @@ export default function Page() {
                   referrerPolicy="no-referrer-when-downgrade"
                   src={`https://www.google.com/maps/embed/v1/search?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${selectedPlace}`}
                 />
-                {/* <Select
-                  label="เลือกสถานที่"
-                  placeholder="เลือกสถานที่"
-                  data={celebrity?.placeVisited.map((place) => ({
-                    value: place.name,
-                    label: place.name,
-                  }))}
-                  onChange={(value) => {
-                    console.log(value);
-                    const selected_places = celebrity.placeVisited.find(
-                      (place) => place.name === value
-                    );
-                    setSelectedPlace(selected_places);
-                  }}
-                /> */}
-                {/* {selectedPlace && (
-                  <Map
-                    initialViewState={{
-                      latitude: selectedPlace.lat,
-                      longitude: selectedPlace.lng,
-                      zoom: 12,
-                    }}
-                    mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-                    style={{ width: 1000, height: 400 }}
-                    mapStyle="mapbox://styles/mapbox/streets-v9"
-                  >
-                    <Marker
-                      latitude={selectedPlace.lat}
-                      longitude={selectedPlace.lng}
-                      offsetLeft={-20}
-                      offsetTop={-40}
-                    >
-                      <Avatar size={40} />
-                    </Marker>
-                    {nearbyPlaces?.map((place) => (
-                      <Marker
-                        key={place?.id}
-                        latitude={place?.lat}
-                        longitude={place?.lon}
-                        offsetLeft={-20}
-                        offsetTop={-40}
-                        onClick={() => setSelectedPlace(place)}
-                      >
-                        <Avatar size={40} src={place?.icon} alt={place?.name} />
-                      </Marker>
-                    ))}
-                  </Map>
-                )} */}
               </Stack>
             </TabsPanel>
             <TabsPanel value="chatgpt-planner">

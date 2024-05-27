@@ -64,8 +64,6 @@ export default function Page() {
 
   const uniqueSeries = allSeries?.filter((obj) => uniqueNames?.includes(obj?.title));
 
-  console.log(uniqueSeries);
-
   if (isTrendingLoading) {
     return (
       <Container size="xl">
