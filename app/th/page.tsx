@@ -149,7 +149,7 @@ export default function Page() {
                     <div
                       style={{
                         position: 'absolute',
-                        bottom: 24,
+                        bottom: 40,
                         borderRadius: '50%',
                         backgroundColor: 'rgba(0, 0, 0, 0.5)',
                         padding: '4px 8px',
@@ -160,7 +160,10 @@ export default function Page() {
                       </Text>
                     </div>
                     <Title order={6} ta="center">
-                      <Link href={`/th/celebrities/${celebrity.id}`}>{celebrity.name}</Link>
+                      <Link href={`/th/celebrities/${celebrity?.id}`}>
+                        {index === 0 ? celebs[0]?.name : celebrity?.englishName}
+                        <div>{celebrity?.thaiName}</div>
+                      </Link>
                     </Title>
                   </div>
                 </Grid.Col>
