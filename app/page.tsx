@@ -187,17 +187,35 @@ const searchCelebrities = async (celebList: typeof CELEB_LISTS) => {
   }
 };
 
+function deg2rad(deg: number) {
+  return deg * (Math.PI / 180);
+}
+
+function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const R = 6371; // Radius of the Earth in kilometers
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in kilometers
+  return distance;
+}
+
 const SuperstarCheckInThailand = () => {
   const [isMapFullscreen, setIsMapFullscreen] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [nearestCeleb, setNearestCeleb] = useState(null);
+  console.log(nearestCeleb);
 
   const fetchNearestCeleb = async () => {
     if (currentLocation) {
       const { lat, lng } = currentLocation;
       const response = await axios.get(`/api/nearest-celeb?lat=${lat}&lng=${lng}`);
+      console.log(response);
 
-      setNearestCeleb(response.data.celebs);
+      setNearestCeleb(response.data.celeb);
     }
   };
 
@@ -374,7 +392,14 @@ const SuperstarCheckInThailand = () => {
             ) : (
               <Skeleton height={400} width="100%" />
             )}
-            <Button size="lg" onClick={() => {}} variant="default">
+            <Button
+              size="lg"
+              component={Link}
+              href={`/${formatNationality(
+                nearestCeleb?.nationality
+              )}/celebrities/${nearestCeleb?.id}`}
+              variant="default"
+            >
               <FormattedMessage id="nearbySuperstars" />
             </Button>
           </Stack>

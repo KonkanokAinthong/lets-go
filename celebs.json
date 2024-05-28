@@ -5,6 +5,13 @@
     "thaiName": "พรนัปพรรณ พรเพ็ญพิพัฒน์",
     "englishName": "Pornnappan Pornpenpipat",
     "placeVisited": ["สนามบินสุวรรณภูมิ"],
+    "geolocation": [
+      {
+        "place": "สนามบินสุวรรณภูมิ",
+        "latitude": 13.6899991,
+        "longitude": 100.7501124
+      }
+    ],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/bWqkbqfwuDsWI5CMBiUJS1PLlx8.jpg",
     "trendingPoint": 310
@@ -15,6 +22,13 @@
     "thaiName": "ซันนี่",
     "englishName": "Sunnee",
     "placeVisited": ["ธันเดอร์โดม เมืองทองธานี"],
+    "geolocation": [
+      {
+        "place": "ธันเดอร์โดม เมืองทองธานี",
+        "latitude": 13.9909256,
+        "longitude": 100.5285011
+      }
+    ],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/p64ZDD9kj5lFEXZsKPcv4BGBROl.jpg",
     "trendingPoint": 68
@@ -25,6 +39,13 @@
     "thaiName": "หลี่ จื่อถิง",
     "englishName": "Li Zi Ting",
     "placeVisited": ["Old Phuket Town"],
+    "geolocation": [
+      {
+        "place": "Old Phuket Town",
+        "latitude": 7.8804647,
+        "longitude": 98.3922504
+      }
+    ],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/6FSWtajuFzP1OUoIPPK1mkCPvbP.jpg",
     "trendingPoint": 32
@@ -35,6 +56,13 @@
     "thaiName": "ณัฐวัฒน์ ฟิงค์เลอร์",
     "englishName": "Nattawat Finkler",
     "placeVisited": ["แม่น้ำเจ้าพระยา"],
+    "geolocation": [
+      {
+        "place": "แม่น้ำเจ้าพระยา",
+        "latitude": 13.7563309,
+        "longitude": 100.5017651
+      }
+    ],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/2AvnGenFrR7GOWfqvuCmqsEJZMK.jpg",
     "trendingPoint": 198
@@ -45,6 +73,13 @@
     "thaiName": "กงจุน",
     "englishName": "Gong Jun",
     "placeVisited": ["ทะเลสมุย"],
+    "geolocation": [
+      {
+        "place": "ทะเลสมุย",
+        "latitude": 9.4770139,
+        "longitude": 100.0180411
+      }
+    ],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/rtjBdEF61NySmDDnoDgAtuclAJJ.jpg",
     "trendingPoint": 4649
@@ -55,6 +90,18 @@
     "thaiName": "เฉิงเสี่ยว",
     "englishName": "Cheng Xiao",
     "placeVisited": ["Old Phuket Town", "เกาะยาวน้อย"],
+    "geolocation": [
+      {
+        "place": "Old Phuket Town",
+        "latitude": 7.8804647,
+        "longitude": 98.3922504
+      },
+      {
+        "place": "เกาะยาวน้อย",
+        "latitude": 8.0260527,
+        "longitude": 98.6368034
+      }
+    ],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/yb8sSkTFZVUjCLPlfSPiAoEE68v.jpg",
     "trendingPoint": 2180
@@ -65,6 +112,23 @@
     "thaiName": "เอลเลน ลี",
     "englishName": "Eleanor Lee",
     "placeVisited": ["ตลาดนัดจตุจักร", "ตลาดน้ำอัมพวา", "หาดเขาตะเกียบ"],
+    "geolocation": [
+      {
+        "place": "ตลาดนัดจตุจักร",
+        "latitude": 13.8006867,
+        "longitude": 100.5501194
+      },
+      {
+        "place": "ตลาดน้ำอัมพวา",
+        "latitude": 13.4307136,
+        "longitude": 99.9562318
+      },
+      {
+        "place": "หาดเขาตะเกียบ",
+        "latitude": 12.8089234,
+        "longitude": 100.9133238
+      }
+    ],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/kiWfDjqHY8bCavX2N8nA0dOIg2E.jpg",
     "trendingPoint": 930
@@ -75,6 +139,13 @@
     "thaiName": "หยางหยาง",
     "englishName": "Yang Yang",
     "placeVisited": ["หาดกะรน"],
+    "geolocation": [
+      {
+        "place": "หาดกะรน",
+        "latitude": 7.8246082,
+        "longitude": 98.2988669
+      }
+    ],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/ygck6qi2U8eoazOZilOaomqflBL.jpg",
     "trendingPoint": 11506
@@ -85,6 +156,18 @@
     "thaiName": "จวี่ จิ่งอี้",
     "englishName": "Ju Jingyi",
     "placeVisited": ["สกายวอล์ก", "ประตูน้ำ"],
+    "geolocation": [
+      {
+        "place": "สกายวอล์ก",
+        "latitude": 12.7426028,
+        "longitude": 100.9216531
+      },
+      {
+        "place": "ประตูน้ำ",
+        "latitude": 13.7472748,
+        "longitude": 100.4935383
+      }
+    ],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/kKYlPzXucTQ4GGC6Iac5Hw2p4cI.jpg",
     "trendingPoint": 2236
@@ -95,6 +178,23 @@
     "thaiName": "จ้าว ลู่ซือ",
     "englishName": "Zhao Lu si",
     "placeVisited": ["ถนนข้าวสาร", "ยูเนี่ยน มอลล์", "เยาวราช"],
+    "geolocation": [
+      {
+        "place": "ถนนข้าวสาร",
+        "latitude": 13.7598888,
+        "longitude": 100.4984614
+      },
+      {
+        "place": "ยูเนี่ยน มอลล์",
+        "latitude": 13.7425612,
+        "longitude": 100.5561411
+      },
+      {
+        "place": "เยาวราช",
+        "latitude": 13.7405077,
+        "longitude": 100.5083028
+      }
+    ],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original//93yxGN5Ld0BSUKfQBtH6F3QIb7Q.jpg",
     "trendingPoint": 9406
@@ -105,6 +205,13 @@
     "thaiName": "นายน์ กรชิต บุญสถิตย์ภักดี",
     "englishName": "Nine Kornchid Boonsathitpakdee",
     "placeVisited": ["สนามบินสุวรรณภูมิ"],
+    "geolocation": [
+      {
+        "place": "สนามบินสุวรรณภูมิ",
+        "latitude": 13.6899991,
+        "longitude": 100.7501124
+      }
+    ],
     "nationality": "Chinese",
     "image": "https://image.tmdb.org/t/p/original/mYS8XqCMKOcJfUPQpvsmZIducw4.jpg",
     "trendingPoint": 616
@@ -115,6 +222,13 @@
     "thaiName": "คิม ซอนโฮ",
     "englishName": "Kim Seon Ho",
     "placeVisited": ["สวนลุมพินี"],
+    "geolocation": [
+      {
+        "place": "สวนลุมพินี",
+        "latitude": 13.7314023,
+        "longitude": 100.541841
+      }
+    ],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/1p7xMHRNsrUJacXqOFs1EZqSIvp.jpg",
     "trendingPoint": 5206
@@ -129,6 +243,23 @@
       "Yuzu Omakase ゆずお任せ",
       "หมูกระทะคนรวย"
     ],
+    "geolocation": [
+      {
+        "place": "Dalmatian 달마시안 Siam Square Block I",
+        "latitude": 13.7457469,
+        "longitude": 100.5337931
+      },
+      {
+        "place": "Yuzu Omakase ゆずお任せ",
+        "latitude": 13.7339108,
+        "longitude": 100.5841809
+      },
+      {
+        "place": "หมูกระทะคนรวย",
+        "latitude": 13.73433,
+        "longitude": 100.5840524
+      }
+    ],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/yPhD9nXzmOVA4IUyVsqv7ZzvTKX.jpg",
     "trendingPoint": 1613
@@ -139,6 +270,13 @@
     "thaiName": "ซง จุงกี",
     "englishName": "Song Jung-gi",
     "placeVisited": ["เยาวราช"],
+    "geolocation": [
+      {
+        "place": "เยาวราช",
+        "latitude": 13.7405077,
+        "longitude": 100.5083028
+      }
+    ],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/kgjb5OppOVTh5tz3hhnfDVnTvDv.jpg",
     "trendingPoint": 15960
@@ -149,6 +287,13 @@
     "thaiName": "ควอน นาร่า",
     "englishName": "Kwon Na-ra",
     "placeVisited": ["PAT Stadium"],
+    "geolocation": [
+      {
+        "place": "PAT Stadium",
+        "latitude": 13.7765753,
+        "longitude": 100.5285402
+      }
+    ],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/4U0cNinwOf7DdsBYA3BFi7arDmz.jpg",
     "trendingPoint": 1528
@@ -159,6 +304,13 @@
     "thaiName": "เด็กซ์ 101",
     "englishName": "Dex101",
     "placeVisited": ["Dalmatian 달마시안 Siam Square Block I"],
+    "geolocation": [
+      {
+        "place": "Dalmatian 달마시안 Siam Square Block I",
+        "latitude": 13.7457469,
+        "longitude": 100.5337931
+      }
+    ],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/b9CCj9gtvgA2DQkuzcrPPwC6eok.jpg",
     "trendingPoint": 212
@@ -169,6 +321,18 @@
     "thaiName": "พัก จีฮโย",
     "englishName": "Park Ji-hyo",
     "placeVisited": ["วัดพระศรีรัตนศาสดาราม", "ร้านเจ๊ไฝ"],
+    "geolocation": [
+      {
+        "place": "วัดพระศรีรัตนศาสดาราม",
+        "latitude": 13.7510107,
+        "longitude": 100.4920019
+      },
+      {
+        "place": "ร้านเจ๊ไฝ",
+        "latitude": 13.7507079,
+        "longitude": 100.4917204
+      }
+    ],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/5OEh0OgobdiTGTYRqGvH6TbjfgV.jpg",
     "trendingPoint": 193
@@ -179,6 +343,13 @@
     "thaiName": "ณิชา ยนตรรักษ์",
     "englishName": "Nicha Yontararak",
     "placeVisited": ["ทิพย์สมัย ผัดไทยประตูผี"],
+    "geolocation": [
+      {
+        "place": "ทิพย์สมัย ผัดไทยประตูผี",
+        "latitude": 13.7564873,
+        "longitude": 100.4993619
+      }
+    ],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/2XaVaqaYXIKw1CBMyjEfcCAyVNF.jpg",
     "trendingPoint": 244
@@ -189,6 +360,13 @@
     "thaiName": "จองจีฮุน",
     "englishName": "Jung Ji-hoon",
     "placeVisited": ["เซ็นทรัลเวิลด์"],
+    "geolocation": [
+      {
+        "place": "เซ็นทรัลเวิลด์",
+        "latitude": 13.7469304,
+        "longitude": 100.539535
+      }
+    ],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/aXOjIBUxu7fmBOxTJcgYmtTKD1D.jpg",
     "trendingPoint": 3396
@@ -199,6 +377,13 @@
     "thaiName": "แบมแบม กันต์พิมุกต์",
     "englishName": "BamBam Kunpimook",
     "placeVisited": ["Rajamangala National Stadium"],
+    "geolocation": [
+      {
+        "place": "Rajamangala National Stadium",
+        "latitude": 13.7553408,
+        "longitude": 100.6227782
+      }
+    ],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/dlXYHMiz1eyN5QrdA6Gh6wmwRVm.jpg",
     "trendingPoint": 761
@@ -209,6 +394,13 @@
     "thaiName": "แบคโฮ",
     "englishName": "Baekho",
     "placeVisited": ["Savoey Seafood CO. Sukhumvit26"],
+    "geolocation": [
+      {
+        "place": "Savoey Seafood CO. Sukhumvit26",
+        "latitude": 13.7140968,
+        "longitude": 100.568391
+      }
+    ],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original/2TOcTPdc2Z4XgbwBV1y9T8o7G1M.jpg",
     "trendingPoint": 86
@@ -219,6 +411,18 @@
     "thaiName": "จี ชางอุค",
     "englishName": "Ji Chang Wook",
     "placeVisited": ["พัทยา", "วัดพระแก้ว"],
+    "geolocation": [
+      {
+        "place": "พัทยา",
+        "latitude": 12.9331281,
+        "longitude": 100.8814969
+      },
+      {
+        "place": "วัดพระแก้ว",
+        "latitude": 13.7510107,
+        "longitude": 100.4920019
+      }
+    ],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original//afgwHQJ3BP6ygM2ZUUZO60U84q0.jpg",
     "trendingPoint": 18778
@@ -237,6 +441,43 @@
       "เมืองโบราณ",
       "โลหะปราสาท วัดราชนัดดารามวรวิหาร"
     ],
+    "geolocation": [
+      {
+        "place": "โรงแรม Siri Sala",
+        "latitude": 13.8127387,
+        "longitude": 100.4451919
+      },
+      {
+        "place": "คุณแดง ก๋วยจั๊บญวน",
+        "latitude": 13.7549756,
+        "longitude": 100.4955007
+      },
+      {
+        "place": "ถนนคนเดินคลองโอ่งอ่าง",
+        "latitude": 13.7454103,
+        "longitude": 100.5108787
+      },
+      {
+        "place": "วัดอรุณราชวราราม",
+        "latitude": 13.7439493,
+        "longitude": 100.4882855
+      },
+      {
+        "place": "ลานแสดงน้ำพุ ไอคอนสยาม",
+        "latitude": 13.7265989,
+        "longitude": 100.5087159
+      },
+      {
+        "place": "เมืองโบราณ",
+        "latitude": 13.5215833,
+        "longitude": 100.2748983
+      },
+      {
+        "place": "โลหะปราสาท วัดราชนัดดารามวรวิหาร",
+        "latitude": 13.7605536,
+        "longitude": 100.5041527
+      }
+    ],
     "nationality": "Korean",
     "image": "https://image.tmdb.org/t/p/original//DJYwG0eWdCoxvqWhLsnJNKQlMR.jpg"
   },
@@ -246,6 +487,13 @@
     "thaiName": "จุมพล อดุลกิตติพร",
     "englishName": "Jumpol Adulkittiporn",
     "placeVisited": ["หัวหิน"],
+    "geolocation": [
+      {
+        "place": "หัวหิน",
+        "latitude": 12.5683747,
+        "longitude": 99.9576888
+      }
+    ],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/alCgpzXB50QWfck3KFlfzkRnXSW.jpg",
     "trendingPoint": 3150
@@ -256,6 +504,13 @@
     "thaiName": "อรรถพันธ์ พูนสวัสดิ์",
     "englishName": "Atthaphan Phunsawat",
     "placeVisited": ["หัวหิน"],
+    "geolocation": [
+      {
+        "place": "หัวหิน",
+        "latitude": 12.5683747,
+        "longitude": 99.9576888
+      }
+    ],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/uJ1THfL7y8tuWpCNpow6eoPIr27.jpg",
     "trendingPoint": 9218
@@ -266,6 +521,13 @@
     "thaiName": "ตะวัน วิหครัตน์",
     "englishName": "Tawan Vihokratana",
     "placeVisited": ["หัวหิน"],
+    "geolocation": [
+      {
+        "place": "หัวหิน",
+        "latitude": 12.5683747,
+        "longitude": 99.9576888
+      }
+    ],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/3UvwJGTDRXVYjUfaiLQuk7vKqHR.jpg",
     "trendingPoint": 2166
@@ -276,6 +538,13 @@
     "thaiName": "ฐิติภูมิ เตชะอภัยคุณ",
     "englishName": "Thitipoom Techa-apaikhun",
     "placeVisited": ["หัวหิน"],
+    "geolocation": [
+      {
+        "place": "หัวหิน",
+        "latitude": 12.5683747,
+        "longitude": 99.9576888
+      }
+    ],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/wlbfFnZg5TfNJHiBr6nkJvtpHm6.jpg",
     "trendingPoint": 2677
@@ -292,6 +561,33 @@
       "สะพานเฉลิมพระเกียรติฯ 80 พรรษา จังหวัดพัทลุง",
       "เขื่อนศรีนครินทร์"
     ],
+    "geolocation": [
+      {
+        "place": "วัดปากน้ำแขมหนู",
+        "latitude": 13.3585701,
+        "longitude": 100.8981341
+      },
+      {
+        "place": "ทุ่งโปรงทอง ปากน้ำกระแส",
+        "latitude": 12.20779,
+        "longitude": 102.3865738
+      },
+      {
+        "place": "น้ำตกตาดวิมานทิพย์ จังหวัดบึงกาฬ",
+        "latitude": 18.1307909,
+        "longitude": 103.8961039
+      },
+      {
+        "place": "สะพานเฉลิมพระเกียรติฯ 80 พรรษา จังหวัดพัทลุง",
+        "latitude": 7.6300917,
+        "longitude": 100.0669565
+      },
+      {
+        "place": "เขื่อนศรีนครินทร์",
+        "latitude": 14.8062628,
+        "longitude": 98.9736133
+      }
+    ],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original//p2mHicig9Obk6InadpCmdxFIMpj.jpg",
     "trendingPoint": 462
@@ -302,6 +598,13 @@
     "thaiName": "ณเดชน์ คูกิมิยะ",
     "englishName": "Nadech Kugimiya",
     "placeVisited": ["อนันตรา ลายัน ภูเก็ต รีสอร์ท"],
+    "geolocation": [
+      {
+        "place": "อนันตรา ลายัน ภูเก็ต รีสอร์ท",
+        "latitude": 8.0155694,
+        "longitude": 98.2862466
+      }
+    ],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/w58HrktpHZ7UVGY5SKoJxFkitCy.jpg",
     "trendingPoint": 979
@@ -312,6 +615,13 @@
     "thaiName": "อุรัสยา เสปอร์บันด์",
     "englishName": "Urassaya Sperbund",
     "placeVisited": ["Memories Beach Bar"],
+    "geolocation": [
+      {
+        "place": "Memories Beach Bar",
+        "latitude": 7.7811876,
+        "longitude": 98.3235333
+      }
+    ],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/ui6VKMPZpAPzc6f7dl9YdQVi7Tj.jpg",
     "trendingPoint": 1658
@@ -322,6 +632,18 @@
     "thaiName": "ปริญ สุภารัตน์",
     "englishName": "Prin Suparat",
     "placeVisited": ["แม่น้ำแควน้อย", "โรสวูด ภูเก็ต"],
+    "geolocation": [
+      {
+        "place": "แม่น้ำแควน้อย",
+        "latitude": 14.7211981,
+        "longitude": 99.1335263
+      },
+      {
+        "place": "โรสวูด ภูเก็ต",
+        "latitude": 8.0198384,
+        "longitude": 98.2967779
+      }
+    ],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/lo6zChxhJrIGYaSZV46IG1K98Rw.jpg",
     "trendingPoint": 1788
@@ -340,6 +662,43 @@
       "โมริ เนเชอรัล ฟาร์ม (Mori Natural Farm) จังหวัดเชียงใหม่",
       "Vala Hua Hin จังหวัดเพชรบุรี"
     ],
+    "geolocation": [
+      {
+        "place": "เขาหลัก จังหวัดพังงา",
+        "latitude": 8.6398809,
+        "longitude": 98.2461906
+      },
+      {
+        "place": "ทุ่งดอกบัวตองดอยแม่อูคอ จังหวัดแม่ฮ่องสอน",
+        "latitude": 19.8326942,
+        "longitude": 98.5007582
+      },
+      {
+        "place": "สะพานเขียว",
+        "latitude": 14.0127359,
+        "longitude": 99.5228921
+      },
+      {
+        "place": "เขื่อนป่าสักชลสิทธิ์ จังหวัดลพบุรี",
+        "latitude": 14.830365,
+        "longitude": 101.0568348
+      },
+      {
+        "place": "บ้านรักไทย จังหวัดแม่ฮ่องสอน",
+        "latitude": 19.2955286,
+        "longitude": 97.9649261
+      },
+      {
+        "place": "โมริ เนเชอรัล ฟาร์ม (Mori Natural Farm) จังหวัดเชียงใหม่",
+        "latitude": 18.7545653,
+        "longitude": 98.8292331
+      },
+      {
+        "place": "Vala Hua Hin จังหวัดเพชรบุรี",
+        "latitude": 12.5426019,
+        "longitude": 99.9608285
+      }
+    ],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/dAPMDffwxEgGT2DQnVH493JaB8T.jpg",
     "trendingPoint": 595
@@ -350,6 +709,13 @@
     "thaiName": "คิมเบอร์ลี่ แอนน์ โวลเทมัส",
     "englishName": "Kimberly Ann Voltemas",
     "placeVisited": ["โรสวูด ภูเก็ต"],
+    "geolocation": [
+      {
+        "place": "โรสวูด ภูเก็ต",
+        "latitude": 8.0198384,
+        "longitude": 98.2967779
+      }
+    ],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original/zgo2a0h3N3oDhsteZzl6f0HEeAE.jpg",
     "trendingPoint": 321
@@ -360,6 +726,38 @@
     "thaiName": "ภวัต จิตต์สว่างดี",
     "englishName": "Ohm Pawat Chittsawangdee",
     "placeVisited": ["พัทยา", "เขาใหญ่", "เกาะยาวน้อย", "เกาะพีพี", "เยาวราช", "ตลาดนัดจตุจักร"],
+    "geolocation": [
+      {
+        "place": "พัทยา",
+        "latitude": 12.9331281,
+        "longitude": 100.8814969
+      },
+      {
+        "place": "เขาใหญ่",
+        "latitude": 14.4325608,
+        "longitude": 101.3724371
+      },
+      {
+        "place": "เกาะยาวน้อย",
+        "latitude": 8.0260527,
+        "longitude": 98.6368034
+      },
+      {
+        "place": "เกาะพีพี",
+        "latitude": 7.7407235,
+        "longitude": 98.7699462
+      },
+      {
+        "place": "เยาวราช",
+        "latitude": 13.7405077,
+        "longitude": 100.5083028
+      },
+      {
+        "place": "ตลาดนัดจตุจักร",
+        "latitude": 13.8006867,
+        "longitude": 100.5501194
+      }
+    ],
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original//m0wsd5KI9w9qk5TFPt8a5pBwL97.jpg",
     "trendingPoint": 3901
@@ -378,6 +776,33 @@
       "สวนสัตว์เชียงใหม่",
       "ดอยม่อนแจ่ม"
     ],
+    "geolocation": [
+      {
+        "place": "เซ็นทรัลแจ้งวัฒนะ",
+        "latitude": 13.9342031,
+        "longitude": 100.6254719
+      },
+      {
+        "place": "วัดพระธาตุดอยสุเทพราชวรวิหาร",
+        "latitude": 18.8058642,
+        "longitude": 98.9199985
+      },
+      {
+        "place": "ถนนคนเดินวัวลาย",
+        "latitude": 18.7884017,
+        "longitude": 98.9926298
+      },
+      {
+        "place": "สวนสัตว์เชียงใหม่",
+        "latitude": 18.8090298,
+        "longitude": 98.9475373
+      },
+      {
+        "place": "ดอยม่อนแจ่ม",
+        "latitude": 18.8853151,
+        "longitude": 98.7311934
+      }
+    ],
     "trendingPoint": 22216
   },
   {
@@ -392,6 +817,23 @@
       "ธันเดอร์โดม เมืองทองธานี",
       "ห้างสรรพสินค้าเซ็นทรัลเวิลด์"
     ],
+    "geolocation": [
+      {
+        "place": "สนามบินนานาชาติสุวรรณภูมิ",
+        "latitude": 13.6899991,
+        "longitude": 100.7501124
+      },
+      {
+        "place": "ธันเดอร์โดม เมืองทองธานี",
+        "latitude": 13.9909256,
+        "longitude": 100.5285011
+      },
+      {
+        "place": "ห้างสรรพสินค้าเซ็นทรัลเวิลด์",
+        "latitude": 13.7469304,
+        "longitude": 100.539535
+      }
+    ],
     "trendingPoint": 16087
   },
   {
@@ -402,6 +844,28 @@
     "nationality": "Thai",
     "image": "https://image.tmdb.org/t/p/original//1LwWkpD8iETov97ieeKcdiCiPJW.jpg",
     "placeVisited": ["พระบรมมหาราชวัง", "วัดอรุณราชวราราม", "ตลาดน้ำอัมพวา", "สยามพารากอน"],
+    "geolocation": [
+      {
+        "place": "พระบรมมหาราชวัง",
+        "latitude": 13.7500617,
+        "longitude": 100.4918899
+      },
+      {
+        "place": "วัดอรุณราชวราราม",
+        "latitude": 13.7439493,
+        "longitude": 100.4882855
+      },
+      {
+        "place": "ตลาดน้ำอัมพวา",
+        "latitude": 13.4307136,
+        "longitude": 99.9562318
+      },
+      {
+        "place": "สยามพารากอน",
+        "latitude": 13.7467703,
+        "longitude": 100.5341912
+      }
+    ],
     "trendingPoint": 3679
   },
   {
@@ -423,6 +887,63 @@
       "ดอยม่อนแจ่ม",
       "ปางช้างแม่สา",
       "เกาะพีพี"
+    ],
+    "geolocation": [
+      {
+        "place": "วัดพระศรีรัตนศาสดาราม (วัดพระแก้ว)",
+        "latitude": 13.7510107,
+        "longitude": 100.4920019
+      },
+      {
+        "place": "ตลาดน้ำอัมพวา",
+        "latitude": 13.4307136,
+        "longitude": 99.9562318
+      },
+      {
+        "place": "สยามพารากอน",
+        "latitude": 13.7467703,
+        "longitude": 100.5341912
+      },
+      {
+        "place": "ร้านอาหารบ้านลุงไสว",
+        "latitude": 13.5138345,
+        "longitude": 100.0359896
+      },
+      {
+        "place": "ห้างสรรพสินค้าเซ็นทรัลเวิลด์",
+        "latitude": 13.7469304,
+        "longitude": 100.539535
+      },
+      {
+        "place": "วัดพระธาตุดอยสุเทพราชวรวิหาร",
+        "latitude": 18.8058642,
+        "longitude": 98.9199985
+      },
+      {
+        "place": "ถนนคนเดินวัวลาย",
+        "latitude": 18.7884017,
+        "longitude": 98.9926298
+      },
+      {
+        "place": "สวนสัตว์เชียงใหม่",
+        "latitude": 18.8090298,
+        "longitude": 98.9475373
+      },
+      {
+        "place": "ดอยม่อนแจ่ม",
+        "latitude": 18.8853151,
+        "longitude": 98.7311934
+      },
+      {
+        "place": "ปางช้างแม่สา",
+        "latitude": 18.9110072,
+        "longitude": 99.2147263
+      },
+      {
+        "place": "เกาะพีพี",
+        "latitude": 7.7407235,
+        "longitude": 98.7699462
+      }
     ],
     "trendingPoint": 10824
   }

@@ -64,6 +64,25 @@ export default function Page() {
 
   const uniqueSeries = allSeries?.filter((obj) => uniqueNames?.includes(obj?.title));
 
+  const mockSeries = [
+    {
+      title: 'Dark Blue Kiss',
+      image: 'https://image.tmdb.org/t/p/w1280/ey2BZaCaJllWy7BGAw6J4zNfPK4.jpg',
+    },
+    {
+      title: 'The Blue Hour',
+      image: 'https://image.tmdb.org/t/p/w1280/beu6ezZZohhBxpADatVgEmxKXcb.jpg',
+    },
+    {
+      title: 'Theory of Love',
+      image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/rE6vK2eX04zEw35MOd6ykStz8CA.jpg',
+    },
+    {
+      title: 'Not Me',
+      image: 'https://image.tmdb.org/t/p/w1280/u55CWUrewbvR8PG3AGjIkgRB6u1.jpg',
+    },
+  ];
+
   if (isTrendingLoading) {
     return (
       <Container size="xl">
@@ -181,7 +200,7 @@ export default function Page() {
               align="center"
               slidesToScroll="auto"
             >
-              {uniqueSeries?.map((serie: any) => (
+              {mockSeries?.map((serie: any) => (
                 <Carousel.Slide key={serie?.title}>
                   <Stack>
                     <Image src={serie?.image} alt={serie?.title} />

@@ -15,23 +15,22 @@ export async function GET(request: Request) {
 
   // Calculate the distance from the current location to each celebrity's visited places
   const celebDistances = CELEB_LISTS.map((celeb) => {
-    const celebPlaces = celeb.placeVisited.map((place) => ({
-      latitude: place.geometry?.location?.lat || 0,
-      longitude: place.geometry?.location?.lng || 0,
+    const celebPlaces = celeb.geolocation.map((place) => ({
+      latitude: place.latitude || 0,
+      longitude: place.longitude || 0,
     }));
 
     const minDistance = Math.min(
       ...celebPlaces.map((place) => getDistance(currentLocation, place))
     );
 
-    return {
-      celeb,
-      distance: minDistance,
-    };
+    return { celeb, distance: minDistance };
   });
 
-  // Sort the celebrities by distance in ascending order
-  const sortedCelebs = celebDistances.sort((a, b) => a.distance - b.distance);
+  // Find the celebrity with the minimum distance
+  const nearestCeleb = celebDistances.reduce((nearest, current) =>
+    current.distance < nearest.distance ? current : nearest
+  );
 
-  return NextResponse.json({ celebs: sortedCelebs.map((item) => item.celeb) });
+  return NextResponse.json({ celeb: nearestCeleb.celeb });
 }
