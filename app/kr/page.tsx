@@ -1,7 +1,8 @@
 'use client';
 
 import { Carousel } from '@mantine/carousel';
-import { Avatar, Container, Grid, Image, Skeleton, Stack, Title } from '@mantine/core';
+import { Avatar, Container, Grid, Image, Skeleton, Stack, Text, Title } from '@mantine/core';
+import { IconCrown } from '@tabler/icons-react';
 import axios from 'axios';
 import Link from 'next/link';
 import { FormattedMessage } from 'react-intl';
@@ -54,7 +55,10 @@ const kdramaRecommendations = [
 export default function Page() {
   const { data: celebs, isLoading: isTrendingLoading } = useQuery(
     'trendingKoreanCelebrities',
-    getTrendingKoreanCelebrities
+    getTrendingKoreanCelebrities,
+    {
+      refetchOnWindowFocus: false,
+    }
   );
 
   if (isTrendingLoading) {
@@ -99,7 +103,7 @@ export default function Page() {
         </Title>
 
         <Grid gutter={64} columns={24} justify="center" align="center">
-          {celebs?.map((celebrity: any) => (
+          {celebs?.map((celebrity: any, index: number) => (
             <Grid.Col
               key={celebrity?.name}
               span={{
@@ -109,6 +113,7 @@ export default function Page() {
             >
               <div
                 style={{
+                  position: 'relative',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'center',
@@ -116,15 +121,44 @@ export default function Page() {
                   gap: 16,
                 }}
               >
+                {index === 0 && (
+                  <IconCrown
+                    size={64}
+                    style={{
+                      position: 'absolute',
+                      top: -48,
+                      zIndex: 1,
+                      fill: 'gold',
+                      stroke: 'gold',
+                    }}
+                  />
+                )}
+
                 <Avatar
                   component={Link}
                   src={celebrity?.image}
-                  alt="test"
+                  alt={celebrity?.name}
                   size="124"
                   href={`/kr/celebrities/${celebrity?.id}`}
                 />
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 40,
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    padding: '4px 8px',
+                  }}
+                >
+                  <Text fw={700} fz="md" c="white">
+                    #{index + 1}
+                  </Text>
+                </div>
                 <Title order={6} ta="center">
-                  <Link href={`/kr/celebrities/${celebrity?.id}`}>{celebrity?.name}</Link>
+                  <Link href={`/kr/celebrities/${celebrity?.id}`}>
+                    {index === 0 ? celebs[0]?.name : celebrity?.englishName}
+                    <div>{celebrity?.thaiName}</div>
+                  </Link>
                 </Title>
               </div>
             </Grid.Col>

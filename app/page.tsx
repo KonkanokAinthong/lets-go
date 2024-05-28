@@ -10,21 +10,21 @@ import {
   Grid,
   GridCol,
   Image,
-  Loader,
   Skeleton,
   Stack,
   Text,
   Title,
 } from '@mantine/core';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 
 import Autoplay from 'embla-carousel-autoplay';
 import Link from 'next/link';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import { FormattedMessage } from 'react-intl';
+import { FullscreenControl, Map, Marker } from 'react-map-gl';
 import CELEB_LISTS from '../celebs.json';
+import { CNFlag, KRFlag, THFlag } from 'mantine-flagpack';
 
 const API_ENDPOINTS = {
   celebsNews: '/api/celebs-news',
@@ -53,19 +53,42 @@ const QUERY_KEYS = {
   trendingChineseCelebrities: 'trendingChineseCelebrities',
 };
 
-const getPlaceDetails = async (places: string[]) => {
+const getPlaceDetails = async (places: any) => {
   try {
     const promises = places.map(async (place) => {
-      const response = await axios.get(`/api/places?query=${encodeURIComponent(place)}`);
-
-      return response.data.data.results;
+      try {
+        const response = await axios.get(
+          'https://tatapi.tourismthailand.org/tatapi/v5/places/search',
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization:
+                'Bearer Gb6UecYN9hyd8JhU6Fs1wUl4mpJaY6Nb6)O)CLN)deKcdMmHpoaDMyH0Bj5ychzyHQSPcb6p5BDAfr4b9WowEa0=====2',
+              'Accept-Language': 'th',
+            },
+            params: {
+              keyword: place,
+            },
+          }
+        );
+        return response.data.result[response.data.result.length - 1];
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          return null;
+        }
+        throw error;
+      }
     });
-    const results = await Promise.all(promises);
 
-    const flattenedResults = results.flat();
+    const results = await Promise.allSettled(promises);
+    const fulfilledResults = results
+      .filter((result) => result.status === 'fulfilled')
+      .map((result) => result.value)
+      .filter((result) => result !== null);
+
+    const flattenedResults = fulfilledResults.flat();
     return { places: flattenedResults };
   } catch (error) {
-    console.error(error);
     return { places: [] };
   }
 };
@@ -164,48 +187,55 @@ const searchCelebrities = async (celebList: typeof CELEB_LISTS) => {
   }
 };
 
+function deg2rad(deg: number) {
+  return deg * (Math.PI / 180);
+}
+
+function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const R = 6371; // Radius of the Earth in kilometers
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in kilometers
+  return distance;
+}
+
 const SuperstarCheckInThailand = () => {
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyBKRFuroEmi6ocPRQzuBuX4ULAFiYTvTGo',
-  });
-  const [map, setMap] = useState(null);
+  const [isMapFullscreen, setIsMapFullscreen] = useState(false);
   const [currentLocation, setCurrentLocation] = useState(null);
   const [nearestCeleb, setNearestCeleb] = useState(null);
+  console.log(nearestCeleb);
 
   const fetchNearestCeleb = async () => {
     if (currentLocation) {
       const { lat, lng } = currentLocation;
       const response = await axios.get(`/api/nearest-celeb?lat=${lat}&lng=${lng}`);
+      console.log(response);
 
-      setNearestCeleb(response.data.celebs);
+      setNearestCeleb(response.data.celeb);
     }
   };
 
   const { data: thCelebrities, isLoading: isLoading_thCelebrities } = useQuery(
     QUERY_KEYS.trendingThaiCelebrities,
     () => searchCelebrities(CELEB_LISTS.filter((celeb) => celeb.nationality === 'Thai')),
-    { refetchOnWindowFocus: false, staleTime: Infinity, cacheTime: 24 * 60 * 60 * 1000 }
+    { refetchOnWindowFocus: false }
   );
 
   const { data: krCelebrities, isLoading: isLoading_krCelebrities } = useQuery(
     QUERY_KEYS.trendingKoreanCelebrities,
     () => searchCelebrities(CELEB_LISTS.filter((celeb) => celeb.nationality === 'Korean')),
-    { refetchOnWindowFocus: false, staleTime: Infinity, cacheTime: 24 * 60 * 60 * 1000 }
+    { refetchOnWindowFocus: false }
   );
 
   const { data: cnCelebrities, isLoading: isLoading_cnCelebrities } = useQuery(
     QUERY_KEYS.trendingChineseCelebrities,
     () => searchCelebrities(CELEB_LISTS.filter((celeb) => celeb.nationality === 'Chinese')),
-    { refetchOnWindowFocus: false, staleTime: Infinity, cacheTime: 24 * 60 * 60 * 1000 }
+    { refetchOnWindowFocus: false }
   );
-
-  const onLoad = useCallback((map) => {
-    setMap(map);
-  }, []);
-
-  const onUnmount = useCallback((map) => {
-    setMap(null);
-  }, []);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -238,17 +268,16 @@ const SuperstarCheckInThailand = () => {
     return celebrities[randomIndex];
   };
 
-  const { data: placeDetails } = useQuery(
+  const { data: placeDetails, isLoading: isLoadingPlaceDetails } = useQuery(
     ['placeDetails', CELEB_LISTS],
     () => {
-      const allPlaces = CELEB_LISTS?.flatMap((celeb) => celeb.placeVisited) || [];
+      const allPlaces = CELEB_LISTS?.flatMap((celeb) => celeb.placeVisited)?.slice(0, 34) || [];
       return getPlaceDetails(allPlaces);
     },
     {
       enabled: !!CELEB_LISTS,
       initialData: { places: [] },
-      staleTime: Infinity,
-      cacheTime: 24 * 60 * 60 * 1000,
+      refetchOnWindowFocus: false,
     }
   );
 
@@ -258,10 +287,12 @@ const SuperstarCheckInThailand = () => {
   const imageCN = getRandomCeleb('cn');
   const imageKR = getRandomCeleb('kr');
 
-  if (loadError) return <FormattedMessage id="errorLoadingMaps" />;
-  if (!isLoaded) return <FormattedMessage id="loading" />;
-
-  if (isLoading_thCelebrities || isLoading_krCelebrities || isLoading_cnCelebrities) {
+  if (
+    isLoading_thCelebrities ||
+    isLoading_krCelebrities ||
+    isLoading_cnCelebrities ||
+    isLoadingPlaceDetails
+  ) {
     return (
       <div
         style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}
@@ -276,35 +307,95 @@ const SuperstarCheckInThailand = () => {
       <Grid justify="center" align="center" gutter="xl" p="lg">
         <Grid.Col span={{ base: 12, md: 6, lg: 3 }} p="md">
           <Stack justify="center" align="center">
-            {isLoaded && bangkokLocation ? (
-              <GoogleMap
-                mapContainerStyle={{ width: '100%', height: '400px', borderRadius: 8 }}
-                center={bangkokLocation}
-                zoom={10}
-                onLoad={onLoad}
-                onUnmount={onUnmount}
+            {bangkokLocation ? (
+              <Map
+                initialViewState={{
+                  longitude: bangkokLocation.lng,
+                  latitude: bangkokLocation.lat,
+                  zoom: 10,
+                }}
+                style={{ width: '100%', height: '400px', borderRadius: 8 }}
+                mapStyle="mapbox://styles/mapbox/streets-v9"
+                mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
               >
+                <FullscreenControl />
                 {placeDetails.places.map((place, index) => (
                   <Marker
                     key={index}
-                    position={place?.geometry?.location}
-                    icon={{
-                      url: `${nearestCeleb?.[index]?.image}`,
-                      scaledSize: new window.google.maps.Size(40, 40),
-                      origin: new window.google.maps.Point(0, 0),
-                      anchor: new window.google.maps.Point(0, 0),
+                    longitude={place?.longitude}
+                    latitude={place?.latitude}
+                    onClick={() => {
+                      const destination = `${place?.latitude},${place?.longitude}`;
+                      const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+                        destination
+                      )}`;
+                      window.open(googleMapsUrl, '_blank');
                     }}
-                  />
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div
+                      style={{
+                        position: 'relative',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: 'absolute',
+                          top: '50%',
+                          left: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          width: '64px',
+                          height: '64px',
+                          borderRadius: '50%',
+                          backgroundColor: 'white',
+                          border: '6px solid rgba(255, 106, 26, 1)',
+                          boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          zIndex: -1,
+                        }}
+                      >
+                        <img
+                          src={CELEB_LISTS[index]?.image}
+                          alt={CELEB_LISTS[index]?.name}
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                          }}
+                        />
+                      </div>
+
+                      <div
+                        style={{
+                          // width: 0,
+                          // height: 0,
+                          borderLeft: '20px solid transparent',
+                          borderRight: '20px solid transparent',
+                          borderTop: '20px solid rgba(255, 106, 26, 1)',
+                          position: 'absolute',
+                          top: '24px',
+                        }}
+                      />
+                    </div>
+                  </Marker>
                 ))}
-                <Marker position={currentLocation} />
-              </GoogleMap>
+                {currentLocation && (
+                  <Marker longitude={currentLocation.lng} latitude={currentLocation.lat} />
+                )}
+              </Map>
             ) : (
               <Skeleton height={400} width="100%" />
             )}
             <Button
               size="lg"
               component={Link}
-              href={`${formatNationality(
+              href={`/${formatNationality(
                 nearestCeleb?.nationality
               )}/celebrities/${nearestCeleb?.id}`}
               variant="default"
@@ -328,7 +419,13 @@ const SuperstarCheckInThailand = () => {
             ) : (
               <Skeleton height={400} width="100%" />
             )}
-            <Button size="lg" component={Link} href="/kr" variant="default">
+            <Button
+              rightSection={<KRFlag w={18} h={18} />}
+              size="lg"
+              component={Link}
+              href="/kr"
+              variant="default"
+            >
               <FormattedMessage id="southKorea" />
             </Button>
           </Stack>
@@ -348,7 +445,13 @@ const SuperstarCheckInThailand = () => {
             ) : (
               <Skeleton height={400} width="100%" />
             )}
-            <Button size="lg" component={Link} href="/cn" variant="default">
+            <Button
+              rightSection={<CNFlag w={18} h={18} />}
+              size="lg"
+              component={Link}
+              href="/cn"
+              variant="default"
+            >
               <FormattedMessage id="china" />
             </Button>
           </Stack>
@@ -369,7 +472,13 @@ const SuperstarCheckInThailand = () => {
             ) : (
               <Skeleton height={400} width="100%" />
             )}
-            <Button size="lg" component={Link} href="/th" variant="default">
+            <Button
+              rightSection={<THFlag w={18} h={18} />}
+              size="lg"
+              component={Link}
+              href="/th"
+              variant="default"
+            >
               <FormattedMessage id="thailand" />
             </Button>
           </Stack>
@@ -385,16 +494,15 @@ const Top10Locations = () => {
     async () => {
       const response = await fetch('/api/top10-locations');
       const data = await response.json();
+      console.log(data);
       return data.locations ?? [];
     },
     {
       refetchOnWindowFocus: false,
-      staleTime: Infinity,
-      cacheTime: 24 * 60 * 60 * 1000,
     }
   );
 
-  const memoizedLocations = useMemo(() => top10Locations, [top10Locations]);
+  console.log(top10Locations);
 
   if (isLoading) {
     return (
@@ -416,14 +524,14 @@ const Top10Locations = () => {
 
   return (
     <section>
-      <Grid columns={12} align="stretch">
-        {memoizedLocations?.map((location, index) => (
+      <Grid columns={12} align="stretch" justify="center">
+        {top10Locations?.map((location, index) => (
           <GridCol key={location.title} span={{ xs: 12, sm: 6, md: 12 / 5 }}>
             <Card
               shadow="sm"
               radius="lg"
               p="xl"
-              style={{ position: 'relative' }}
+              style={{ position: 'relative', height: '100%' }}
               component={Link}
               href={location.link}
               rel="noreferrer"

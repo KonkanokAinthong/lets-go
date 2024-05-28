@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import {
-  TextInput,
   Paper,
   Text,
   Box,
@@ -10,18 +9,31 @@ import {
   Stack,
   Modal,
   Button,
+  LoadingOverlay,
+  Alert,
 } from '@mantine/core';
-import { IconSend } from '@tabler/icons-react';
+import { IconAlertCircle } from '@tabler/icons-react';
 import ReactMarkdown from 'react-markdown';
+import { FormattedMessage, useIntl } from 'react-intl';
 
-const ChatInterface = () => {
+interface ChatInterfaceProps {
+  visitedPlaces: any[];
+}
+
+const ChatInterface = ({ visitedPlaces }: ChatInterfaceProps) => {
+  if (visitedPlaces.length === 0) {
+    return 'No visited places found';
+  }
   const [messages, setMessages] = useState([]);
-  const [inputValue, setInputValue] = useState('');
   const chatContainerRef = useRef(null);
   const [selectedBudget, setSelectedBudget] = useState('');
-  const [selectedProvince, setSelectedProvince] = useState('');
+  const [selectedPlace, setSelectedPlace] = useState('');
   const [selectedDuration, setSelectedDuration] = useState('');
   const [showInstructions, setShowInstructions] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const intl = useIntl();
 
   const scrollToBottom = () => {
     if (chatContainerRef.current) {
@@ -33,206 +45,138 @@ const ChatInterface = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = async () => {
-    if (inputValue.trim() !== '') {
-      setMessages([...messages, { text: inputValue, sender: 'user' }]);
-      setInputValue('');
+  const handleGenerateTripPlan = async () => {
+    setIsLoading(true);
+    setError('');
 
-      try {
-        const response = await fetch('/api/trip-planner', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            message: inputValue,
-            context: `You are a trip planner assistant helping to plan a trip to Thailand with the following details:
-              - Budget: ${selectedBudget} THB
-              - Province: ${selectedProvince}
-              - Duration: ${selectedDuration}
-              If the user's input is in Thai, respond in Thai. If the user's input is in English, respond in English. Provide your response in bullet points for easy readability, rather than in paragraphs.`,
-          }),
-        });
+    try {
+      const response = await fetch('/api/trip-planner', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: `I want to plan a trip to Thailand with a budget of ${selectedBudget} THB. I will be visiting ${selectedPlace} for ${selectedDuration}.`,
+          context: `You are a trip planner assistant helping to plan a trip to Thailand with the following details:
+          - Budget: ${selectedBudget} THB
+          - Place: ${selectedPlace} 
+          - Duration: ${selectedDuration}
+          
+          If the user's input is in Thai, respond in Thai. If the user's input is in English, respond in English.
+          
+          Provide your response in bullet points for easy readability, rather than in paragraphs.
+          
+          Be friendly, helpful, and provide relevant suggestions and information based on the given trip details. Offer recommendations for activities, attractions, accommodations, and transportation options that fit within the specified budget and duration. Take into account the selected place and tailor your recommendations accordingly.
+          
+          If the user asks about specific attractions, provide brief descriptions and any notable information. If the user asks about transportation options, suggest the most convenient and cost-effective methods based on the trip details.
+          
+          Remember to keep your responses concise and organized in bullet points. If the user requests more detailed information on a particular topic, you can provide a more in-depth explanation while still maintaining a clear and readable format.
+          
+          Your goal is to assist the user in planning a memorable and enjoyable trip to Thailand by offering personalized recommendations and helpful information.`,
+        }),
+      });
 
-        const data = await response.json();
-        if (data.response) {
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { text: data.response, sender: 'assistant' },
-          ]);
-        } else {
-          setMessages((prevMessages) => [
-            ...prevMessages,
-            { text: data.error, sender: 'assistant' },
-          ]);
-        }
-      } catch (error) {
-        console.error('Error:', error);
+      const data = await response.json();
+      if (data.response) {
         setMessages((prevMessages) => [
           ...prevMessages,
-          {
-            text: 'An error occurred. Please try again later.',
-            sender: 'assistant',
-          },
+          { text: data.response, sender: 'assistant' },
         ]);
+      } else {
+        setError(intl.formatMessage({ id: 'errorMessage' }));
       }
+    } catch (error) {
+      console.error('Error:', error);
+      setError(intl.formatMessage({ id: 'errorMessage' }));
     }
+
+    setIsLoading(false);
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleSendMessage();
-    }
+  const handleClearChat = () => {
+    setMessages([]);
   };
 
   return (
     <Paper shadow="sm" p="md" style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <LoadingOverlay visible={isLoading} />
       <Title order={3} mb="md">
-        Thailand Trip Planner
+        <FormattedMessage id="thailandTripPlanner" />
       </Title>
       <Modal
         opened={showInstructions}
         onClose={() => setShowInstructions(false)}
-        title="How to Use"
+        title={<FormattedMessage id="howToUse" />}
         centered
       >
         <Text size="sm">
-          1. Select your budget, desired province, and duration for the trip using the dropdown
-          menus.
+          <FormattedMessage id="instruction1" />
         </Text>
         <Text size="sm" mt="sm">
-          2. Type your message or query related to trip planning in the input field at the bottom.
+          <FormattedMessage id="instruction2" />
         </Text>
         <Text size="sm" mt="sm">
-          3. Press Enter or click the send icon to submit your message.
+          <FormattedMessage id="instruction3" />
         </Text>
         <Text size="sm" mt="sm">
-          4. The assistant will provide a response with trip suggestions based on your inputs.
-        </Text>
-        <Text size="sm" mt="sm">
-          5. You can continue the conversation by typing additional messages or modifying your
-          selections.
+          <FormattedMessage id="instruction4" />
         </Text>
       </Modal>
       <Stack>
         <Button variant="outline" onClick={() => setShowInstructions(true)}>
-          Show Instructions
+          <FormattedMessage id="showInstructions" />
         </Button>
         <Select
-          label="Budget (THB)"
-          placeholder="เลือกงบประมาณ"
+          style={{
+            color: 'black',
+          }}
+          label={<FormattedMessage id="budget" />}
+          placeholder={intl.formatMessage({ id: 'selectBudget' })}
           value={selectedBudget}
           onChange={setSelectedBudget}
           data={[
-            { value: '1000', label: '1,000 บาท' },
-            { value: '2000', label: '2,000 บาท' },
-            { value: '5000', label: '5,000 บาท' },
-            { value: '10000', label: '10,000 บาท' },
+            { value: '1000', label: intl.formatMessage({ id: 'budgetOption1' }) },
+            { value: '2000', label: intl.formatMessage({ id: 'budgetOption2' }) },
+            { value: '5000', label: intl.formatMessage({ id: 'budgetOption3' }) },
+            { value: '10000', label: intl.formatMessage({ id: 'budgetOption4' }) },
           ]}
+          required
         />
 
         <Select
-          label="Province"
-          placeholder="เลือกจังหวัดที่ต้องการไปท่องเที่ยว"
-          value={selectedProvince}
-          onChange={setSelectedProvince}
-          data={[
-            { value: 'bangkok', label: 'Bangkok' },
-            { value: 'amnatCharoen', label: 'Amnat Charoen' },
-            { value: 'angThong', label: 'Ang Thong' },
-            { value: 'buengKan', label: 'Bueng Kan' },
-            { value: 'buriram', label: 'Buriram' },
-            { value: 'chachoengsao', label: 'Chachoengsao' },
-            { value: 'chainat', label: 'Chainat' },
-            { value: 'chaiyaphum', label: 'Chaiyaphum' },
-            { value: 'chanthaburi', label: 'Chanthaburi' },
-            { value: 'chiangMai', label: 'Chiang Mai' },
-            { value: 'chiangRai', label: 'Chiang Rai' },
-            { value: 'chonburi', label: 'Chonburi' },
-            { value: 'chumphon', label: 'Chumphon' },
-            { value: 'kalasin', label: 'Kalasin' },
-            { value: 'kamphaengPhet', label: 'Kamphaeng Phet' },
-            { value: 'kanchanaburi', label: 'Kanchanaburi' },
-            { value: 'khonKaen', label: 'Khon Kaen' },
-            { value: 'krabi', label: 'Krabi' },
-            { value: 'lampang', label: 'Lampang' },
-            { value: 'lamphun', label: 'Lamphun' },
-            { value: 'loei', label: 'Loei' },
-            { value: 'lopburi', label: 'Lopburi' },
-            { value: 'mae Hong Son', label: 'Mae Hong Son' },
-            { value: 'maha Sarakham', label: 'Maha Sarakham' },
-            { value: 'mukdahan', label: 'Mukdahan' },
-            { value: 'nakhonNayok', label: 'Nakhon Nayok' },
-            { value: 'nakhonPathom', label: 'Nakhon Pathom' },
-            { value: 'nakhonPhanom', label: 'Nakhon Phanom' },
-            { value: 'nakhonRatchasima', label: 'Nakhon Ratchasima' },
-            { value: 'nakhonSawan', label: 'Nakhon Sawan' },
-            { value: 'nakhonSiThammarat', label: 'Nakhon Si Thammarat' },
-            { value: 'nan', label: 'Nan' },
-            { value: 'narathiwat', label: 'Narathiwat' },
-            { value: 'nongBuaLamphu', label: 'Nong Bua Lamphu' },
-            { value: 'nongKhai', label: 'Nong Khai' },
-            { value: 'nonthaburi', label: 'Nonthaburi' },
-            { value: 'pathumThani', label: 'Pathum Thani' },
-            { value: 'pattani', label: 'Pattani' },
-            { value: 'phangNga', label: 'Phang Nga' },
-            { value: 'phatthalung', label: 'Phatthalung' },
-            { value: 'phayao', label: 'Phayao' },
-            { value: 'phetchabun', label: 'Phetchabun' },
-            { value: 'phetchaburi', label: 'Phetchaburi' },
-            { value: 'phichit', label: 'Phichit' },
-            { value: 'phitsanulok', label: 'Phitsanulok' },
-            { value: 'phra Nakhon Si Ayutthaya', label: 'Phra Nakhon Si Ayutthaya' },
-            { value: 'phrae', label: 'Phrae' },
-            { value: 'phuket', label: 'Phuket' },
-            { value: 'prachinBuri', label: 'Prachin Buri' },
-            { value: 'prachuapKhiriKhan', label: 'Prachuap Khiri Khan' },
-            { value: 'ranong', label: 'Ranong' },
-            { value: 'ratchaburi', label: 'Ratchaburi' },
-            { value: 'rayong', label: 'Rayong' },
-            { value: 'roiEt', label: 'Roi Et' },
-            { value: 'saKaeo', label: 'Sa Kaeo' },
-            { value: 'sakonNakhon', label: 'Sakon Nakhon' },
-            { value: 'samutPrakan', label: 'Samut Prakan' },
-            { value: 'samutSakhon', label: 'Samut Sakhon' },
-            { value: 'samutSongkhram', label: 'Samut Songkhram' },
-            { value: 'saraburi', label: 'Saraburi' },
-            { value: 'satun', label: 'Satun' },
-            { value: 'singBuri', label: 'Sing Buri' },
-            { value: 'siSaKet', label: 'Si Sa Ket' },
-            { value: 'songkhla', label: 'Songkhla' },
-            { value: 'sukhothai', label: 'Sukhothai' },
-            { value: 'suphanburi', label: 'Suphanburi' },
-            { value: 'suratThani', label: 'Surat Thani' },
-            { value: 'surin', label: 'Surin' },
-            { value: 'tak', label: 'Tak' },
-            { value: 'trang', label: 'Trang' },
-            { value: 'trat', label: 'Trat' },
-            { value: 'ubonRatchathani', label: 'Ubon Ratchathani' },
-            { value: 'udonThani', label: 'Udon Thani' },
-            { value: 'uthaithani', label: 'Uthai Thani' },
-            { value: 'uttaradit', label: 'Uttaradit' },
-            { value: 'yala', label: 'Yala' },
-            { value: 'yasothon', label: 'Yasothon' },
-          ]}
+          style={{
+            color: 'black',
+          }}
+          label={<FormattedMessage id="placesVisitedByCelebrity" />}
+          placeholder={intl.formatMessage({ id: 'searchPlace' })}
+          value={selectedPlace}
+          onChange={setSelectedPlace}
+          data={visitedPlaces?.map((place) => ({ value: place, label: place }))}
+          required
         />
 
         <Select
-          label="Duration"
-          placeholder="เลือกระยะเวลาการท่องเที่ยว"
+          style={{
+            color: 'black',
+          }}
+          label={<FormattedMessage id="duration" />}
+          placeholder={intl.formatMessage({ id: 'selectDuration' })}
           value={selectedDuration}
           onChange={setSelectedDuration}
           data={[
-            { value: '1-day', label: '1 วัน' },
-            { value: '2-days-1-night', label: '2 วัน 1 คืน' },
-            { value: '3-days-2-nights', label: '3 วัน 2 คืน' },
-            { value: '4-days-3-nights', label: '4 วัน 3 คืน' },
-            { value: '5-days-4-nights', label: '5 วัน 4 คืน' },
-            { value: '6-days-5-nights', label: '6 วัน 5 คืน' },
-            { value: '7-days-6-nights', label: '7 วัน 6 คืน' },
+            { value: '1-day', label: intl.formatMessage({ id: 'durationOption1' }) },
+            { value: '2-days-1-night', label: intl.formatMessage({ id: 'durationOption2' }) },
+            { value: '3-days-2-nights', label: intl.formatMessage({ id: 'durationOption3' }) },
+            { value: '4-days-3-nights', label: intl.formatMessage({ id: 'durationOption4' }) },
+            { value: '5-days-4-nights', label: intl.formatMessage({ id: 'durationOption5' }) },
+            { value: '6-days-5-nights', label: intl.formatMessage({ id: 'durationOption6' }) },
+            { value: '7-days-6-nights', label: intl.formatMessage({ id: 'durationOption7' }) },
           ]}
+          required
         />
+        <Button onClick={handleGenerateTripPlan}>
+          <FormattedMessage id="generateTripPlan" />
+        </Button>
       </Stack>
       <Box
         style={{
@@ -272,14 +216,21 @@ const ChatInterface = () => {
         ))}
       </Box>
 
+      {error && (
+        <Alert
+          icon={<IconAlertCircle size={16} />}
+          title={<FormattedMessage id="error" />}
+          color="red"
+          mb="sm"
+        >
+          {error}
+        </Alert>
+      )}
+
       <Box style={{ position: 'relative', bottom: 0, left: 0, right: 0 }}>
-        <TextInput
-          placeholder="พิมข้อความวางแผนการเดินทางของคุณที่นี่.."
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onKeyPress={handleKeyPress}
-          rightSection={<IconSend onClick={handleSendMessage} />}
-        />
+        <Button variant="subtle" onClick={handleClearChat} mt="sm">
+          <FormattedMessage id="clearChat" />
+        </Button>
       </Box>
     </Paper>
   );

@@ -1,7 +1,8 @@
 'use client';
 
 import { Carousel } from '@mantine/carousel';
-import { Avatar, Container, Grid, Image, Skeleton, Stack, Title } from '@mantine/core';
+import { Avatar, Container, Grid, Image, Skeleton, Stack, Text, Title } from '@mantine/core';
+import { IconCrown } from '@tabler/icons-react';
 import axios from 'axios';
 import Link from 'next/link';
 import { FormattedMessage } from 'react-intl';
@@ -10,7 +11,6 @@ import { useQuery } from 'react-query';
 async function getTrendingThaiCelebrities() {
   try {
     const response = await axios.get('/api/trending-celebs?nationality=Thai');
-
     return response.data;
   } catch (error) {
     console.error(error);
@@ -18,24 +18,70 @@ async function getTrendingThaiCelebrities() {
   }
 }
 
+async function getCelebrityDetails(id: string) {
+  try {
+    const response = await axios.get(`/api/celebs/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to fetch data');
+  }
+}
+
+const mockSeries = [
+  {
+    title: 'The Legend of White Snake',
+    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/1ZYBRDnpgMcDI3h5ZovCRS2NJvX.jpg',
+  },
+  {
+    title: 'Word of Honor',
+    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/op0ZXBZodAc12CVqEN55KxD0FYe.jpg',
+  },
+  {
+    title: 'The Shiny Group',
+    image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/rE6vK2eX04zEw35MOd6ykStz8CA.jpg',
+  },
+];
+
 export default function Page() {
   const { data: celebs, isLoading: isTrendingLoading } = useQuery(
-    'trendingKoreanCelebrities',
+    'getTrendingThaiCelebrities',
     getTrendingThaiCelebrities
   );
 
-  // // Sort by popularity in descending order
-  // const sortedByPopularity = celebs?.map((f) => {
-  //   const tvShows = f.known_for.filter((media) => media.media_type === 'tv');
-  //   tvShows.sort((a, b) => b.popularity - a.popularity); // Sort by popularity descending
-  //   return { ...f, known_for: tvShows };
-  // });
+  console.log(celebs);
 
-  // const trendingSeries = sortedByPopularity?.map((f) => f?.known_for.map((item) => item)).flat();
+  // Sort by popularity in descending order
+  const sortedByPopularity = celebs?.map((f) => {
+    const trendingSeries = f.trendingSeries;
+    trendingSeries?.sort((a, b) => b.trendingPoint - a.trendingPoint); // Sort by trendingPoint descending
+    return { ...f, trendingSeries };
+  });
 
-  // const uniqueNames = Array.from(new Set(trendingSeries?.map((obj) => obj?.name)));
+  const allSeries = sortedByPopularity?.map((f) => f?.trendingSeries).flat();
 
-  // const uniqueSeries = trendingSeries?.filter((obj) => uniqueNames?.includes(obj?.name));
+  const uniqueNames = Array.from(new Set(allSeries?.map((obj) => obj?.title)));
+
+  const uniqueSeries = allSeries?.filter((obj) => uniqueNames?.includes(obj?.title));
+
+  const mockSeries = [
+    {
+      title: 'Dark Blue Kiss',
+      image: 'https://image.tmdb.org/t/p/w1280/ey2BZaCaJllWy7BGAw6J4zNfPK4.jpg',
+    },
+    {
+      title: 'The Blue Hour',
+      image: 'https://image.tmdb.org/t/p/w1280/beu6ezZZohhBxpADatVgEmxKXcb.jpg',
+    },
+    {
+      title: 'Theory of Love',
+      image: 'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/rE6vK2eX04zEw35MOd6ykStz8CA.jpg',
+    },
+    {
+      title: 'Not Me',
+      image: 'https://image.tmdb.org/t/p/w1280/u55CWUrewbvR8PG3AGjIkgRB6u1.jpg',
+    },
+  ];
 
   if (isTrendingLoading) {
     return (
@@ -80,7 +126,7 @@ export default function Page() {
               <FormattedMessage id="topTrendingThaiCelebrities" />
             </Title>
             <Grid gutter={64} columns={24} justify="center" align="center">
-              {celebs?.map((celebrity: any) => (
+              {celebs?.map((celebrity: any, index) => (
                 <Grid.Col
                   key={celebrity.name}
                   span={{
@@ -95,17 +141,46 @@ export default function Page() {
                       justifyContent: 'center',
                       alignItems: 'center',
                       gap: 16,
+                      position: 'relative',
                     }}
                   >
+                    {index === 0 && (
+                      <IconCrown
+                        size={64}
+                        style={{
+                          position: 'absolute',
+                          top: -48,
+                          zIndex: 1,
+                          fill: 'gold',
+                          stroke: 'gold',
+                        }}
+                      />
+                    )}
                     <Avatar
                       size={124}
-                      src={`https://image.tmdb.org/t/p/original/${celebrity.image}`}
+                      src={celebrity.image}
                       alt={celebrity.name}
                       component={Link}
                       href={`/th/celebrities/${celebrity?.id}`}
                     />
+                    <div
+                      style={{
+                        position: 'absolute',
+                        bottom: 40,
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        padding: '4px 8px',
+                      }}
+                    >
+                      <Text fw={700} fz="md" c="white">
+                        #{index + 1}
+                      </Text>
+                    </div>
                     <Title order={6} ta="center">
-                      <Link href={`/th/celebrities/${celebrity.id}`}>{celebrity.name}</Link>
+                      <Link href={`/th/celebrities/${celebrity?.id}`}>
+                        {index === 0 ? celebs[0]?.name : celebrity?.englishName}
+                        <div>{celebrity?.thaiName}</div>
+                      </Link>
                     </Title>
                   </div>
                 </Grid.Col>
@@ -125,19 +200,16 @@ export default function Page() {
               align="center"
               slidesToScroll="auto"
             >
-              {/* {uniqueSeries?.map((serie: any) => (
-                <Carousel.Slide key={serie.name}>
+              {mockSeries?.map((serie: any) => (
+                <Carousel.Slide key={serie?.title}>
                   <Stack>
-                    <Image
-                      src={`https://image.tmdb.org/t/p/original/${serie.poster_path}`}
-                      alt={serie.name}
-                    />
+                    <Image src={serie?.image} alt={serie?.title} />
                     <Title order={6} ta="center">
-                      {serie.name}
+                      {serie?.title}
                     </Title>
                   </Stack>
                 </Carousel.Slide>
-              ))} */}
+              ))}
             </Carousel>
           </Stack>
         </section>

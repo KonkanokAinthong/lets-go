@@ -5,12 +5,13 @@ import {
   Box,
   Breadcrumbs,
   Button,
+  Card,
   Center,
   Container,
   Divider,
   Grid,
   Image,
-  Rating,
+  Select,
   Skeleton,
   Stack,
   Tabs,
@@ -20,22 +21,15 @@ import {
   Text,
   Title,
 } from '@mantine/core';
-import { GoogleMap, InfoWindow, Marker, useJsApiLoader } from '@react-google-maps/api';
+
 import axios from 'axios';
 import { useParams, useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { IconArrowLeft } from '@tabler/icons-react';
+import { Map, Marker } from 'react-map-gl';
 import ChatInterface from '@/components/ChatInterface';
 
-const API_KEY = 'AIzaSyBKRFuroEmi6ocPRQzuBuX4ULAFiYTvTGo';
-
-/**
- * Retrieves celebrity data by ID from the API.
- * @param celebId - The ID of the celebrity to retrieve.
- * @returns The celebrity data.
- * @throws An error if there was a problem retrieving the celebrity data.
- */
 const getCelebrityById = async (celebId: string) => {
   try {
     const response = await axios.get(`/api/celebrities?id=${celebId}`);
@@ -70,11 +64,6 @@ const getWikipediaBiography = async (name: string) => {
   }
 };
 
-/**
- * Searches for a celebrity by name using The Movie Database (TMDb) API.
- * @param name - The name of the celebrity to search for.
- * @returns The first search result from the TMDb API.
- */
 const searchCelebrity = async (name: string) => {
   const data = await axios.get(`https://api.themoviedb.org/3/search/person?query=${name}`, {
     headers: {
@@ -84,70 +73,67 @@ const searchCelebrity = async (name: string) => {
   return data.data.results[0];
 };
 
-/**
- * Retrieves detailed information about a celebrity using the TMDb API.
- * @param person_id - The ID of the celebrity to retrieve information for.
- * @returns The detailed celebrity information from the TMDb API.
- */
-const getCelebrityInfo = async (person_id: string) => {
-  const data = await axios.get(`https://api.themoviedb.org/3/person/${person_id}`, {
-    headers: {
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_TOKEN}`,
-    },
-  });
-  return data.data;
-};
-
-/**
- * Fetches nearby places based on a given location using the Google Places API.
- * @param location - The location to search for nearby places.
- * @returns An array of nearby places.
- */
-const fetchNearbyPlaces = async (location) => {
-  const { lat, lng } = location;
-  const response = await axios.post(
-    'https://places.googleapis.com/v1/places:searchNearby',
-    {
-      languageCode: 'th',
-      regionCode: 'TH',
-      includedTypes: ['restaurant'],
-      rankPreference: 'DISTANCE',
-      maxResultCount: 10,
-      locationRestriction: {
-        circle: {
-          center: {
-            latitude: lat,
-            longitude: lng,
-          },
-          radius: 1000.0,
-        },
-      },
-    },
+const getCelebrityInfo = async (
+  person_id: string,
+  options: {
+    language?: string;
+  }
+) => {
+  const data = await axios.get(
+    `https://api.themoviedb.org/3/person/${person_id}?language=${options.language}`,
     {
       headers: {
-        'Content-Type': 'application/json',
-        'X-Goog-Api-Key': API_KEY,
-        'X-Goog-FieldMask': '*',
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_TOKEN}`,
       },
     }
   );
-  return response.data.places;
+  return data.data;
 };
 
-/**
- * Retrieves details for a list of places.
- * @param places - An array of place names to retrieve details for.
- * @returns An object containing the detailed place information.
- */
+const getPlaceDetailFromPlaceId = async (placeId: string) => {
+  const response = await axios.get(
+    `https://tatapi.tourismthailand.org/tatapi/v5/attraction/${placeId}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization:
+          'Bearer Gb6UecYN9hyd8JhU6Fs1wUl4mpJaY6Nb6)O)CLN)deKcdMmHpoaDMyH0Bj5ychzyHQSPcb6p5BDAfr4b9WowEa0=====2',
+        'Accept-Language': 'th',
+      },
+    }
+  );
+  return response.data.result;
+};
+
+// const fetchNearbyPlaces = async (places) => {
+//   const promises = places.map(async (place) => {
+//     const response = await axios.get('https://search.longdo.com/mapsearch/json/search', {
+//       params: {
+//         keyword: place.name,
+//         area: `${place.lat},${place.lng}`,
+//         span: '1km',
+//         limit: 10,
+//         key: process.env.NEXT_PUBLIC_LONGDO_API_KEY,
+//       },
+//     });
+//     return response.data.data;
+//   });
+
+//   const results = await Promise.all(promises);
+//   return results.flat();
+// };
+
 const getPlaceDetails = async (places: string[]) => {
   try {
     const promises = places.map(async (place) => {
-      const response = await axios.get(`/api/places?query=${encodeURIComponent(place)}`);
-      return response.data.data.results;
+      const response = await axios.get(`/api/places2?place=${encodeURIComponent(place)}`);
+      return response.data;
     });
+
     const results = await Promise.all(promises);
-    const flattenedResults = results.flat();
-    return { places: flattenedResults };
+    const filteredResults = results.filter((result) => result !== undefined);
+
+    return { places: filteredResults };
   } catch (error) {
     console.error(error);
     return { places: [] };
@@ -156,25 +142,11 @@ const getPlaceDetails = async (places: string[]) => {
 
 export default function Page() {
   const [selectedPlace, setSelectedPlace] = useState(null);
-  const [map, setMap] = useState(null);
   const navigate = useRouter();
 
   const { celebId } = useParams();
 
   const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
-
-  const onLoad = useCallback(
-    (map) => {
-      map.setCenter(currentLocation);
-      map.setZoom(10);
-      setMap(map);
-    },
-    [currentLocation]
-  );
-
-  const onUnmount = useCallback((map) => {
-    setMap(null);
-  }, []);
 
   const { data: celebrity, isLoading: isCelebrityLoading } = useQuery(
     ['celebrity', celebId],
@@ -194,30 +166,50 @@ export default function Page() {
     }
   );
 
-  const { data: info } = useQuery(['info', celebInfo?.id], () => getCelebrityInfo(celebInfo?.id), {
-    enabled: !!celebInfo?.id,
-    refetchOnWindowFocus: false,
-  });
+  const { data: info } = useQuery(
+    ['info', celebInfo?.id],
+    () =>
+      getCelebrityInfo(celebInfo?.id, {
+        language: document.documentElement.lang,
+      }),
+    {
+      enabled: !!celebInfo?.id,
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  console.log(info);
+
+  console.log(celebrity);
 
   const { data: places } = useQuery(
     ['places', celebrity?.placeVisited],
-    () => getPlaceDetails(celebrity?.placeVisited),
+    () => getPlaceDetails(celebrity.placeVisited.map((place) => place)),
     {
       refetchOnWindowFocus: false,
       initialData: { places: [] },
+      enabled: !!celebrity?.placeVisited,
     }
   );
-
-  const { data: nearbyPlaces } = useQuery(
-    ['nearbyPlaces', places?.places],
-    () => fetchNearbyPlaces(places?.places[0].geometry.location),
-    {
-      enabled: !!places,
-      refetchOnWindowFocus: false,
-    }
-  );
-
   console.log(places);
+
+  // const { data: placeDetails } = useQuery(
+  //   ['placeDetails', selectedPlace],
+  //   () => getPlaceDetailFromPlaceId(selectedPlace?.place_id),
+  //   {
+  //     refetchOnWindowFocus: false,
+  //     enabled: !!selectedPlace,
+  //   }
+  // );
+
+  // const { data: nearbyPlaces } = useQuery(
+  //   ['nearbyPlaces', celebrity?.placeVisited],
+  //   () => fetchNearbyPlaces(celebrity?.placeVisited || []),
+  //   {
+  //     enabled: !!celebrity?.placeVisited,
+  //     refetchOnWindowFocus: false,
+  //   }
+  // );
 
   const [biography, setBiography] = useState('');
   const [isFetching, setIsFetching] = useState(false);
@@ -251,23 +243,6 @@ export default function Page() {
     }
   }, []);
 
-  const containerStyle = {
-    width: '100%',
-    height: '600px',
-  };
-
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: 'AIzaSyBKRFuroEmi6ocPRQzuBuX4ULAFiYTvTGo',
-  });
-
-  if (loadError) {
-    return <div>Error loading Google Maps API</div>;
-  }
-
-  if (!isLoaded) {
-    return <div>Loading...</div>;
-  }
-
   if (isCelebrityLoading) {
     return <div>Loading...</div>;
   }
@@ -289,19 +264,24 @@ export default function Page() {
         </header>
         <main>
           <section>
-            <Center>
-              {info ? (
-                <Avatar
-                  size={200}
-                  src={`https://image.tmdb.org/t/p/original/${info?.profile_path}`}
-                />
-              ) : (
-                <Skeleton height={200} circle />
-              )}
-            </Center>
-            <Title order={1} ta="center">
-              {celebrity?.name}
-            </Title>
+            <Stack>
+              <Center>
+                {info ? (
+                  <Avatar
+                    size={200}
+                    src={`https://image.tmdb.org/t/p/original/${info?.profile_path}`}
+                  />
+                ) : (
+                  <Skeleton height={200} circle />
+                )}
+              </Center>
+              <Title order={1} ta="center" mb={24}>
+                {celebrity?.name}
+              </Title>
+              {/* <Text ta="center" size="lg">
+                Also known as: {info?.also_known_as?.join(', ')}
+              </Text> */}
+            </Stack>
           </section>
 
           <Tabs defaultValue="info">
@@ -310,7 +290,7 @@ export default function Page() {
                 <TabsTab value="info">ประวัติ</TabsTab>
                 <TabsTab value="visited-places">การท่องเที่ยว</TabsTab>
                 <TabsTab value="nearby">สถานที่ท่องเที่ยวใกล้เคียง</TabsTab>
-                <TabsTab value="chatgpt-planner">Trip Planner</TabsTab>
+                <TabsTab value="chatgpt-planner">วางแผนการเดินทาง</TabsTab>
               </TabsList>
             </nav>
             <TabsPanel value="info">
@@ -374,181 +354,73 @@ export default function Page() {
               </Stack>
             </TabsPanel>
             <TabsPanel value="visited-places">
-              {places ? (
-                places.places.some((place) => place !== undefined) ? (
-                  <>
-                    <GoogleMap
-                      mapContainerStyle={containerStyle}
-                      center={currentLocation}
-                      zoom={10}
-                      onLoad={onLoad}
-                      onUnmount={onUnmount}
-                    >
-                      {places.places.map((place: any) => (
-                        <Marker
-                          key={place?.name}
-                          position={{
-                            lat: place?.geometry.location.lat,
-                            lng: place?.geometry.location.lng,
-                          }}
-                          icon={{
-                            url: `https://image.tmdb.org/t/p/original/${info?.profile_path}`,
-                            scaledSize: new window.google.maps.Size(40, 40),
-                            anchor: new window.google.maps.Point(20, 20),
-                            labelOrigin: new window.google.maps.Point(20, 60),
-                          }}
-                          title={place?.name}
-                          label={{
-                            text: place?.name,
-                            color: 'black',
-                            fontWeight: 'bold',
-                            fontSize: '16px',
-                          }}
-                        />
-                      ))}
-                    </GoogleMap>
-
-                    <Stack mt="md">
-                      {places.places.map((place: any) => (
-                        <article key={place?.name}>
-                          <Stack spacing="md">
+              {celebrity?.placeVisited && celebrity.placeVisited.length > 0 ? (
+                <Stack>
+                  <Title order={3}>สถานที่ท่องเที่ยวที่เคยไป</Title>
+                  <Grid>
+                    {places.places.map((place, index) => (
+                      <Grid.Col key={index} span={12}>
+                        <Card shadow="sm" p="md">
+                          <Stack mt="md">
                             <Image
-                              src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place?.photos[0].photo_reference}&key=${API_KEY}`}
-                              alt={place?.name}
+                              src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`}
+                              alt={place.name}
                             />
-                            <Stack spacing="sm">
-                              <Title order={3} ta="center">
-                                {place?.name}
-                                {console.log(place)}
-                              </Title>
-                              <Text size="sm">{place?.formatted_address}</Text>
-                              <Stack dir="row" justify="space-between" align="center">
-                                <Stack ta="center" justify="center">
-                                  <Rating value={place?.rating} fractions={2} />
-                                  <Text size="xs">{`User Ratings: ${place?.user_ratings_total}`}</Text>
-                                </Stack>
-                                <Box ta="center">
-                                  {place?.opening_hours?.open_now ? (
-                                    <Title c="green" size="xs" w={500}>
-                                      Open Now
-                                    </Title>
-                                  ) : (
-                                    <Title c="red" size="xs" w={500}>
-                                      Closed Now
-                                    </Title>
-                                  )}
-                                </Box>
-                              </Stack>
-                              <Stack spacing="sm">
-                                <Text size="xs" w={500}>
-                                  {`Phone: ${place?.phone_number || 'Not available'}`}
-                                </Text>
-                                <Text size="xs" w={500}>
-                                  {`Website: ${place?.website || 'Not available'}`}
-                                </Text>
-                                <Text size="xs" w={500}>
-                                  {`Price Level: ${place?.price_level || 'Not available'}`}
-                                </Text>
-                                <Text size="xs" w={500}>
-                                  {`Types: ${place?.types?.join(', ') || 'Not available'}`}
-                                </Text>
-                              </Stack>
-                            </Stack>
-                            <Divider size="md" w="100%" />
+                            <Title order={4}>{place.name}</Title>
+                            {place.editorial_summary && (
+                              <div>
+                                <Title order={5}>Biography:</Title>
+                                <Text>{place.editorial_summary.overview}</Text>
+                              </div>
+                            )}
+                            {place.types && (
+                              <div>
+                                <Title order={5}>Activities:</Title>
+                                <ul>
+                                  {place.types.map((type, typeIndex) => (
+                                    <li key={typeIndex}>{type}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
                           </Stack>
-                        </article>
-                      ))}
-                    </Stack>
-                  </>
-                ) : (
-                  <Text size="xs">ไม่มีข้อมูล</Text>
-                )
-              ) : (
-                <Stack justify="center" align="center">
-                  {Array(3)
-                    .fill(0)
-                    .map((_, index) => (
-                      <article key={index}>
-                        <Stack>
-                          <Skeleton height={200} />
-                          <Stack>
-                            <Skeleton height={30} width="50%" mx="auto" />
-                            <Skeleton height={20} width="80%" mx="auto" />
-                          </Stack>
-                          <Skeleton height={450} />
-                          <Divider size="md" w="100%" />
-                        </Stack>
-                      </article>
+                        </Card>
+                      </Grid.Col>
                     ))}
+                  </Grid>
                 </Stack>
+              ) : (
+                <Text>ไม่มีข้อมูลสถานที่ท่องเที่ยวที่ไปแล้ว</Text>
               )}
             </TabsPanel>
 
             <TabsPanel value="nearby">
-              <div>
-                {isLoaded && places?.places[0] ? (
-                  <>
-                    <GoogleMap
-                      mapContainerStyle={containerStyle}
-                      center={{
-                        lat: places.places[0].geometry.location.lat,
-                        lng: places.places[0].geometry.location.lng,
-                      }}
-                      zoom={100}
-                      onLoad={onLoad}
-                      onUnmount={onUnmount}
-                    >
-                      <Marker
-                        position={{
-                          lat: places.places[0].geometry.location.lat,
-                          lng: places.places[0].geometry.location.lng,
-                        }}
-                        icon={{
-                          url: `https://image.tmdb.org/t/p/original/${info?.profile_path}`,
-                          scaledSize: new window.google.maps.Size(40, 40),
-                          anchor: new window.google.maps.Point(20, 20),
-                          labelOrigin: new window.google.maps.Point(20, 60),
-                        }}
-                        title={info?.name}
-                      />
-                      {nearbyPlaces?.map((place: any) => (
-                        <Marker
-                          key={place.id}
-                          position={{
-                            lat: place.location.latitude,
-                            lng: place.location.longitude,
-                          }}
-                          onClick={() => setSelectedPlace(place)}
-                          title={place.displayName.text}
-                        />
-                      ))}
-                      {selectedPlace && (
-                        <InfoWindow
-                          position={{
-                            lat: selectedPlace.location.latitude,
-                            lng: selectedPlace.location.longitude,
-                          }}
-                          onCloseClick={() => setSelectedPlace(null)}
-                        >
-                          <div
-                            style={{
-                              color: 'black',
-                            }}
-                          >
-                            <h2>{selectedPlace.displayName.text}</h2>
-                            <p>{selectedPlace.formattedAddress}</p>
-                          </div>
-                        </InfoWindow>
-                      )}
-                    </GoogleMap>
-                  </>
-                ) : (
-                  <Skeleton height={600} />
-                )}
-              </div>
+              <Stack>
+                <Select
+                  label="เลือกสถานที่"
+                  placeholder="เลือกสถานที่"
+                  data={celebrity?.placeVisited?.map((place) => ({
+                    value: place,
+                    label: place,
+                  }))}
+                  onChange={(value) => {
+                    setSelectedPlace(value);
+                  }}
+                />
+                <iframe
+                  title="map"
+                  width="100%"
+                  height="450"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src={`https://www.google.com/maps/embed/v1/search?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${selectedPlace}`}
+                />
+              </Stack>
             </TabsPanel>
             <TabsPanel value="chatgpt-planner">
-              <ChatInterface />
+              <ChatInterface visitedPlaces={celebrity?.placeVisited} />
             </TabsPanel>
           </Tabs>
         </main>

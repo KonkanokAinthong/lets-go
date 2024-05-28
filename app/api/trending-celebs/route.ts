@@ -3,7 +3,6 @@ import celebritiesData from '../../../celebs.json';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const search = searchParams.get('search');
   const nationality = searchParams.get('nationality');
 
   try {
@@ -11,20 +10,14 @@ export async function GET(req: NextRequest) {
 
     if (nationality) {
       filteredCelebrities = celebritiesData.filter(
-        (item) => item.nationality.toLowerCase() === nationality.toLowerCase()
+        (item) => item.nationality?.toLowerCase() === nationality.toLowerCase()
       );
     }
 
-    // const searchResults = filteredCelebrities.filter((item) =>
-    //   item.name.toLowerCase().includes(search.toLowerCase())
-    // );
+    // Sort the filtered celebrities by trending points in descending order
+    filteredCelebrities.sort((a, b) => (b.trendingPoint || 0) - (a.trendingPoint || 0));
 
-    // const formattedResults = searchResults.map((result) => ({
-    //   id: result.id,
-    //   value: result.id,
-    //   label: result.name,
-    //   profile_path: result.image || null,
-    // }));
+    console.log('Filtered celebrities:', filteredCelebrities);
 
     return new Response(JSON.stringify(filteredCelebrities), {
       headers: {
